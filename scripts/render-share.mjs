@@ -5,10 +5,10 @@ const browser = await chromium.launch();
 try {
   const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
   await page.setContent(`<!doctype html><html lang="en"><meta charset="utf-8"><style>
-  *{box-sizing:border-box}body{margin:0;background:#f7f6f0;color:#202e2c;font-family:Arial,sans-serif;width:1200px;height:630px;padding:52px 64px;position:relative}
-  .top{display:flex;justify-content:space-between;align-items:center;font-size:18px}.name{font-weight:600}.label{text-transform:uppercase;letter-spacing:3px;font-size:12px;color:#587064}
-  h1{font-size:60px;line-height:1.08;letter-spacing:-3px;font-weight:500;margin:30px 0 22px}em{font-style:normal;color:#597d6a}
-  p{color:#566461;font-size:20px;margin:0}footer{position:absolute;left:64px;right:64px;bottom:42px;display:flex;flex-direction:column;gap:10px;border-top:1px solid #ccd5c9;padding-top:20px;font-size:18px}footer span:last-child{font-size:13px;color:#566461}
+  *{box-sizing:border-box}body{margin:0;background:#0D1B2A;color:#EAEAEA;font-family:Arial,sans-serif;width:1200px;height:630px;padding:52px 64px;position:relative}
+  .top{display:flex;justify-content:space-between;align-items:center;font-size:18px}.name{font-weight:600}.label{text-transform:uppercase;letter-spacing:3px;font-size:12px;color:#00B4D8}
+  h1{font-size:60px;line-height:1.08;letter-spacing:-3px;font-weight:500;margin:30px 0 22px}em{font-style:normal;color:#00B4D8}
+  p{color:#EAEAEA;font-size:20px;margin:0}footer{position:absolute;left:64px;right:64px;bottom:42px;display:flex;flex-direction:column;gap:10px;border-top:1px solid rgba(234,234,234,.22);padding-top:20px;font-size:18px}footer span:last-child{font-size:13px;color:#EAEAEA}
   </style><div class="top"><span class="name">Harleen Kaur</span><span class="label">Enterprise AI · With evidence</span></div>
   <h1>Choose the model.<br>Govern the action.<br>Test the boundary.<br><em>Measure the change.</em></h1>
   <p>Four complementary projects. Reproducible evidence.</p>
