@@ -7,11 +7,11 @@
   <meta property="og:title" content="Harleen Kaur · Enterprise AI, with evidence">
   <meta property="og:description" content="Choose the model. Govern the action. Test the boundary. Measure the change. Four complementary open-source projects, with reproducible evidence.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://hk-775.github.io/hk-775/share.png">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/share.png?v=navy-cyan">
   <meta property="og:url" content="https://hk-775.github.io/hk-775/">
-  <meta name="theme-color" content="#123a36">
+  <meta name="theme-color" content="#0D1B2A">
   <title>Harleen Kaur · Enterprise AI, with evidence</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=navy-cyan">
   <script src="workflow.js" defer></script>
 </head>
 <body>
@@ -88,7 +88,7 @@ Protected    SSN-S06-0001 (synthetic)</pre><p id="evidence-caption">The record, 
       </tbody></table></div>
       <div class="limitation"><strong>What this does—and does not—measure</strong><p>These two runs check a specific data boundary. The completion flag does not assess summary quality. C4 outputs a redaction placeholder. There is no live-model quality evaluation, real human approval, production traffic, isolation certification, or demonstrated business saving in this example.</p></div>
       <details class="source-details"><summary>Separate evidence: AxonLLM routing classification</summary><p>A September 16, 2026 evaluation on 60 held-out generated prompts reported 52 correct heuristic routes, 55 LLM routes, and 57 hybrid routes. The hybrid made 17 classifier calls. That experiment used live classifier calls on synthetic prompts and excluded downstream answer generation.</p><p><a href="https://github.com/hk-775/axonllm/blob/dbfbc70a56c0be5e8f2c4217c179f28f375f87d8/docs/AUTOROUTING_BENCHMARK.md">Methodology and limitations</a> · <a href="https://github.com/hk-775/axonllm/blob/dbfbc70a56c0be5e8f2c4217c179f28f375f87d8/docs/benchmarks/autorouting-held-out-2026-09-16.json">Case-level results</a></p></details>
-      <details class="source-details"><summary>Evaluate the next change with Practical Eval Lab</summary><p>Explore six runnable examples: classification, extraction, tool calling, RAG, response quality, and multi-step agents. Compare candidates, inspect individual failures, and apply regression checks through a local tuning webpage and command-line runner.</p><p>The bundled candidates use local rules. Teaching data includes synthetic cases and an attributed human-preference sample. These offline results demonstrate evaluation methods; they do not establish production quality or safety certification.</p><p><a href="https://github.com/hk-775/practical-eval-lab">Open Practical Eval Lab</a> · <a href="https://github.com/hk-775/practical-eval-lab/blob/e016fe066342d32f800f5bc25282dd38e97afcdb/examples/tool-calling.md">Inspect a regression example</a></p></details>
+      <details class="source-details"><summary>Evaluate the next change with Practical Eval Lab</summary><p>Explore six runnable examples: classification, extraction, tool calling, RAG, response quality, and multi-step agents. Compare candidates, inspect individual failures, and apply regression checks through a local tuning webpage and command-line runner.</p><p>The bundled candidates use local rules. Teaching data includes synthetic cases and an attributed human-preference sample. These offline results demonstrate evaluation methods; they do not establish production quality or safety certification.</p><p><a href="https://hk-775.github.io/practical-eval-lab/">Explore recorded evals and guides</a> · <a href="https://github.com/hk-775/practical-eval-lab">Repository and local setup</a> · <a href="https://github.com/hk-775/practical-eval-lab/blob/e016fe066342d32f800f5bc25282dd38e97afcdb/examples/tool-calling.md">Inspect a regression example</a></p></details>
     </section>
 
     <section id="inspect" class="inspect-section"><div class="shell">

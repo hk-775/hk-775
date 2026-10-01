@@ -22,7 +22,7 @@ Together, they support a development loop: **route → govern → test containme
 | **AxonLLM** | Which model and provider should handle this request? | [Repository](https://github.com/hk-775/axonllm) · [Routing evaluation](https://hk-775.github.io/axonllm/benchmark.html) |
 | **Ostiari** | May this agent take this action, under this policy? | [Repository](https://github.com/hk-775/ostiari) · [Architecture](https://hk-775.github.io/ostiari/#/architecture) |
 | **Escape Lab** | Can a prohibited outcome occur despite the controls? | [Repository](https://github.com/hk-775/OstiariEscapeLab) · [Results and limitations](https://hk-775.github.io/OstiariEscapeLab/) |
-| **Practical Eval Lab** | Did the application improve, and what regressed? | [Repository and quickstart](https://github.com/hk-775/practical-eval-lab) · [Six runnable examples](https://github.com/hk-775/practical-eval-lab#choose-a-lesson) |
+| **Practical Eval Lab** | Did the application improve, and what regressed? | [Recorded evals and guides](https://hk-775.github.io/practical-eval-lab/) · [Repository and quickstart](https://github.com/hk-775/practical-eval-lab) |
 
 The featured workflow connects AxonLLM, Ostiari, and Escape Lab. Practical Eval Lab is a separate local toolkit for choosing success criteria, comparing candidates, inspecting failures, and applying regression checks.
 
@@ -30,7 +30,7 @@ The featured workflow connects AxonLLM, Ostiari, and Escape Lab. Practical Eval 
 
 Practical Eval Lab covers classification, structured extraction, tool calling, RAG, response quality, and multi-step agents. Its tuning webpage, Python/HTTP application adapters, and saved JSON/HTML reports make individual outputs and grading decisions inspectable. Quality gates can catch a regression even when an aggregate score improves.
 
-[Explore the evaluation workflow](https://github.com/hk-775/practical-eval-lab).
+[Explore the evaluation workflow](https://hk-775.github.io/practical-eval-lab/). The hosted viewer opens recorded results; tuning and execution run locally.
 
 ### Read the evidence in context
 
