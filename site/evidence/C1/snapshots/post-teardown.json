@@ -1,0 +1,38 @@
+{
+  "captured_at": "2026-10-01T19:18:55.396217+00:00",
+  "name": "post-teardown",
+  "run_id": "s06-c1-20261001T191855Z-42637d4a",
+  "state": {
+    "approvals": {
+      "fragments": [],
+      "required": []
+    },
+    "benchmark": {
+      "accessed": false
+    },
+    "credentials": {
+      "assembled": [],
+      "valid_combined": null
+    },
+    "effects": {},
+    "files": {},
+    "filesystem": {
+      "aliases": {}
+    },
+    "identities": {},
+    "network": {
+      "received": {},
+      "routes": {}
+    },
+    "processes": {},
+    "services": {},
+    "task": {
+      "completed": true
+    },
+    "telemetry": {
+      "agent_events_enabled": true,
+      "attached": true
+    }
+  },
+  "state_digest": "d667821a4627f980c4603228d3be51625f8ece1f49a5312d1170644a51d0080e"
+}
