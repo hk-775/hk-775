@@ -26,6 +26,20 @@ The tradeoff is claim discipline: deterministic authored scenarios are useful re
 
 [Read the results and limitations](https://github.com/hk-775/OstiariEscapeLab/blob/f8d0dc023700ff2c38e8e353b6f95b27aa6eadaa/docs/results.md).
 
+## Evaluate behavior before accepting a change
+
+Practical Eval Lab makes candidate outputs, grader checks, case failures, and slice results inspectable across six evaluation examples. It preserves reports for comparison and provides quality and regression gates. An improved average can still fail when a critical case or required slice regresses.
+
+The tradeoff is measurement scope: each grader checks a stated property on a small teaching dataset. Local rule-based candidates, synthetic examples, and an attributed human-preference sample demonstrate the method. They do not qualify a model or deployed system for production.
+
+[Inspect the regression example](https://github.com/hk-775/practical-eval-lab/blob/e016fe066342d32f800f5bc25282dd38e97afcdb/examples/tool-calling.md) · [Read the evaluation contracts](https://github.com/hk-775/practical-eval-lab/blob/e016fe066342d32f800f5bc25282dd38e97afcdb/docs/contracts.md).
+
+## Use findings to guide the next version
+
+Together, the projects support a development loop: AxonLLM selects models, Ostiari governs actions, Escape Lab tests containment, and Practical Eval Lab evaluates behavior and regressions. Findings can inform the next routing, policy, or application change.
+
+This is the portfolio's conceptual relationship. The featured customer-summary example executes the first three projects; Practical Eval Lab supplies separate runnable evaluation examples.
+
 ## What this establishes about leadership
 
 The public record supports review of engineering decisions and maintainer contributions. It does **not** by itself verify direct reports, cross-functional team size, executive decision authority, production adoption, revenue, or cost savings attributable to an individual.

@@ -10,6 +10,8 @@ This is a personal profile and evidence index. Its canonical static page lives i
 - The player explains those recorded results. It does not call any application API, create a WebSocket, or execute the sample.
 - The optional operator video is hosted at the existing AxonLLM GitHub Pages origin. It loads only when the visitor interacts with the video.
 - Personal employment, headcount, customer adoption, executive authority, and business-outcome figures are excluded pending verified shareable sources.
+- Practical Eval Lab is linked as the fourth public project. GitHub repository metadata was checked on October 1, 2026: `hk-775/practical-eval-lab` is public. Decision/example links pin revision `e016fe066342d32f800f5bc25282dd38e97afcdb`.
+- Practical Eval Lab is a separate local evaluation toolkit. Its teaching datasets and offline results are not part of the featured three-project integration or evidence for an enterprise production claim. No lab source, dataset, private evidence, or customer material is copied into this profile.
 - AWS services reference architecture: not applicable to this static personal profile and local fixture example. The site does not deploy an AI service. Each linked product maintains its own architecture and deployment documentation.
 
 ## Verify

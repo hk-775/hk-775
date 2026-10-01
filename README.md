@@ -1,8 +1,10 @@
 # Harleen Kaur
 
-I build open-source tools for enterprise AI: **select the model, govern the action, test the boundary.**
+I build open-source tools for enterprise AI: **select the model, govern the action, test the boundary, measure the change.**
 
-My projects address different parts of the same workflow. **AxonLLM selects models and provider routes. Ostiari governs agent actions. Escape Lab tests whether the controls hold.**
+My projects address complementary engineering questions. **AxonLLM selects models and provider routes. Ostiari governs agent actions. Escape Lab tests containment. Practical Eval Lab evaluates application behavior and regressions.**
+
+Together, they support a development loop: **route → govern → test containment → evaluate behavior → refine**. Evaluation findings guide the next routing, policy, or application change.
 
 **[Start here → one workflow, its evidence, and the code](https://hk-775.github.io/hk-775/)**
 
@@ -20,9 +22,20 @@ My projects address different parts of the same workflow. **AxonLLM selects mode
 | **AxonLLM** | Which model and provider should handle this request? | [Repository](https://github.com/hk-775/axonllm) · [Routing evaluation](https://hk-775.github.io/axonllm/benchmark.html) |
 | **Ostiari** | May this agent take this action, under this policy? | [Repository](https://github.com/hk-775/ostiari) · [Architecture](https://hk-775.github.io/ostiari/#/architecture) |
 | **Escape Lab** | Can a prohibited outcome occur despite the controls? | [Repository](https://github.com/hk-775/OstiariEscapeLab) · [Results and limitations](https://hk-775.github.io/OstiariEscapeLab/) |
+| **Practical Eval Lab** | Did the application improve, and what regressed? | [Repository and quickstart](https://github.com/hk-775/practical-eval-lab) · [Six runnable examples](https://github.com/hk-775/practical-eval-lab#choose-a-lesson) |
+
+The featured workflow connects AxonLLM, Ostiari, and Escape Lab. Practical Eval Lab is a separate local toolkit for choosing success criteria, comparing candidates, inspecting failures, and applying regression checks.
+
+### Evaluate the next change
+
+Practical Eval Lab covers classification, structured extraction, tool calling, RAG, response quality, and multi-step agents. Its tuning webpage, Python/HTTP application adapters, and saved JSON/HTML reports make individual outputs and grading decisions inspectable. Quality gates can catch a regression even when an aggregate score improves.
+
+[Explore the evaluation workflow](https://github.com/hk-775/practical-eval-lab).
 
 ### Read the evidence in context
 
 The featured example uses real routing and control code with a **deterministic provider fixture and synthetic customer data**. It is a reproducible integration check. It does not measure production adoption, business savings, live-model quality, or general containment safety.
 
 AxonLLM's separate routing evaluation uses a generated, reviewed test corpus. Its benchmark scores are evaluation results; the operator tour's seeded dashboard values are demonstration data. Neither is presented as customer production evidence.
+
+Practical Eval Lab's bundled candidates use local rules. Its teaching datasets combine synthetic cases with an attributed human-preference sample. The recorded offline results demonstrate evaluation methods; they do not establish live-model quality, production adoption, or safety certification.
