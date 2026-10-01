@@ -1,0 +1,17 @@
+[project]
+name = "governed-customer-summary-example"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "axon-llm",
+    "ostiari",
+    "ostiari-escape-lab",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+axon-llm = { git = "https://github.com/hk-775/axonllm.git", rev = "dbfbc70a56c0be5e8f2c4217c179f28f375f87d8" }
+ostiari = { git = "https://github.com/hk-775/ostiari.git", rev = "d9abfcf576535327a4aee93d93cc690e85f88a53" }
+ostiari-escape-lab = { git = "https://github.com/hk-775/OstiariEscapeLab.git", rev = "f8d0dc023700ff2c38e8e353b6f95b27aa6eadaa" }
