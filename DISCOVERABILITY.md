@@ -5,7 +5,9 @@ canonical HTML, a Markdown alternative, a concise `llms.txt` index, a downloadab
 context bundle, and source fingerprints in `discovery.json`.
 
 Run `npm run discovery` after changing README, case-study, decision, example, or
-agent instructions. `npm run discovery:check` in CI rejects stale generated files.
+agent instructions, or articles listed in `blog/posts.json`.
+The same command builds `/blog/`, article HTML, Markdown alternatives, and RSS.
+`npm run discovery:check` in CI rejects stale generated files.
 The generator uses a fixed source allowlist and does not ingest the whole checkout.
 GitIngest is an optional external way to inspect the public repository; the
 published context files can be fetched directly without that service.
@@ -24,6 +26,9 @@ Practical Eval Lab has its own prefix property and sitemap:
 Project sites do not control the host's root `robots.txt`. A file at
 `/hk-775/robots.txt` would not set crawler access policy for `hk-775.github.io`.
 The site does not use a `noindex` directive or require login to read its content.
+The sitemap includes the blog and every published article. Each article has a
+canonical URL, `BlogPosting` metadata, a Markdown alternative, and a source
+fingerprint. `/blog/feed.xml` provides RSS without a subscription service.
 
 ## Measure the two requested goals
 

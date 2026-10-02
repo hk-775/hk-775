@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>When rules beat decision models · Harleen Kaur</title>
+  <meta name="description" content="I replaced a label-matching diagnostic with an executable support workflow. On 144 synthetic test episodes, the rules baseline outperformed the tested zero-shot model configurations.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="when-rules-beat-decision-models.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=1">
+  <meta property="og:title" content="When rules beat decision models">
+  <meta property="og:description" content="I replaced a label-matching diagnostic with an executable support workflow. On 144 synthetic test episodes, the rules baseline outperformed the tested zero-shot model configurations.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/share.png">
+  <meta property="og:image:alt" content="Harleen Kaur — Engineering notes. Decisions, experiments, and evidence for AI workloads.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-10-02">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"When rules beat decision models","alternativeHeadline":"Lessons from an executed tool-selection evaluation","description":"I replaced a label-matching diagnostic with an executable support workflow. On 144 synthetic test episodes, the rules baseline outperformed the tested zero-shot model configurations.","datePublished":"2026-10-02","dateModified":"2026-10-02","url":"https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/share.png","keywords":["Evaluation","Tool selection","Agent engineering"],"isPartOf":{"@type":"Blog","name":"Engineering notes","url":"https://hk-775.github.io/hk-775/blog/"}}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Evaluation · Tool selection · Agent engineering</p>
+    <h1>When rules beat decision models</h1>
+    <p class="article-subtitle">Lessons from an executed tool-selection evaluation</p>
+    <p class="post-meta"><time datetime="2026-10-02">2 October 2026</time><span>9 min read</span><span>Synthetic, executed workflow</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#start-with-the-decision-the-system-must-make">Start with the decision the system must make</a>
+<a href="#why-i-replaced-the-first-test">Why I replaced the first test</a>
+<a href="#split-families-before-expanding-variants">Split families before expanding variants</a>
+<a href="#score-the-executed-trajectory">Score the executed trajectory</a>
+<a href="#missing-information-was-the-decisive-failure">Missing information was the decisive failure</a>
+<a href="#a-confidence-gate-has-to-earn-its-coverage">A confidence gate has to earn its coverage</a>
+<a href="#measure-the-whole-path-then-state-what-timing-excludes">Measure the whole path, then state what timing excludes</a>
+<a href="#the-architecture-decision">The architecture decision</a>
+<a href="#how-this-fits-the-other-projects">How this fits the other projects</a>
+<a href="#inspect-and-reproduce">Inspect and reproduce</a></nav>
+      <div class="article-tools"><a href="when-rules-beat-decision-models.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-10-02-when-rules-beat-decision-models.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="When rules beat decision models"><p>I wanted to answer a practical architecture question: <strong>does a local decision
+model improve tool selection enough to justify adding it to an agent workflow?</strong></p>
+<p>My first experiment could not answer that question. It compared model choices
+with handwritten labels, without executing the downstream task. I redesigned the
+evaluation around a small support workflow and froze the implementation before
+calibration and final testing.</p>
+<p>On 144 synthetic test episodes, rules achieved <strong>86.1% strict success</strong>,
+compared with <strong>27.1% for Strands Decider v19</strong> and <strong>24.3% for Laya English</strong>.
+The tested configurations did not meet the criterion for adding a model stage.
+The useful result was a concrete architecture decision and a record of where
+each selector failed.</p>
+<p><strong>Scope:</strong> this is one authored, in-memory workflow, evaluated on 2 October 2026.
+It uses pinned, zero-shot model configurations. These measurements are
+synthetic evaluation evidence, not production results or a general model ranking.
+<a href="https://hk-775.github.io/practical-eval-lab/tool-workflow-results.html">The full results and raw traces are public.</a></p>
+<h2 id="start-with-the-decision-the-system-must-make">Start with the decision the system must make</h2>
+<p>The selector receives a user request, two synthetic ticket records,
+authorization state, and the last tool result. It must select an action and,
+where necessary, the ticket and new priority.</p>
+<p>There are four actions:</p>
+<ul>
+<li><code>read_ticket</code>: return the requested ticket&#39;s current state.</li>
+<li><code>set_priority</code>: change the requested ticket to the requested priority.</li>
+<li><code>ask_user</code>: obtain information required to act correctly.</li>
+<li><code>handoff</code>: record that the request needs another operator or capability.</li>
+</ul>
+<p>Each choice runs against a fresh simulator. A clarification receives a scripted
+reply and another decision. A blocked operation returns its reason. An episode
+has a maximum of three decision-and-tool steps.</p>
+<p>That makes the engineering question specific: <strong>can the selector complete the
+workflow, obtain missing information, and avoid an incorrect action along the way?</strong></p>
+<p>The executor checks schemas, update permission, and ticket locks. It does not
+read the private task reference to prevent a valid-looking but wrong update.
+A permitted write to the wrong ticket can therefore execute and fail the
+evaluation. This separation lets the test expose a semantic mistake that ordinary
+permission checks cannot identify.</p>
+<p><a href="https://github.com/hk-775/practical-eval-lab/blob/86da0fcea679c1ca1dd4cf2b5d81537e08361b62/benchmarks/tool_workflow/PROTOCOL.md">Inspect the frozen workflow contract.</a></p>
+<h2 id="why-i-replaced-the-first-test">Why I replaced the first test</h2>
+<p>The initial diagnostic mixed routing labels, tool choices, and policy questions.
+It had too few underlying scenarios, incomplete calibration coverage, and a weak
+baseline. Its Laya inputs also used generic boolean Choice keys that the pinned
+upstream documentation warned about.</p>
+<p>The arithmetic was reproducible. The experiment still could not establish a
+deployment advantage. No downstream tool or routed model ran, so a correct label
+did not show that a task succeeded.</p>
+<p>I retained that run and attached a
+<a href="https://github.com/hk-775/practical-eval-lab/blob/86da0fcea679c1ca1dd4cf2b5d81537e08361b62/benchmarks/decision_models/DESIGN_REVIEW.md">design review</a>.
+The replacement uses semantic action names, executes the selected tools, and
+compares against alternatives that could actually handle this bounded workload.</p>
+<h2 id="split-families-before-expanding-variants">Split families before expanding variants</h2>
+<p>I separated development, calibration, and final test data by wording family:</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Partition</th>
+<th align="right">Episodes</th>
+<th align="right">Wording families</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Development</td>
+<td align="right">72</td>
+<td align="right">30</td>
+<td>Fit the lightweight baseline and check inputs</td>
+</tr>
+<tr>
+<td>Calibration</td>
+<td align="right">72</td>
+<td align="right">30</td>
+<td>Select the confidence gate</td>
+</tr>
+<tr>
+<td>Final test</td>
+<td align="right">144</td>
+<td align="right">60</td>
+<td>Measure the frozen configurations</td>
+</tr>
+</tbody></table>
+</div><p>Related argument-order and permission variants remain in the same partition.
+The final set has 12 episodes in each of 12 declared conditions, covering clear
+reads and writes, missing information, negation, priority corrections, ambiguous
+intent, permission denial, locked tickets, unsupported operations, and references
+that contrast one ticket with another.</p>
+<p>These are held-out wording families within the same designed workflow. They do
+not represent 144 independent enterprise use cases. The bootstrap resamples
+whole families to retain the dependence between related variants.</p>
+<p>I committed the code, fixtures, and protocol at
+<a href="https://github.com/hk-775/practical-eval-lab/commit/2aa9e2a"><code>2aa9e2a</code></a>
+before calibration and final-test runs. The
+<a href="https://github.com/hk-775/practical-eval-lab/blob/86da0fcea679c1ca1dd4cf2b5d81537e08361b62/benchmarks/tool_workflow/freeze.json">freeze record</a>
+records the configuration and content hashes.</p>
+<h2 id="score-the-executed-trajectory">Score the executed trajectory</h2>
+<p>The primary metric is <strong>strict episode success</strong>: reach the required terminal
+outcome, obtain required clarification, and make no incorrect intermediate action
+or argument selection.</p>
+<p>This is deliberately stricter than eventually reaching the goal. An unnecessary
+question counts as a mistake. An appropriate handoff can satisfy the contract
+without completing the underlying business request.</p>
+<p>I compared rules, a fitted multinomial Naive Bayes classifier, Strands Decider
+v19, Laya English, a development-majority action, and a seeded random policy.
+The rules were authored against the workflow specification. Naive Bayes learned
+only from development reference states. Neither receives the private test goal.</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Direct selector</th>
+<th align="right">Strict successes</th>
+<th align="right">Success rate</th>
+<th align="right">Correct initial clarification</th>
+<th align="right">Incorrect writes accepted</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Rules</td>
+<td align="right">124 / 144</td>
+<td align="right">86.1%</td>
+<td align="right">48 / 48</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Fitted Naive Bayes</td>
+<td align="right">60 / 144</td>
+<td align="right">41.7%</td>
+<td align="right">29 / 48</td>
+<td align="right">7</td>
+</tr>
+<tr>
+<td>Strands Decider v19</td>
+<td align="right">39 / 144</td>
+<td align="right">27.1%</td>
+<td align="right">0 / 48</td>
+<td align="right">50</td>
+</tr>
+<tr>
+<td>Laya English</td>
+<td align="right">35 / 144</td>
+<td align="right">24.3%</td>
+<td align="right">0 / 48</td>
+<td align="right">23</td>
+</tr>
+<tr>
+<td>Development-majority action</td>
+<td align="right">26 / 144</td>
+<td align="right">18.1%</td>
+<td align="right">0 / 48</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Seeded random policy</td>
+<td align="right">14 / 144</td>
+<td align="right">9.7%</td>
+<td align="right">10 / 48</td>
+<td align="right">22</td>
+</tr>
+</tbody></table>
+</div><p>Strands eventually reached the reference goal in 59 episodes; 39 were
+mistake-free. Rules&#39; 124 successes comprised 88 completed reads or updates and
+36 appropriate handoffs.</p>
+<p>An incorrect accepted write means a <code>set_priority</code> call executed in violation of
+the task contract. It includes a call that sets an existing value. Of Strands&#39;
+50 incorrect writes, 25 changed a value. Of Laya&#39;s 23, five changed a value.
+All seven of Naive Bayes&#39; incorrect writes changed a value.</p>
+<p>The full report includes family intervals and per-condition results. For
+example, rules&#39; 95% family-bootstrap interval was 80.6–90.3%; Strands&#39; was
+21.5–32.6%. Those intervals describe variation within this fixture.</p>
+<p><a href="https://github.com/hk-775/practical-eval-lab/blob/86da0fcea679c1ca1dd4cf2b5d81537e08361b62/benchmarks/tool_workflow/recordings/2026-10-02/comparison.json">Inspect the matched comparison and report hashes.</a></p>
+<h2 id="missing-information-was-the-decisive-failure">Missing information was the decisive failure</h2>
+<p>Both local models failed to ask the required initial clarification in all 48
+episodes that required it. The rules baseline obtained that clarification in
+all 48.</p>
+<p>The permission guard blocked 79 Strands operations and 136 Laya operations.
+It still allowed some authorized, well-formed writes that contradicted the
+request. I therefore tracked proposals, tool attempts, blocked operations,
+executed writes, and actual state changes separately.</p>
+<p>Rules also had a clear weakness: all 12 contrastive-reference episodes failed.
+Both models resolved some references and priority corrections that rules missed.
+That is a useful direction for another experiment, provided the next design
+preserves clarification and write correctness.</p>
+<h2 id="a-confidence-gate-has-to-earn-its-coverage">A confidence gate has to earn its coverage</h2>
+<p>I predeclared a fixed threshold grid. To qualify, an operating point had to
+achieve at most 5% empirical calibration plan error and cover at least 20 wording
+families. Confidence was the minimum selected-option probability across the
+action and its required arguments; it was not a calibrated joint correctness
+probability.</p>
+<p>No candidate met both requirements:</p>
+<ul>
+<li>Naive Bayes at 0.95 had two errors in 46 accepted states, covering 19 families.</li>
+<li>Strands at 0.60 covered 20 families but made five errors in 29 accepted states.</li>
+<li>Laya at 0.50 made 40 errors in 53 accepted states across 23 families.</li>
+</ul>
+<p>The complete grids are published with the recordings. I kept the declared
+criterion after seeing the results.</p>
+<p>A failed gate bypassed the primary selector and executed rules on every
+decision. All three gated policies achieved 124 of 144 strict successes, with
+<strong>100% fallback demand and zero primary calls</strong>. Their success is attributable
+to the rules fallback.</p>
+<h2 id="measure-the-whole-path-then-state-what-timing-excludes">Measure the whole path, then state what timing excludes</h2>
+<p>On an Apple M4 Pro with 48 GiB unified memory, the recorded simulator-episode
+latencies were:</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Direct selector</th>
+<th align="right">Median</th>
+<th align="right">p95</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Rules</td>
+<td align="right">0.061 ms</td>
+<td align="right">0.153 ms</td>
+</tr>
+<tr>
+<td>Fitted Naive Bayes</td>
+<td align="right">0.111 ms</td>
+<td align="right">0.188 ms</td>
+</tr>
+<tr>
+<td>Strands Decider v19</td>
+<td align="right">453.8 ms</td>
+<td align="right">1,339.6 ms</td>
+</tr>
+<tr>
+<td>Laya English</td>
+<td align="right">125.0 ms</td>
+<td align="right">412.5 ms</td>
+</tr>
+</tbody></table>
+</div><p>These measurements include the actual decision trajectory, tool execution, and
+scripted clarification turns. They exclude setup and three warmups. All tools
+run in memory; user replies are instantaneous.</p>
+<p>Candidates can fail after different numbers of steps. The table mixes successful
+and failed episodes and does not compare inference at equal task quality.
+Network services, queues, human response time, concurrency, and monetary cost
+remain unmeasured.</p>
+<p>Both models ran locally with pinned checkpoints and runtimes, using their
+recorded native precision. Laya was the English base checkpoint; neither model
+was fine-tuned for this workflow. The Laya input audit found no truncation across
+1,152 reference questions. All scored model calls completed without inference
+or response-validation errors.</p>
+<p><a href="https://github.com/hk-775/practical-eval-lab/blob/86da0fcea679c1ca1dd4cf2b5d81537e08361b62/benchmarks/decision_models/models.json">Inspect model revisions</a>
+and the
+<a href="https://github.com/hk-775/practical-eval-lab/blob/86da0fcea679c1ca1dd4cf2b5d81537e08361b62/benchmarks/tool_workflow/input-audit.json">input audit</a>.</p>
+<h2 id="the-architecture-decision">The architecture decision</h2>
+<p>My acceptance criterion required a paired improvement over rules whose 95%
+family-bootstrap interval stayed above zero, no incorrect executed writes, and
+no inference failures. Neither model configuration qualified.</p>
+<p><strong>I would keep rules as the reference selector for this bounded workflow.</strong>
+Their 20 failed episodes still require engineering work. An 86.1% synthetic
+success rate does not establish production readiness.</p>
+<p>A different model, task specialization, or a model used only for reference
+resolution could change the result. Evaluating that change requires a new
+protocol and fresh final-test families. The current test has already informed
+the next hypothesis.</p>
+<p>The broader lesson I take from this experiment is to make a proposed model
+stage justify its place in the execution path. Define its contract, compare
+against an implementable baseline, execute its mistakes, and measure how much
+work the fallback actually performs.</p>
+<h2 id="how-this-fits-the-other-projects">How this fits the other projects</h2>
+<p>I use four projects to investigate complementary parts of an AI system:</p>
+<ul>
+<li><strong><a href="https://github.com/hk-775/axonllm">AxonLLM</a></strong> selects models and provider routes.</li>
+<li><strong><a href="https://github.com/hk-775/ostiari">Ostiari</a></strong> governs proposed agent actions.</li>
+<li><strong><a href="https://github.com/hk-775/OstiariEscapeLab">Escape Lab</a></strong> tests containment
+through observed effects and retained evidence.</li>
+<li><strong><a href="https://github.com/hk-775/practical-eval-lab">Practical Eval Lab</a></strong> measures
+application behavior, compares candidates, and exposes regressions.</li>
+</ul>
+<p>This experiment lives in Practical Eval Lab. It evaluates a local support
+selector; it does not execute the other three projects. Its failure analysis
+helps frame the next routing, control, or evaluation question.</p>
+<h2 id="inspect-and-reproduce">Inspect and reproduce</h2>
+<p>The published run includes the protocol, partition manifest, pinned model
+identities, calibration grids, execution traces, and replay verifier.
+Start with the recorded evidence; replaying a trace does not require model
+weights or API keys.</p>
+<pre><code class="language-sh">git clone https://github.com/hk-775/practical-eval-lab.git
+cd practical-eval-lab
+git checkout 86da0fcea679c1ca1dd4cf2b5d81537e08361b62
+uv sync --locked
+uv run --locked python -m scripts.audit_workflow_recordings \
+  benchmarks/tool_workflow/recordings/2026-10-02/strands-direct.json
+</code></pre>
+<p>Replay verifies the recorded trajectory against fresh simulator state and
+recomputes its metrics. It does not rerun model inference. Model execution
+requires the separately locked runtime and downloaded weights described in the
+protocol.</p>
+<ul>
+<li><a href="https://hk-775.github.io/practical-eval-lab/tool-workflow-results.html">Readable results and limitations</a></li>
+<li><a href="https://github.com/hk-775/practical-eval-lab/tree/86da0fcea679c1ca1dd4cf2b5d81537e08361b62/benchmarks/tool_workflow/recordings">Recorded evidence at the cited revision</a></li>
+<li><a href="https://github.com/hk-775/practical-eval-lab/blob/86da0fcea679c1ca1dd4cf2b5d81537e08361b62/benchmarks/tool_workflow/PROTOCOL.md">Frozen methodology</a></li>
+<li><a href="https://github.com/hk-775/practical-eval-lab/blob/86da0fcea679c1ca1dd4cf2b5d81537e08361b62/benchmarks/decision_models/DESIGN_REVIEW.md">Original diagnostic and its design review</a></li>
+</ul>
+<p>All workflow records and tickets are synthetic. No customer data, production
+traces, Jev calls, or paid model services are part of this experiment.
+Content hashes detect changes; they are not signed execution attestations.</p>
+
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>

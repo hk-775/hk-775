@@ -16,11 +16,13 @@
   <!-- discovery:start -->
   <link rel="canonical" href="https://hk-775.github.io/hk-775/">
   <link rel="alternate" type="text/markdown" href="index.md">
+  <link rel="alternate" type="application/rss+xml" title="Engineering notes" href="blog/feed.xml">
   <link rel="describedby" type="text/plain" href="llms.txt">
   <link rel="sitemap" type="application/xml" href="sitemap.xml">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfilePage","@id":"https://hk-775.github.io/hk-775/#profile","url":"https://hk-775.github.io/hk-775/","name":"Harleen Kaur — AI model routing, agent governance, and evaluations","mainEntity":{"@type":"Person","@id":"https://hk-775.github.io/hk-775/#harleen-kaur","name":"Harleen Kaur","alternateName":"hk-775","url":"https://hk-775.github.io/hk-775/","sameAs":["https://github.com/hk-775","https://www.linkedin.com/in/harleenkaurprofile"],"description":"Builder of open-source tools for LLM model routing, agent governance, containment testing, and application evaluation.","knowsAbout":["LLM model routing and provider selection","Agent action governance and policy enforcement","Agent containment tests and inspectable evidence","Application evaluation, transparent graders, and regression checks"]},"about":[{"@type":"SoftwareSourceCode","name":"AxonLLM","description":"LLM model routing and provider selection","codeRepository":"https://github.com/hk-775/axonllm","url":"https://hk-775.github.io/axonllm/"},{"@type":"SoftwareSourceCode","name":"Ostiari","description":"Agent action governance and policy enforcement","codeRepository":"https://github.com/hk-775/ostiari","url":"https://hk-775.github.io/ostiari/"},{"@type":"SoftwareSourceCode","name":"Ostiari Escape Lab","description":"Agent containment tests and inspectable evidence","codeRepository":"https://github.com/hk-775/OstiariEscapeLab","url":"https://hk-775.github.io/OstiariEscapeLab/"},{"@type":"SoftwareSourceCode","name":"Practical Eval Lab","description":"Application evaluation, transparent graders, and regression checks","codeRepository":"https://github.com/hk-775/practical-eval-lab","url":"https://hk-775.github.io/practical-eval-lab/"}]}</script>
   <!-- discovery:end -->
-  <link rel="stylesheet" href="styles.css?v=contact-1">
+  <link rel="stylesheet" href="styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog/blog.css?v=1">
   <script src="workflow.js" defer></script>
 </head>
 <body>
@@ -28,7 +30,7 @@
   <header class="shell header">
     <a class="identity" href="./" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
     <nav aria-label="Main navigation">
-      <a href="#watch">Watch</a><a href="#understand">Understand</a><a href="#inspect">Inspect</a><a href="#leadership">Decisions</a><a href="#contact">Contact</a>
+      <a href="#watch">Watch</a><a href="#understand">Understand</a><a href="#inspect">Inspect</a><a href="#leadership">Decisions</a><a href="blog/">Blog</a><a href="#contact">Contact</a>
     </nav>
   </header>
   <main id="main">
@@ -117,6 +119,13 @@ uv run --locked python run.py</code></pre><p>Installation downloads public depen
         <a href="https://github.com/hk-775/practical-eval-lab/blob/e016fe066342d32f800f5bc25282dd38e97afcdb/examples/tool-calling.md"><small>Evaluation</small><h3>Measure the change.<br>Inspect regressions.</h3><p>See how case and slice checks reveal failures hidden by an improving average.</p><span>Inspect the example ↗</span></a>
       </div>
       <a class="text-link" href="https://github.com/hk-775/hk-775/blob/main/DECISIONS.md">Read the engineering decision case study →</a>
+    </section>
+    <section class="shell blog-feature" aria-labelledby="blog-heading">
+      <p class="eyebrow">Engineering notes / Latest article</p>
+      <h2 id="blog-heading">When rules beat decision models</h2>
+      <p>I replaced a label-matching diagnostic with an executable support workflow. Here is what 144 synthetic test episodes revealed about tool selection, missing information, and fallback demand.</p>
+      <a class="text-link" href="blog/when-rules-beat-decision-models.html">Read the article →</a>
+      <a class="text-link" href="blog/">Explore the engineering blog →</a>
     </section>
     <section id="contact" class="contact-section" aria-labelledby="contact-heading">
       <div class="shell">

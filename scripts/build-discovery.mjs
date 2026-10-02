@@ -1,22 +1,26 @@
 import { createHash } from "node:crypto";
-import { readFile, writeFile, access } from "node:fs/promises";
+import { readFile, writeFile, access, mkdir } from "node:fs/promises";
 import { dirname, posix, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadPosts, buildBlog, blogBase } from "./build-blog.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const base = "https://hk-775.github.io/hk-775/";
 const repo = "https://github.com/hk-775/hk-775";
 const linkedin = "https://www.linkedin.com/in/harleenkaurprofile";
 const check = process.argv.includes("--check");
+const posts = await loadPosts(root);
 const sources = new Map([
   ["README.md", "index.md"],
   ["CASE_STUDY.md", "case-study.md"],
   ["DECISIONS.md", "decisions.md"],
   ["examples/customer-summary/README.md", "run-example.md"],
   ["AGENTS.md", "coding-agents.md"],
+  ["blog/README.md", "blog/index.md"],
+  ...posts.map(post => [post.source, `blog/${post.slug}.md`]),
 ]);
 const digestSources = [...sources.keys()].filter(name => name !== "AGENTS.md");
-const generated = new Map();
+const generated = buildBlog(posts);
 const records = [];
 const hash = content => createHash("sha256").update(content).digest("hex");
 
@@ -87,10 +91,13 @@ The featured customer-summary workflow connects AxonLLM, Ostiari, and Escape Lab
 - [Engineering case study](${base}case-study.md): The customer-summary boundary, paired results, exact source references, and limitations.
 - [Engineering decisions](${base}decisions.md): Product boundaries, governance choices, and evidence practices.
 - [Run the integration](${base}run-example.md): Locked installation and reproduction commands.
+- [Engineering blog](${blogBase}): Articles on AI workloads, design decisions, and evaluation evidence.
+${posts.map(post => `- [${post.title}](${post.url}): ${post.description}`).join("\n")}
 
 ## Evidence and context
 - [Paired result data](${base}evidence/summary.json): One recorded synthetic run per control profile.
-- [Combined context download](${base}agent-context.txt): The four source documents above, with source URLs and SHA-256 fingerprints.
+- [Combined context download](${base}agent-context.txt): ${digestSources.length} allowlisted public documents, including blog articles, with source URLs and SHA-256 fingerprints.
+- [Blog RSS feed](${blogBase}feed.xml): Published engineering articles.
 - [Source manifest](${base}discovery.json): Document provenance and project destinations in JSON.
 - [Eval Lab agent guide](https://hk-775.github.io/practical-eval-lab/llms.txt): Six evaluation walkthroughs, contracts, and recorded results.
 
@@ -107,9 +114,9 @@ const digest = digestSources.map(source => {
 generated.set("agent-context.txt", `Harleen Kaur — public engineering context\n\nGenerated from ${digestSources.length} allowlisted public documents. Source fingerprints describe the documentation; reported experiments retain their own dates and source revisions. Follow the cited evidence when evaluating a claim.\n\n${digest}`);
 generated.set("discovery.json", JSON.stringify({
   schema_version: 1, name: "Harleen Kaur", github: "https://github.com/hk-775",
-  website: base, linkedin, projects, documents: records,
+  website: base, linkedin, projects, blog: blogBase, feed: `${blogBase}feed.xml`, documents: records,
 }, null, 2) + "\n");
-generated.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${base}</loc></url></urlset>\n`);
+generated.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[base, blogBase, ...posts.map(post => post.url)].map(url => `<url><loc>${url}</loc></url>`).join("")}</urlset>\n`);
 
 const structured = {
   "@context": "https://schema.org",
@@ -133,6 +140,7 @@ const head = [
   "<!-- discovery:start -->",
   `  <link rel="canonical" href="${base}">`,
   '  <link rel="alternate" type="text/markdown" href="index.md">',
+  '  <link rel="alternate" type="application/rss+xml" title="Engineering notes" href="blog/feed.xml">',
   '  <link rel="describedby" type="text/plain" href="llms.txt">',
   '  <link rel="sitemap" type="application/xml" href="sitemap.xml">',
   `  <script type="application/ld+json">${JSON.stringify(structured).replaceAll("<", "\\u003c")}</script>`,
@@ -148,7 +156,10 @@ for (const [name, text] of generated) {
   const existing = await readFile(path, "utf8").catch(() => null);
   if (existing === text) continue;
   if (check) stale.push(name);
-  else await writeFile(path, text);
+  else {
+    await mkdir(dirname(path), { recursive: true });
+    await writeFile(path, text);
+  }
 }
 if (stale.length) throw new Error(`Run npm run discovery; outdated files: ${stale.join(", ")}`);
 console.log(`${check ? "Verified" : "Generated"} ${generated.size} discovery artifacts from ${sources.size} allowlisted sources.`);

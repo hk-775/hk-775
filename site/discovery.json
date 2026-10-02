@@ -30,14 +30,16 @@
       "website": "https://hk-775.github.io/practical-eval-lab/"
     }
   ],
+  "blog": "https://hk-775.github.io/hk-775/blog/",
+  "feed": "https://hk-775.github.io/hk-775/blog/feed.xml",
   "documents": [
     {
       "source": "README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/README.md",
-      "source_sha256": "dc1f697d3bd4aae26b0979322ef89a8017ddf365379f9241229a4b111f9e2619",
+      "source_sha256": "320907dd38495e46c52a5a3f138f0c44d4c5fad6542c8b0ecb4928a3d1678c40",
       "markdown_url": "https://hk-775.github.io/hk-775/index.md",
-      "bytes": 4369,
-      "sha256": "a5b6ddd114a7d9e17edaec5d11c8226b3d72fb59c6fe776702cdc047f16f35e3"
+      "bytes": 4765,
+      "sha256": "f5da6af8c1423463b3f0aa58c025fb31dba89db3217b881ba06081bba7e0e002"
     },
     {
       "source": "CASE_STUDY.md",
@@ -66,10 +68,26 @@
     {
       "source": "AGENTS.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/AGENTS.md",
-      "source_sha256": "a3852fa852ad9c7073f4db9a0a7335666992bee65a756935115a1da03dc55570",
+      "source_sha256": "f2f7bb13b9f233417313606c350cc79e39f7278864e9835eb5c843e59392cfe5",
       "markdown_url": "https://hk-775.github.io/hk-775/coding-agents.md",
-      "bytes": 2557,
-      "sha256": "0dd067f46db025ed43267d4f130cef1170587800e84409b3b461576f3237c1a7"
+      "bytes": 3266,
+      "sha256": "5741e5a04178c596460047572330a4868f0c662eec1e27814d3954934f446095"
+    },
+    {
+      "source": "blog/README.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/README.md",
+      "source_sha256": "be61ffcbac16c8682bbacae18659e739640b1cb09f132c45d3b735dd3d515bbb",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/index.md",
+      "bytes": 2949,
+      "sha256": "c9d74f7b1770d92be5f90abded884a8b36742609a2cc3af2e73d6709938b6a54"
+    },
+    {
+      "source": "blog/2026-10-02-when-rules-beat-decision-models.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-10-02-when-rules-beat-decision-models.md",
+      "source_sha256": "c1633458d3c6dfef4bbf8a3c0bc82c49f22e4885fd6850b74f381ce85f2fd0bd",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.md",
+      "bytes": 13771,
+      "sha256": "ff048af22d700906601ef70e752d864ca45c0441c9c74a9691baeb91138180fd"
     }
   ]
 }

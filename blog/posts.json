@@ -1,0 +1,12 @@
+[
+  {
+    "slug": "when-rules-beat-decision-models",
+    "source": "blog/2026-10-02-when-rules-beat-decision-models.md",
+    "title": "When rules beat decision models",
+    "subtitle": "Lessons from an executed tool-selection evaluation",
+    "description": "I replaced a label-matching diagnostic with an executable support workflow. On 144 synthetic test episodes, the rules baseline outperformed the tested zero-shot model configurations.",
+    "date": "2026-10-02",
+    "topics": ["Evaluation", "Tool selection", "Agent engineering"],
+    "evidence": "Synthetic, executed workflow"
+  }
+]

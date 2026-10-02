@@ -36,6 +36,37 @@ The example is intentionally a local fixture. It has no production authenticatio
 
 GitHub Pages publishes only `site/`. CI has read-only source permissions; the Pages deployment job alone receives Pages and identity-token write permissions. No AWS infrastructure, package release, or paid resource is created.
 
+## Engineering blog
+
+- The blog is part of the existing public portfolio, at `/hk-775/blog/`.
+  Markdown in `blog/` is rendered only when listed in `blog/posts.json`.
+- The first article uses only the already-public support-workflow results from
+  `hk-775/practical-eval-lab` at
+  `86da0fcea679c1ca1dd4cf2b5d81537e08361b62`. It links the frozen protocol,
+  original design review, model revisions, input audit, and raw recordings.
+- All test tickets, requests, tool effects, and outcomes discussed are synthetic.
+  No private leadership notes, enterprise production claims, customer material,
+  internal endpoints, or proprietary architecture are included. Enterprise
+  examples in future writing should use vertical and workload descriptions
+  supported by shareable evidence.
+- The prose is original MIT-0 writing. Public source citations establish the
+  evidence; links do not relicense model weights or upstream libraries.
+  Marked is an MIT-licensed build dependency, pinned in `package-lock.json`.
+- Generated blog HTML, RSS, Markdown mirrors, source fingerprints, and sitemap
+  entries are committed and checked for freshness in the existing Pages CI.
+  RSS uses the publication date at noon UTC as a stable date-only convention.
+- Articles render without JavaScript. They load only local styles; external
+  resources are ordinary links. There are no forms, tracking scripts, remote
+  images, external fonts, credentials, or application APIs.
+- The social preview is original typography rendered locally by
+  `scripts/render-blog-share.mjs`. It contains no stock or customer assets.
+- AWS services reference architecture: not applicable. This is an extension
+  of the GitHub Pages static personal blog and has no AWS deployment target.
+- Browser checks cover profile-to-blog navigation, articles, section anchors,
+  same-origin assets, source mirrors, RSS XML and destinations, metadata,
+  sitemap entries, social image dimensions, print layout, mobile overflow,
+  and reading with JavaScript disabled.
+
 To preview locally:
 
 ```bash
