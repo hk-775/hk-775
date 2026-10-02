@@ -2,6 +2,8 @@
 
 I build open-source tools for enterprise AI: **select the model, govern the action, test the boundary, measure the change.**
 
+For AI engineering opportunities and collaboration, [contact me on LinkedIn](https://www.linkedin.com/in/harleenkaurprofile).
+
 My projects address complementary engineering questions. **AxonLLM selects models and provider routes. Ostiari governs agent actions. Escape Lab tests containment. Practical Eval Lab evaluates application behavior and regressions.**
 
 Together, they support a development loop: **route → govern → test containment → evaluate behavior → refine**. Evaluation findings guide the next routing, policy, or application change.

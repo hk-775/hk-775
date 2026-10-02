@@ -18,4 +18,5 @@ The featured customer-summary workflow connects AxonLLM, Ostiari, and Escape Lab
 
 ## Optional
 - [Coding-agent instructions](https://hk-775.github.io/hk-775/coding-agents.md): Setup, tests, repository map, and evidence-handling conventions.
+- [Professional contact](https://www.linkedin.com/in/harleenkaurprofile): Harleen Kaur's LinkedIn profile for AI engineering opportunities and collaboration.
 - [GitHub profile](https://github.com/hk-775): Repository ownership and public activity.

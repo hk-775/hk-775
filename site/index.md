@@ -2,6 +2,8 @@
 
 I build open-source tools for enterprise AI: **select the model, govern the action, test the boundary, measure the change.**
 
+For AI engineering opportunities and collaboration, [contact me on LinkedIn](https://www.linkedin.com/in/harleenkaurprofile).
+
 My projects address complementary engineering questions. **AxonLLM selects models and provider routes. Ostiari governs agent actions. Escape Lab tests containment. Practical Eval Lab evaluates application behavior and regressions.**
 
 Together, they support a development loop: **route → govern → test containment → evaluate behavior → refine**. Evaluation findings guide the next routing, policy, or application change.
@@ -47,4 +49,4 @@ Practical Eval Lab's bundled candidates use local rules. Its teaching datasets c
 ---
 Source: [README.md](https://github.com/hk-775/hk-775/blob/main/README.md)
 
-Source SHA-256: `f9817736dfc8a27be09ed291b74d06b777fbe731d8efa0ecf99a18b90cb36867`
+Source SHA-256: `dc1f697d3bd4aae26b0979322ef89a8017ddf365379f9241229a4b111f9e2619`

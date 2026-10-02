@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const base = "https://hk-775.github.io/hk-775/";
 const repo = "https://github.com/hk-775/hk-775";
+const linkedin = "https://www.linkedin.com/in/harleenkaurprofile";
 const check = process.argv.includes("--check");
 const sources = new Map([
   ["README.md", "index.md"],
@@ -95,6 +96,7 @@ The featured customer-summary workflow connects AxonLLM, Ostiari, and Escape Lab
 
 ## Optional
 - [Coding-agent instructions](${base}coding-agents.md): Setup, tests, repository map, and evidence-handling conventions.
+- [Professional contact](${linkedin}): Harleen Kaur's LinkedIn profile for AI engineering opportunities and collaboration.
 - [GitHub profile](https://github.com/hk-775): Repository ownership and public activity.
 `);
 
@@ -105,7 +107,7 @@ const digest = digestSources.map(source => {
 generated.set("agent-context.txt", `Harleen Kaur — public engineering context\n\nGenerated from ${digestSources.length} allowlisted public documents. Source fingerprints describe the documentation; reported experiments retain their own dates and source revisions. Follow the cited evidence when evaluating a claim.\n\n${digest}`);
 generated.set("discovery.json", JSON.stringify({
   schema_version: 1, name: "Harleen Kaur", github: "https://github.com/hk-775",
-  website: base, projects, documents: records,
+  website: base, linkedin, projects, documents: records,
 }, null, 2) + "\n");
 generated.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${base}</loc></url></urlset>\n`);
 
@@ -118,7 +120,7 @@ const structured = {
   mainEntity: {
     "@type": "Person", "@id": base + "#harleen-kaur",
     name: "Harleen Kaur", alternateName: "hk-775",
-    url: base, sameAs: ["https://github.com/hk-775"],
+    url: base, sameAs: ["https://github.com/hk-775", linkedin],
     description: "Builder of open-source tools for LLM model routing, agent governance, containment testing, and application evaluation.",
     knowsAbout: projects.map(project => project.focus),
   },
