@@ -15,9 +15,9 @@ Together, they support a development loop: **route → govern → test containme
 | Your next step | What you will find |
 | --- | --- |
 | **[Watch](https://hk-775.github.io/hk-775/#watch)** | A 60-second replay of a synthetic customer-summary workflow, plus a 2:13 AxonLLM operator tour. |
-| **[Understand](CASE_STUDY.md)** | The problem, architecture, measured outcome, and limitations. |
-| **[Inspect](examples/customer-summary/README.md)** | Exact source revisions, locked dependencies, runnable commands, and recorded evidence. |
-| **[Evaluate decisions](DECISIONS.md)** | Documented engineering scope and tradeoffs, with an explicit boundary around leadership and production claims. |
+| **[Understand](https://hk-775.github.io/hk-775/case-study.md)** | The problem, architecture, measured outcome, and limitations. |
+| **[Inspect](https://hk-775.github.io/hk-775/run-example.md)** | Exact source revisions, locked dependencies, runnable commands, and recorded evidence. |
+| **[Evaluate decisions](https://hk-775.github.io/hk-775/decisions.md)** | Documented engineering scope and tradeoffs, with an explicit boundary around leadership and production claims. |
 
 ### One body of work
 
@@ -43,3 +43,8 @@ The featured example uses real routing and control code with a **deterministic p
 AxonLLM's separate routing evaluation uses a generated, reviewed test corpus. Its benchmark scores are evaluation results; the operator tour's seeded dashboard values are demonstration data. Neither is presented as customer production evidence.
 
 Practical Eval Lab's bundled candidates use local rules. Its teaching datasets combine synthetic cases with an attributed human-preference sample. The recorded offline results demonstrate evaluation methods; they do not establish live-model quality, production adoption, or safety certification.
+
+---
+Source: [README.md](https://github.com/hk-775/hk-775/blob/main/README.md)
+
+Source SHA-256: `f9817736dfc8a27be09ed291b74d06b777fbe731d8efa0ecf99a18b90cb36867`

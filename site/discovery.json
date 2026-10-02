@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "name": "Harleen Kaur",
+  "github": "https://github.com/hk-775",
+  "website": "https://hk-775.github.io/hk-775/",
+  "projects": [
+    {
+      "name": "AxonLLM",
+      "focus": "LLM model routing and provider selection",
+      "repository": "https://github.com/hk-775/axonllm",
+      "website": "https://hk-775.github.io/axonllm/"
+    },
+    {
+      "name": "Ostiari",
+      "focus": "Agent action governance and policy enforcement",
+      "repository": "https://github.com/hk-775/ostiari",
+      "website": "https://hk-775.github.io/ostiari/"
+    },
+    {
+      "name": "Ostiari Escape Lab",
+      "focus": "Agent containment tests and inspectable evidence",
+      "repository": "https://github.com/hk-775/OstiariEscapeLab",
+      "website": "https://hk-775.github.io/OstiariEscapeLab/"
+    },
+    {
+      "name": "Practical Eval Lab",
+      "focus": "Application evaluation, transparent graders, and regression checks",
+      "repository": "https://github.com/hk-775/practical-eval-lab",
+      "website": "https://hk-775.github.io/practical-eval-lab/"
+    }
+  ],
+  "documents": [
+    {
+      "source": "README.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/README.md",
+      "source_sha256": "f9817736dfc8a27be09ed291b74d06b777fbe731d8efa0ecf99a18b90cb36867",
+      "markdown_url": "https://hk-775.github.io/hk-775/index.md",
+      "bytes": 4242,
+      "sha256": "3ed45008de28a08f9db910eb047dcf8858ca4b98551b5ab29fde4a3812c822a0"
+    },
+    {
+      "source": "CASE_STUDY.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/CASE_STUDY.md",
+      "source_sha256": "f6a5bde164c08c2becba05aae130fd65de5ab03263e8435b4a8c040f59214c0f",
+      "markdown_url": "https://hk-775.github.io/hk-775/case-study.md",
+      "bytes": 4939,
+      "sha256": "87c97a2ad40522d25b86ff410e9d499de2ce885ff49109bde11ebad8e6295814"
+    },
+    {
+      "source": "DECISIONS.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/DECISIONS.md",
+      "source_sha256": "8e67b41fcf58dac3d4d8adefaaa97f59c690c02e46fd0155883bdf54c4c81541",
+      "markdown_url": "https://hk-775.github.io/hk-775/decisions.md",
+      "bytes": 4432,
+      "sha256": "0aa1a340fd2236c0003fedd261f434477e500939a339f5ad4f11402d6963e352"
+    },
+    {
+      "source": "examples/customer-summary/README.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/examples/customer-summary/README.md",
+      "source_sha256": "909ed686429695503cca0282a7ae009ca3beb61660d88477a1f83b8e667f3a33",
+      "markdown_url": "https://hk-775.github.io/hk-775/run-example.md",
+      "bytes": 2565,
+      "sha256": "b698e8723b103d71fe8072836ec5e71116436136b96a78fa498620df98e454ee"
+    },
+    {
+      "source": "AGENTS.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/AGENTS.md",
+      "source_sha256": "a3852fa852ad9c7073f4db9a0a7335666992bee65a756935115a1da03dc55570",
+      "markdown_url": "https://hk-775.github.io/hk-775/coding-agents.md",
+      "bytes": 2557,
+      "sha256": "0dd067f46db025ed43267d4f130cef1170587800e84409b3b461576f3237c1a7"
+    }
+  ]
+}
