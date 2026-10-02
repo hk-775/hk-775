@@ -3,6 +3,7 @@
   "name": "Harleen Kaur",
   "github": "https://github.com/hk-775",
   "website": "https://hk-775.github.io/hk-775/",
+  "linkedin": "https://www.linkedin.com/in/harleenkaurprofile",
   "projects": [
     {
       "name": "AxonLLM",
@@ -33,10 +34,10 @@
     {
       "source": "README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/README.md",
-      "source_sha256": "f9817736dfc8a27be09ed291b74d06b777fbe731d8efa0ecf99a18b90cb36867",
+      "source_sha256": "dc1f697d3bd4aae26b0979322ef89a8017ddf365379f9241229a4b111f9e2619",
       "markdown_url": "https://hk-775.github.io/hk-775/index.md",
-      "bytes": 4242,
-      "sha256": "3ed45008de28a08f9db910eb047dcf8858ca4b98551b5ab29fde4a3812c822a0"
+      "bytes": 4369,
+      "sha256": "a5b6ddd114a7d9e17edaec5d11c8226b3d72fb59c6fe776702cdc047f16f35e3"
     },
     {
       "source": "CASE_STUDY.md",
