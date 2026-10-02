@@ -74,7 +74,7 @@ test("agent resources preserve source context and identify the canonical profile
   await page.goto("/hk-775/");
   const publicBase = "https://hk-775.github.io/hk-775/";
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", publicBase);
-  await expect(page.locator('link[rel="alternate"]')).toHaveAttribute("href", "index.md");
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute("href", "index.md");
   await expect(page.locator('link[rel="describedby"]')).toHaveAttribute("href", "llms.txt");
   const data = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent());
   expect(data["@type"]).toBe("ProfilePage");
@@ -82,7 +82,7 @@ test("agent resources preserve source context and identify the canonical profile
   expect(data.mainEntity.sameAs).toContain("https://github.com/hk-775");
   expect(data.about).toHaveLength(4);
   const manifest = await (await page.request.get("/hk-775/discovery.json")).json();
-  expect(manifest.documents).toHaveLength(5);
+  expect(manifest.documents).toHaveLength(7);
   for (const record of manifest.documents) {
     const response = await page.request.get(record.markdown_url.replace(publicBase, "/hk-775/"));
     expect(response.status()).toBe(200);

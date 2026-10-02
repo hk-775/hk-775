@@ -24,7 +24,7 @@ createServer(async (request, response) => {
       return;
     }
     path = path.slice("/hk-775/".length);
-    const file = resolve(root, path || "index.html");
+    const file = resolve(root, !path || path.endsWith("/") ? path + "index.html" : path);
     if (!file.startsWith(root + sep)) {
       response.writeHead(403).end();
       return;

@@ -14,6 +14,10 @@ customer-summary integration example. The public site is
 - `site/evidence/`: recorded synthetic results, event chains, and snapshots.
 - `scripts/build-discovery.mjs`: allowlisted Markdown mirrors, context download,
   agent index, sitemap, and structured metadata.
+- `blog/posts.json` and `blog/*.md`: explicit article allowlist and original
+  writing. `scripts/build-blog.mjs` renders the blog, feed, and article metadata
+  as part of `npm run discovery`. `site/blog/*.html` and `*.md` are generated.
+- `site/blog/blog.css`: blog presentation, sharing the profile's palette.
 
 ## Commands
 
@@ -55,5 +59,10 @@ uv run --locked escape-lab verify ../../site/evidence/C4
   indicators and check desktop/mobile layout after presentation changes.
 - Public discovery files use an explicit source allowlist. Exclude credentials,
   ignored run artifacts, local state, dependencies, and unrelated files.
+- Blog articles may draw on public repositories and verified shareable evidence.
+  Describe enterprise examples by vertical, workload, and engineering choices.
+  Exclude customer names, proprietary architecture details, internal identifiers,
+  private metrics, and private leadership drafts. Generalization must not add
+  unsupported claims. Keep article evidence pinned to its evaluated revision.
 - The Pages workflow verifies PRs and deploys `main`; it does not deploy AWS
   resources or execute models in the visitor's browser.

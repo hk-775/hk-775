@@ -10,6 +10,10 @@ Together, they support a development loop: **route → govern → test containme
 
 **[Start here → one workflow, its evidence, and the code](https://hk-775.github.io/hk-775/)**
 
+**[Engineering blog](https://hk-775.github.io/hk-775/blog/)** ·
+[Latest: When rules beat decision models](https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html) ·
+[RSS](https://hk-775.github.io/hk-775/blog/feed.xml)
+
 [Agent guide](https://hk-775.github.io/hk-775/llms.txt) ·
 [Download public context](https://hk-775.github.io/hk-775/agent-context.txt) ·
 [Read the repository with GitIngest](https://gitingest.com/hk-775/hk-775)
@@ -20,6 +24,7 @@ Together, they support a development loop: **route → govern → test containme
 | **[Understand](CASE_STUDY.md)** | The problem, architecture, measured outcome, and limitations. |
 | **[Inspect](examples/customer-summary/README.md)** | Exact source revisions, locked dependencies, runnable commands, and recorded evidence. |
 | **[Evaluate decisions](DECISIONS.md)** | Documented engineering scope and tradeoffs, with an explicit boundary around leadership and production claims. |
+| **[Read the blog](https://hk-775.github.io/hk-775/blog/)** | Engineering questions, implementation choices, measured results, and reproducible evidence. |
 
 ### One body of work
 

@@ -10,6 +10,10 @@ Together, they support a development loop: **route → govern → test containme
 
 **[Start here → one workflow, its evidence, and the code](https://hk-775.github.io/hk-775/)**
 
+**[Engineering blog](https://hk-775.github.io/hk-775/blog/)** ·
+[Latest: When rules beat decision models](https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html) ·
+[RSS](https://hk-775.github.io/hk-775/blog/feed.xml)
+
 [Agent guide](https://hk-775.github.io/hk-775/llms.txt) ·
 [Download public context](https://hk-775.github.io/hk-775/agent-context.txt) ·
 [Read the repository with GitIngest](https://gitingest.com/hk-775/hk-775)
@@ -20,6 +24,7 @@ Together, they support a development loop: **route → govern → test containme
 | **[Understand](https://hk-775.github.io/hk-775/case-study.md)** | The problem, architecture, measured outcome, and limitations. |
 | **[Inspect](https://hk-775.github.io/hk-775/run-example.md)** | Exact source revisions, locked dependencies, runnable commands, and recorded evidence. |
 | **[Evaluate decisions](https://hk-775.github.io/hk-775/decisions.md)** | Documented engineering scope and tradeoffs, with an explicit boundary around leadership and production claims. |
+| **[Read the blog](https://hk-775.github.io/hk-775/blog/)** | Engineering questions, implementation choices, measured results, and reproducible evidence. |
 
 ### One body of work
 
@@ -49,4 +54,4 @@ Practical Eval Lab's bundled candidates use local rules. Its teaching datasets c
 ---
 Source: [README.md](https://github.com/hk-775/hk-775/blob/main/README.md)
 
-Source SHA-256: `dc1f697d3bd4aae26b0979322ef89a8017ddf365379f9241229a4b111f9e2619`
+Source SHA-256: `320907dd38495e46c52a5a3f138f0c44d4c5fad6542c8b0ecb4928a3d1678c40`
