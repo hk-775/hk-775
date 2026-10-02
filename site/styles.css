@@ -27,3 +27,5 @@
 .good { color:var(--ink); }
 .good::before { content:""; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--success); margin-right:7px; }
 .skip { background:var(--cream); color:var(--ink); }
+footer { flex-wrap:wrap; }
+.agent-links { flex-basis:100%; display:flex; flex-wrap:wrap; justify-content:flex-start; gap:12px 24px; margin-top:6px; font-size:11px; }

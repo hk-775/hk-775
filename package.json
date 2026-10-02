@@ -6,6 +6,8 @@
     "node": ">=22"
   },
   "scripts": {
+    "discovery": "node scripts/build-discovery.mjs",
+    "discovery:check": "node scripts/build-discovery.mjs --check",
     "test": "playwright test",
     "preview": "node scripts/serve.mjs"
   },

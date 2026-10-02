@@ -4,10 +4,13 @@ import { dirname, extname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../site");
+const port = Number(process.env.PORTFOLIO_PREVIEW_PORT || 4177);
 const types = {
   ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript",
   ".json": "application/json", ".jsonl": "application/x-ndjson",
   ".png": "image/png", ".vtt": "text/vtt", ".zip": "application/zip",
+  ".md": "text/markdown; charset=utf-8", ".txt": "text/plain; charset=utf-8",
+  ".xml": "application/xml; charset=utf-8",
 };
 createServer(async (request, response) => {
   try {
@@ -32,4 +35,4 @@ createServer(async (request, response) => {
   } catch {
     response.writeHead(404).end("Not found");
   }
-}).listen(4177, "127.0.0.1", () => console.log("Preview: http://127.0.0.1:4177/hk-775/"));
+}).listen(port, "127.0.0.1", () => console.log(`Preview: http://127.0.0.1:${port}/hk-775/`));

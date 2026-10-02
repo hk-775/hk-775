@@ -1,0 +1,21 @@
+# Harleen Kaur — enterprise AI engineering
+
+> Open-source work in LLM model routing, agent governance, containment testing, and application evaluation. This portfolio links runnable examples and evidence with explicit limitations.
+
+The featured customer-summary workflow connects AxonLLM, Ostiari, and Escape Lab through a deterministic synthetic fixture. Practical Eval Lab supplies separate application-evaluation examples. The public material supports inspection of engineering work; it does not establish production adoption, business savings, executive scope, or general safety certification.
+
+## Start here
+- [Portfolio in Markdown](https://hk-775.github.io/hk-775/index.md): The four projects, their relationship, and runnable entry points.
+- [Engineering case study](https://hk-775.github.io/hk-775/case-study.md): The customer-summary boundary, paired results, exact source references, and limitations.
+- [Engineering decisions](https://hk-775.github.io/hk-775/decisions.md): Product boundaries, governance choices, and evidence practices.
+- [Run the integration](https://hk-775.github.io/hk-775/run-example.md): Locked installation and reproduction commands.
+
+## Evidence and context
+- [Paired result data](https://hk-775.github.io/hk-775/evidence/summary.json): One recorded synthetic run per control profile.
+- [Combined context download](https://hk-775.github.io/hk-775/agent-context.txt): The four source documents above, with source URLs and SHA-256 fingerprints.
+- [Source manifest](https://hk-775.github.io/hk-775/discovery.json): Document provenance and project destinations in JSON.
+- [Eval Lab agent guide](https://hk-775.github.io/practical-eval-lab/llms.txt): Six evaluation walkthroughs, contracts, and recorded results.
+
+## Optional
+- [Coding-agent instructions](https://hk-775.github.io/hk-775/coding-agents.md): Setup, tests, repository map, and evidence-handling conventions.
+- [GitHub profile](https://github.com/hk-775): Repository ownership and public activity.
