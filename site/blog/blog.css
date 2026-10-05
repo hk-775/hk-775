@@ -51,6 +51,10 @@
 .prose pre{background:var(--navy);color:var(--on-dark);border-radius:8px;padding:24px;margin-block:28px;font-size:12px;line-height:1.8}
 .prose pre code{font-size:inherit;padding:0;background:none}
 .article-table{max-width:100%;overflow-x:auto;margin:28px 0;font-size:13px}
+.article-figure{margin:32px 0 16px}
+.article-figure>a{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--cream)}
+.article-figure img{display:block;width:100%;height:auto}
+.article-figure figcaption{font-size:11px;color:var(--muted);margin-top:9px}
 .table-hint{display:none}
 .article-table:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .article-table table{font-size:12px;line-height:1.6}

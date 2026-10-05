@@ -65,6 +65,14 @@ verifier.</p>
 are synthetic. The tools operate in an in-process state machine. This article
 describes that implementation and identifies additional controls I would require
 in a production design.</p>
+<figure class="article-figure"><a href="diagrams/agent-action-evidence-workflow.svg" aria-label="Open full-size diagram"><img src="diagrams/agent-action-evidence-workflow.svg" alt="Workflow showing the C4 action path from agent request through policy, payload redaction, tool execution, and observed state, with references to retained event records, snapshots, run context, and evidence review." loading="lazy" decoding="async"></a><figcaption>Open the diagram to view it at full size.</figcaption></figure>
+<p>The diagram separates the recorded action path from the retained evidence and
+the checks a reviewer needs to perform. Dashed connectors show evidence
+references. The grouping describes the modeled tool surface; it does not imply
+an independently isolated collector.</p>
+<p><a href="diagrams/agent-action-evidence-workflow.svg">Full-size SVG</a> ·
+<a href="diagrams/agent-action-evidence-workflow.png">High-resolution PNG</a> ·
+<a href="diagrams/agent-action-evidence-workflow.drawio">Editable draw.io source</a></p>
 <h2 id="give-each-stage-a-separate-evidence-contract">Give each stage a separate evidence contract</h2>
 <p>I use the action lifecycle to decide what to record and which component should
 record it:</p>

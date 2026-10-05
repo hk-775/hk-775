@@ -50,5 +50,27 @@ The generator creates article pages, a blog index, a feed, Markdown mirrors,
 source fingerprints, and sitemap entries. Articles need no browser JavaScript,
 external fonts, analytics, model API, or backend.
 
+## Local diagrams
+
+List reviewed diagram files in the article's `assets` array using
+`blog/diagrams/name.svg`, `.png`, and `.drawio` paths. Markdown refers to them
+through `../site/blog/diagrams/name.svg`; the generator resolves those paths for
+the published article. Images require descriptive alt text. Remote images are
+not embedded.
+
+To rebuild the evidence-workflow artwork with Node and draw.io Desktop:
+
+```sh
+node scripts/build-evidence-diagram.mjs
+drawio --disable-update --export --format svg --embed-diagram \
+  --embed-svg-fonts false --theme light \
+  --output site/blog/diagrams/agent-action-evidence-workflow.svg \
+  site/blog/diagrams/agent-action-evidence-workflow.drawio
+drawio --disable-update --export --format png --scale 2 --theme light \
+  --output site/blog/diagrams/agent-action-evidence-workflow.png \
+  site/blog/diagrams/agent-action-evidence-workflow.drawio
+npm run discovery
+```
+
 Original writing and site code use the repository's MIT-0 license. Linked
 projects, model weights, and third-party dependencies retain their own licenses.

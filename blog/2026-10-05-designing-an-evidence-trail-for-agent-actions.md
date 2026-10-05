@@ -19,6 +19,17 @@ are synthetic. The tools operate in an in-process state machine. This article
 describes that implementation and identifies additional controls I would require
 in a production design.
 
+![Workflow showing the C4 action path from agent request through policy, payload redaction, tool execution, and observed state, with references to retained event records, snapshots, run context, and evidence review.](../site/blog/diagrams/agent-action-evidence-workflow.svg)
+
+The diagram separates the recorded action path from the retained evidence and
+the checks a reviewer needs to perform. Dashed connectors show evidence
+references. The grouping describes the modeled tool surface; it does not imply
+an independently isolated collector.
+
+[Full-size SVG](../site/blog/diagrams/agent-action-evidence-workflow.svg) ·
+[High-resolution PNG](../site/blog/diagrams/agent-action-evidence-workflow.png) ·
+[Editable draw.io source](../site/blog/diagrams/agent-action-evidence-workflow.drawio)
+
 ## Give each stage a separate evidence contract
 
 I use the action lifecycle to decide what to record and which component should

@@ -298,13 +298,35 @@ The generator creates article pages, a blog index, a feed, Markdown mirrors,
 source fingerprints, and sitemap entries. Articles need no browser JavaScript,
 external fonts, analytics, model API, or backend.
 
+## Local diagrams
+
+List reviewed diagram files in the article's `assets` array using
+`blog/diagrams/name.svg`, `.png`, and `.drawio` paths. Markdown refers to them
+through `../site/blog/diagrams/name.svg`; the generator resolves those paths for
+the published article. Images require descriptive alt text. Remote images are
+not embedded.
+
+To rebuild the evidence-workflow artwork with Node and draw.io Desktop:
+
+```sh
+node scripts/build-evidence-diagram.mjs
+drawio --disable-update --export --format svg --embed-diagram \
+  --embed-svg-fonts false --theme light \
+  --output site/blog/diagrams/agent-action-evidence-workflow.svg \
+  site/blog/diagrams/agent-action-evidence-workflow.drawio
+drawio --disable-update --export --format png --scale 2 --theme light \
+  --output site/blog/diagrams/agent-action-evidence-workflow.png \
+  site/blog/diagrams/agent-action-evidence-workflow.drawio
+npm run discovery
+```
+
 Original writing and site code use the repository's MIT-0 license. Linked
 projects, model weights, and third-party dependencies retain their own licenses.
 
 ---
 Source: [blog/README.md](https://github.com/hk-775/hk-775/blob/main/blog/README.md)
 
-Source SHA-256: `1a3cdc539df0ba09c3c473f23be2d14b8eda78723cc766e00af06a9fd426b5e1`
+Source SHA-256: `eb9cedbc5aef9444a9bf178fb012066a400f78dc5dd5427aec4346882972567b`
 
 ===== FILE: blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md =====
 Published Markdown: https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.md
@@ -329,6 +351,17 @@ verifier.
 are synthetic. The tools operate in an in-process state machine. This article
 describes that implementation and identifies additional controls I would require
 in a production design.
+
+![Workflow showing the C4 action path from agent request through policy, payload redaction, tool execution, and observed state, with references to retained event records, snapshots, run context, and evidence review.](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.svg)
+
+The diagram separates the recorded action path from the retained evidence and
+the checks a reviewer needs to perform. Dashed connectors show evidence
+references. The grouping describes the modeled tool surface; it does not imply
+an independently isolated collector.
+
+[Full-size SVG](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.svg) ·
+[High-resolution PNG](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.png) ·
+[Editable draw.io source](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.drawio)
 
 ## Give each stage a separate evidence contract
 
@@ -631,7 +664,7 @@ assumptions that could invalidate it.
 ---
 Source: [blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md)
 
-Source SHA-256: `2f6f00bf79cc989daa193f56b584bd2292546818ab02d3c07a9c4c810739964b`
+Source SHA-256: `bbabf3b094f2664ea23f1a5c3e5a522f6acb314d3bef3909ca8e766c095dc229`
 
 ===== FILE: blog/2026-10-02-when-rules-beat-decision-models.md =====
 Published Markdown: https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.md

@@ -26,6 +26,13 @@ test("profile leads to a readable article with local assets and working section 
   await expect(page).toHaveURL(new RegExp(article + "$"));
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(latest.title);
   await expect(page.locator(".prose")).toContainText("synthetic");
+  for (const image of await page.locator(".article-figure img").all()) {
+    await image.scrollIntoViewIfNeeded();
+    await expect(image).toBeVisible();
+    await expect.poll(() => image.evaluate(element => element.complete && element.naturalWidth > 0)).toBe(true);
+    expect(await image.getAttribute("src")).toMatch(/^diagrams\/[a-z0-9-]+\.(svg|png)$/);
+    expect(await image.getAttribute("alt")).not.toBe("");
+  }
   for (const href of await page.locator('.article-aside nav a').evaluateAll(links => links.map(link => link.getAttribute("href")))) {
     await expect(page.locator(href)).toHaveCount(1);
   }
@@ -80,6 +87,14 @@ for (const post of posts) test(`published resources resolve for ${post.slug}`, a
   const imageBytes = await image.body();
   expect(imageBytes.readUInt32BE(16)).toBe(1200);
   expect(imageBytes.readUInt32BE(20)).toBe(630);
+  for (const asset of post.assets ?? []) {
+    const response = await page.request.get(`/hk-775/${asset}`);
+    expect(response.status(), asset).toBe(200);
+    if (asset.endsWith(".svg")) {
+      expect(response.headers()["content-type"]).toContain("image/svg+xml");
+      expect(await response.text()).not.toMatch(/<script\b|<foreignObject\b|(?:xlink:)?href="https?:/i);
+    }
+  }
 });
 
 test("blog works without JavaScript and at mobile widths", async ({ browser }) => {
@@ -97,6 +112,10 @@ test("blog works without JavaScript and at mobile widths", async ({ browser }) =
     for (const post of posts) {
       await page.goto(`${origin}/hk-775/blog/${post.slug}.html`);
       await expect(page.locator(".prose")).toBeVisible();
+      for (const image of await page.locator(".article-figure img").all()) {
+        await image.scrollIntoViewIfNeeded();
+        await expect.poll(() => image.evaluate(element => element.complete && element.naturalWidth > 0)).toBe(true);
+      }
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
       await page.screenshot({ path: `/tmp/${post.slug}-mobile.png`, fullPage: true });
       await page.screenshot({ path: `/tmp/${post.slug}-mobile-top.png` });

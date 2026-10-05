@@ -19,6 +19,17 @@ are synthetic. The tools operate in an in-process state machine. This article
 describes that implementation and identifies additional controls I would require
 in a production design.
 
+![Workflow showing the C4 action path from agent request through policy, payload redaction, tool execution, and observed state, with references to retained event records, snapshots, run context, and evidence review.](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.svg)
+
+The diagram separates the recorded action path from the retained evidence and
+the checks a reviewer needs to perform. Dashed connectors show evidence
+references. The grouping describes the modeled tool surface; it does not imply
+an independently isolated collector.
+
+[Full-size SVG](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.svg) ·
+[High-resolution PNG](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.png) ·
+[Editable draw.io source](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.drawio)
+
 ## Give each stage a separate evidence contract
 
 I use the action lifecycle to decide what to record and which component should
@@ -320,4 +331,4 @@ assumptions that could invalidate it.
 ---
 Source: [blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md)
 
-Source SHA-256: `2f6f00bf79cc989daa193f56b584bd2292546818ab02d3c07a9c4c810739964b`
+Source SHA-256: `bbabf3b094f2664ea23f1a5c3e5a522f6acb314d3bef3909ca8e766c095dc229`

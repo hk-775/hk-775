@@ -7,7 +7,12 @@
     "description": "I trace one synthetic agent action from its request to its observed effect, then examine what event hashes, snapshots, and replay can establish—and what needs additional verification.",
     "date": "2026-10-05",
     "topics": ["Agent engineering", "Evidence", "Action governance"],
-    "evidence": "Public code and synthetic recordings"
+    "evidence": "Public code and synthetic recordings",
+    "assets": [
+      "blog/diagrams/agent-action-evidence-workflow.svg",
+      "blog/diagrams/agent-action-evidence-workflow.png",
+      "blog/diagrams/agent-action-evidence-workflow.drawio"
+    ]
   },
   {
     "slug": "when-rules-beat-decision-models",
