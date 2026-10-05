@@ -36,10 +36,10 @@
     {
       "source": "README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/README.md",
-      "source_sha256": "320907dd38495e46c52a5a3f138f0c44d4c5fad6542c8b0ecb4928a3d1678c40",
+      "source_sha256": "97762508e3970c5525e1148c28e46e4dac11624a4f35e9c541063eb1841a884a",
       "markdown_url": "https://hk-775.github.io/hk-775/index.md",
-      "bytes": 4765,
-      "sha256": "f5da6af8c1423463b3f0aa58c025fb31dba89db3217b881ba06081bba7e0e002"
+      "bytes": 4793,
+      "sha256": "158e299b5abe0fdb45252a5bff0943e41ac9143875c012a6549142808be26743"
     },
     {
       "source": "CASE_STUDY.md",
@@ -76,10 +76,18 @@
     {
       "source": "blog/README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/README.md",
-      "source_sha256": "be61ffcbac16c8682bbacae18659e739640b1cb09f132c45d3b735dd3d515bbb",
+      "source_sha256": "1a3cdc539df0ba09c3c473f23be2d14b8eda78723cc766e00af06a9fd426b5e1",
       "markdown_url": "https://hk-775.github.io/hk-775/blog/index.md",
-      "bytes": 2949,
-      "sha256": "c9d74f7b1770d92be5f90abded884a8b36742609a2cc3af2e73d6709938b6a54"
+      "bytes": 3378,
+      "sha256": "780d9acadf98222c97a6ef5418f80844831932162e592df8d11f0fc3b11bb2d7"
+    },
+    {
+      "source": "blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md",
+      "source_sha256": "2f6f00bf79cc989daa193f56b584bd2292546818ab02d3c07a9c4c810739964b",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.md",
+      "bytes": 16706,
+      "sha256": "4cc4b15a40cef3883009d720a47ef4b94dd7350395263e6851ab0e0be745122b"
     },
     {
       "source": "blog/2026-10-02-when-rules-beat-decision-models.md",

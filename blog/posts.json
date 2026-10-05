@@ -1,5 +1,15 @@
 [
   {
+    "slug": "designing-an-evidence-trail-for-agent-actions",
+    "source": "blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md",
+    "title": "Designing an Evidence Trail for Agent Actions",
+    "subtitle": "Connecting requests, policy decisions, execution, and observed state",
+    "description": "I trace one synthetic agent action from its request to its observed effect, then examine what event hashes, snapshots, and replay can establish—and what needs additional verification.",
+    "date": "2026-10-05",
+    "topics": ["Agent engineering", "Evidence", "Action governance"],
+    "evidence": "Public code and synthetic recordings"
+  },
+  {
     "slug": "when-rules-beat-decision-models",
     "source": "blog/2026-10-02-when-rules-beat-decision-models.md",
     "title": "When rules beat decision models",

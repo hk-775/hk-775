@@ -1,5 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+
+const articleCount = JSON.parse(readFileSync(new URL("../blog/posts.json", import.meta.url), "utf8")).length;
 
 test("workflow, evidence links, and browser network boundary", async ({ page, baseURL }) => {
   const errors = [];
@@ -82,7 +85,7 @@ test("agent resources preserve source context and identify the canonical profile
   expect(data.mainEntity.sameAs).toContain("https://github.com/hk-775");
   expect(data.about).toHaveLength(4);
   const manifest = await (await page.request.get("/hk-775/discovery.json")).json();
-  expect(manifest.documents).toHaveLength(7);
+  expect(manifest.documents).toHaveLength(6 + articleCount);
   for (const record of manifest.documents) {
     const response = await page.request.get(record.markdown_url.replace(publicBase, "/hk-775/"));
     expect(response.status()).toBe(200);

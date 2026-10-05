@@ -44,6 +44,14 @@ GitHub Pages publishes only `site/`. CI has read-only source permissions; the Pa
   `hk-775/practical-eval-lab` at
   `86da0fcea679c1ca1dd4cf2b5d81537e08361b62`. It links the frozen protocol,
   original design review, model revisions, input audit, and raw recordings.
+- The second article, “Designing an Evidence Trail for Agent Actions,” uses the
+  published S06 recordings in this portfolio at
+  `954cc781c21eb80d207f6f0f068dfc0fe6400bd8` and Escape Lab source at
+  `f8d0dc023700ff2c38e8e353b6f95b27aa6eadaa`. It distinguishes event-chain
+  verification from snapshot, lifecycle, authenticity, and outcome checks.
+  Its snapshot-check snippet is read-only. Production requirements are labeled
+  as design recommendations; no production deployment or new evaluation score
+  is claimed. Original evidence files remain unchanged.
 - All test tickets, requests, tool effects, and outcomes discussed are synthetic.
   No private leadership notes, enterprise production claims, customer material,
   internal endpoints, or proprietary architecture are included. Enterprise

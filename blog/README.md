@@ -10,6 +10,10 @@ connects a concrete question to implementation, evidence, and limitations.
 
 ## Articles
 
+- **5 October 2026 — [Designing an Evidence Trail for Agent Actions](https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.html).**
+  Correlating requests, policy decisions, execution, and observed state; verifying
+  snapshot references; and defining the limits of event hashes and replay.
+  [Markdown source](2026-10-05-designing-an-evidence-trail-for-agent-actions.md).
 - **2 October 2026 — [When rules beat decision models](https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html).**
   Lessons from an executed tool-selection evaluation: the test design, observed
   mistakes, fallback demand, and the decision the evidence supports.
