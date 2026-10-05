@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { Marked, Renderer } from "marked";
 
@@ -30,6 +30,11 @@ export async function loadPosts(root) {
     if (!Array.isArray(post.topics) || !post.topics.length
       || !post.topics.every(topic => typeof topic === "string" && topic.trim()))
       throw new Error("Article topics must be nonempty strings");
+    post.assets ??= [];
+    if (!Array.isArray(post.assets) || !post.assets.every(asset =>
+      /^blog\/diagrams\/[a-z0-9-]+\.(?:svg|png|drawio)$/.test(asset)))
+      throw new Error("Article assets must be explicitly listed local diagram files");
+    for (const asset of post.assets) await access(resolve(root, "site", asset));
     slugs.add(post.slug);
     sources.add(post.source);
     post.markdown = await readFile(resolve(root, post.source), "utf8");
@@ -89,6 +94,12 @@ function renderArticle(post) {
   const headings = [];
   const used = new Map();
   const renderer = new Renderer();
+  function assetHref(href) {
+    if (!href.startsWith("../site/")) return null;
+    const asset = href.slice("../site/".length);
+    if (!post.assets.includes(asset)) throw new Error(`Unlisted article asset: ${asset}`);
+    return asset.slice("blog/".length);
+  }
   renderer.heading = function ({ tokens, depth, text }) {
     if (depth < 2) throw new Error("Article headings start at level 2; metadata supplies the title");
     const plain = text.replace(/[`*_]/g, "");
@@ -100,13 +111,24 @@ function renderArticle(post) {
     return `<h${depth} id="${id}">${this.parser.parseInline(tokens)}</h${depth}>\n`;
   };
   renderer.html = ({ text }) => escape(text);
-  renderer.image = () => { throw new Error("Use reviewed local template assets; Markdown image embeds are disabled"); };
+  renderer.image = ({ href, text }) => {
+    const local = assetHref(href);
+    if (!local || !/\.(svg|png)$/.test(local))
+      throw new Error("Only allowlisted local diagram images can be embedded");
+    if (!text.trim()) throw new Error("Article diagrams require descriptive alt text");
+    return `<figure class="article-figure"><a href="${escape(local)}" aria-label="Open full-size diagram"><img src="${escape(local)}" alt="${escape(text)}" loading="lazy" decoding="async"></a><figcaption>Open the diagram to view it at full size.</figcaption></figure>`;
+  };
+  renderer.paragraph = function (token) {
+    if (token.tokens.length === 1 && token.tokens[0].type === "image")
+      return this.parser.parseInline(token.tokens) + "\n";
+    return Renderer.prototype.paragraph.call(this, token);
+  };
   renderer.link = function ({ href, title, tokens }) {
     if (/^[a-z][a-z0-9+.-]*:/i.test(href) && !href.startsWith("https:"))
       throw new Error(`Disallowed article link scheme: ${href}`);
     if (href.startsWith("//") || href.includes("\\") || /[\u0000-\u0020]/.test(href))
       throw new Error(`Invalid article link: ${href}`);
-    return `<a href="${escape(href)}"${title ? ` title="${escape(title)}"` : ""}>${this.parser.parseInline(tokens)}</a>`;
+    return `<a href="${escape(assetHref(href) ?? href)}"${title ? ` title="${escape(title)}"` : ""}>${this.parser.parseInline(tokens)}</a>`;
   };
   renderer.table = function (token) {
     return `<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0">${Renderer.prototype.table.call(this, token)}</div>`;

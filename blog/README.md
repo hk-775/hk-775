@@ -10,6 +10,10 @@ connects a concrete question to implementation, evidence, and limitations.
 
 ## Articles
 
+- **5 October 2026 — [Designing an Evidence Trail for Agent Actions](https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.html).**
+  Correlating requests, policy decisions, execution, and observed state; verifying
+  snapshot references; and defining the limits of event hashes and replay.
+  [Markdown source](2026-10-05-designing-an-evidence-trail-for-agent-actions.md).
 - **2 October 2026 — [When rules beat decision models](https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html).**
   Lessons from an executed tool-selection evaluation: the test design, observed
   mistakes, fallback demand, and the decision the evidence supports.
@@ -45,6 +49,28 @@ Synthetic evaluations stay distinct from production evidence.
 The generator creates article pages, a blog index, a feed, Markdown mirrors,
 source fingerprints, and sitemap entries. Articles need no browser JavaScript,
 external fonts, analytics, model API, or backend.
+
+## Local diagrams
+
+List reviewed diagram files in the article's `assets` array using
+`blog/diagrams/name.svg`, `.png`, and `.drawio` paths. Markdown refers to them
+through `../site/blog/diagrams/name.svg`; the generator resolves those paths for
+the published article. Images require descriptive alt text. Remote images are
+not embedded.
+
+To rebuild the evidence-workflow artwork with Node and draw.io Desktop:
+
+```sh
+node scripts/build-evidence-diagram.mjs
+drawio --disable-update --export --format svg --embed-diagram \
+  --embed-svg-fonts false --theme light \
+  --output site/blog/diagrams/agent-action-evidence-workflow.svg \
+  site/blog/diagrams/agent-action-evidence-workflow.drawio
+drawio --disable-update --export --format png --scale 2 --theme light \
+  --output site/blog/diagrams/agent-action-evidence-workflow.png \
+  site/blog/diagrams/agent-action-evidence-workflow.drawio
+npm run discovery
+```
 
 Original writing and site code use the repository's MIT-0 license. Linked
 projects, model weights, and third-party dependencies retain their own licenses.

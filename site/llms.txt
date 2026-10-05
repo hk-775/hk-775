@@ -10,11 +10,12 @@ The featured customer-summary workflow connects AxonLLM, Ostiari, and Escape Lab
 - [Engineering decisions](https://hk-775.github.io/hk-775/decisions.md): Product boundaries, governance choices, and evidence practices.
 - [Run the integration](https://hk-775.github.io/hk-775/run-example.md): Locked installation and reproduction commands.
 - [Engineering blog](https://hk-775.github.io/hk-775/blog/): Articles on AI workloads, design decisions, and evaluation evidence.
+- [Designing an Evidence Trail for Agent Actions](https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.html): I trace one synthetic agent action from its request to its observed effect, then examine what event hashes, snapshots, and replay can establish—and what needs additional verification.
 - [When rules beat decision models](https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html): I replaced a label-matching diagnostic with an executable support workflow. On 144 synthetic test episodes, the rules baseline outperformed the tested zero-shot model configurations.
 
 ## Evidence and context
 - [Paired result data](https://hk-775.github.io/hk-775/evidence/summary.json): One recorded synthetic run per control profile.
-- [Combined context download](https://hk-775.github.io/hk-775/agent-context.txt): 6 allowlisted public documents, including blog articles, with source URLs and SHA-256 fingerprints.
+- [Combined context download](https://hk-775.github.io/hk-775/agent-context.txt): 7 allowlisted public documents, including blog articles, with source URLs and SHA-256 fingerprints.
 - [Blog RSS feed](https://hk-775.github.io/hk-775/blog/feed.xml): Published engineering articles.
 - [Source manifest](https://hk-775.github.io/hk-775/discovery.json): Document provenance and project destinations in JSON.
 - [Eval Lab agent guide](https://hk-775.github.io/practical-eval-lab/llms.txt): Six evaluation walkthroughs, contracts, and recorded results.

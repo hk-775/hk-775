@@ -9,6 +9,7 @@ const types = {
   ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript",
   ".json": "application/json", ".jsonl": "application/x-ndjson",
   ".png": "image/png", ".vtt": "text/vtt", ".zip": "application/zip",
+  ".svg": "image/svg+xml", ".drawio": "application/xml",
   ".md": "text/markdown; charset=utf-8", ".txt": "text/plain; charset=utf-8",
   ".xml": "application/xml; charset=utf-8",
 };
