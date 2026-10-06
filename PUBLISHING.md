@@ -60,6 +60,11 @@ GitHub Pages publishes only `site/`. CI has read-only source permissions; the Pa
   The diagram has editable draw.io source, SVG, and a PNG rendered at 2× scale
   under `site/blog/diagrams/`. It explicitly labels the synthetic scope and
   distinguishes event-chain checks from additional evidence checks.
+- The web article embeds that reviewed SVG and progressively adds moving
+  evidence dashes, action markers, and stage highlights with a local script.
+  Motion is illustrative, with keyboard-operable pause/resume, reduced-motion
+  preferences, offscreen pausing, and optional full-screen viewing. Static
+  SVG/PNG/draw.io downloads and a readable no-JavaScript view remain available.
 - All test tickets, requests, tool effects, and outcomes discussed are synthetic.
   No private leadership notes, enterprise production claims, customer material,
   internal endpoints, or proprietary architecture are included. Enterprise
@@ -71,7 +76,8 @@ GitHub Pages publishes only `site/`. CI has read-only source permissions; the Pa
 - Generated blog HTML, RSS, Markdown mirrors, source fingerprints, and sitemap
   entries are committed and checked for freshness in the existing Pages CI.
   RSS uses the publication date at noon UTC as a stable date-only convention.
-- Articles render without JavaScript. They load only local styles; external
+- Articles render without JavaScript. Optional diagram motion uses a local
+  script; all styles and assets are local. External
   resources are ordinary links. There are no forms, tracking scripts, remote
   images, external fonts, credentials, or application APIs.
 - Article image embeds and diagram downloads use an explicit per-article asset
@@ -83,7 +89,8 @@ GitHub Pages publishes only `site/`. CI has read-only source permissions; the Pa
 - Browser checks cover profile-to-blog navigation, articles, section anchors,
   same-origin assets, source mirrors, RSS XML and destinations, metadata,
   sitemap entries, social image dimensions, print layout, mobile overflow,
-  and reading with JavaScript disabled.
+  reading with JavaScript disabled, actual connector motion over time,
+  keyboard pause/resume, full-screen viewing, and reduced-motion preferences.
 
 To preview locally:
 

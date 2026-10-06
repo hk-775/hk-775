@@ -24,10 +24,12 @@ in a production design.
 The diagram separates the recorded action path from the retained evidence and
 the checks a reviewer needs to perform. Dashed connectors show evidence
 references. The grouping describes the modeled tool surface; it does not imply
-an independently isolated collector.
+an independently isolated collector. The web diagram adds illustrative flow
+animation with pause and expand controls; the motion does not encode measured
+execution timings.
 
-[Full-size SVG](../site/blog/diagrams/agent-action-evidence-workflow.svg) ·
-[High-resolution PNG](../site/blog/diagrams/agent-action-evidence-workflow.png) ·
+[Static SVG](../site/blog/diagrams/agent-action-evidence-workflow.svg) ·
+[Static PNG (high resolution)](../site/blog/diagrams/agent-action-evidence-workflow.png) ·
 [Editable draw.io source](../site/blog/diagrams/agent-action-evidence-workflow.drawio)
 
 ## Give each stage a separate evidence contract

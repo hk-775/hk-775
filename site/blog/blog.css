@@ -55,6 +55,26 @@
 .article-figure>a{display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--cream)}
 .article-figure img{display:block;width:100%;height:auto}
 .article-figure figcaption{font-size:11px;color:var(--muted);margin-top:9px}
+.diagram-canvas{overflow:hidden;border:1px solid var(--line);border-radius:8px;background:var(--cream)}
+.diagram-canvas svg{display:block;width:100%;height:auto}
+.diagram-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.diagram-controls[hidden],.diagram-controls button[hidden]{display:none}
+.diagram-controls button{appearance:none;border:1px solid var(--navy);border-radius:5px;padding:9px 13px;background:var(--cream);color:var(--navy);font:inherit;font-size:12px;line-height:1.4;cursor:pointer}
+.diagram-controls button:hover:not(:disabled){background:var(--navy);color:var(--cream)}
+.diagram-controls button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.diagram-motion-note{font-size:11px;color:var(--muted)}
+.diagram-action-marker{fill:none;stroke:var(--navy);stroke-width:4;stroke-dasharray:12 28;pointer-events:none;animation:diagram-action-flow 1.8s linear infinite}
+.diagram-evidence-flow{stroke-dasharray:7 7;stroke-width:2.2;animation:diagram-evidence-flow 1.6s linear infinite}
+.diagram-stage-highlight{fill:none;stroke:var(--accent);stroke-width:4;opacity:0;pointer-events:none;animation:diagram-stage-focus 8.4s ease-in-out infinite}
+.animated-diagram .diagram-action-marker,.animated-diagram .diagram-evidence-flow,.animated-diagram .diagram-stage-highlight{animation-play-state:paused}
+.animated-diagram[data-motion="running"] .diagram-action-marker,.animated-diagram[data-motion="running"] .diagram-evidence-flow,.animated-diagram[data-motion="running"] .diagram-stage-highlight{animation-play-state:running}
+@keyframes diagram-action-flow{to{stroke-dashoffset:-40}}
+@keyframes diagram-evidence-flow{to{stroke-dashoffset:-28}}
+@keyframes diagram-stage-focus{0%,20%,100%{opacity:0}5%,13%{opacity:.85}}
+.animated-diagram:fullscreen{box-sizing:border-box;width:100%;height:100%;margin:0;padding:20px;display:flex;flex-direction:column;background:var(--cream);color:var(--navy)}
+.animated-diagram:fullscreen .diagram-canvas{flex:1;min-height:0}
+.animated-diagram:fullscreen svg{width:100%;height:100%}
+.animated-diagram:fullscreen .diagram-controls{flex-shrink:0}
 .table-hint{display:none}
 .article-table:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .article-table table{font-size:12px;line-height:1.6}
@@ -72,4 +92,5 @@
 @media(max-width:800px){.article-layout{display:block}.article-aside{position:static;border:1px solid var(--line);border-radius:8px;padding:22px;margin-bottom:36px}.article-aside nav{display:grid;grid-template-columns:1fr 1fr;gap:12px 22px}.article-aside .eyebrow{grid-column:1/-1}.article-tools{flex-direction:row;flex-wrap:wrap;gap:10px 22px}.blog-articles{grid-template-columns:minmax(0,1fr)}.editorial-note{grid-column:1;grid-row:auto}.article-subtitle{font-size:18px}}
 @media(max-width:580px){.blog-intro{padding-block:42px 46px}.blog-intro h1{font-size:40px}.blog-articles{padding-block:38px;gap:32px}.article-heading{padding-block:26px 34px}.article-heading h1{font-size:39px}.back-link{margin-bottom:28px}.article-layout{padding-block:30px 48px}.article-aside nav{display:flex;gap:11px}.article-aside{padding:19px}.prose{font-size:16px;line-height:1.8}.prose>p:first-child{font-size:19px}.prose h2{font-size:27px;margin-top:40px}.article-table table{min-width:560px}.prose pre{padding:18px;font-size:11px}.blog-projects h2{font-size:26px}.blog-page footer a{white-space:normal}.blog-feature{padding-block:36px}.blog-feature h2{font-size:28px}}
 @media print{.header,.article-aside,footer,.article-end,.back-link{display:none!important}.blog-banner{background:white;color:black}.article-heading .eyebrow,.article-heading .post-meta,.article-subtitle{color:black}.article-layout{display:block}.shell{max-width:none;padding-inline:0}.article-heading{padding-block:10px}.prose a{color:black}.article-table{overflow:visible}.article-table table{min-width:0}}
+@media print{.diagram-controls,.diagram-action-marker,.diagram-stage-highlight{display:none!important}.diagram-evidence-flow{animation:none!important}.article-figure{break-inside:avoid}}
 @media screen and (max-width:580px){.prose .table-hint{display:block;font-size:11px;color:var(--muted);margin:24px 0 8px}.table-hint+.article-table{margin-top:8px}}

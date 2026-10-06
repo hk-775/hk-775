@@ -12,7 +12,14 @@
       "blog/diagrams/agent-action-evidence-workflow.svg",
       "blog/diagrams/agent-action-evidence-workflow.png",
       "blog/diagrams/agent-action-evidence-workflow.drawio"
-    ]
+    ],
+    "animatedDiagrams": {
+      "blog/diagrams/agent-action-evidence-workflow.svg": {
+        "action": ["request-policy", "policy-change", "change-execution", "execution-state", "evidence-review"],
+        "evidence": ["request-evidence", "policy-evidence", "change-evidence", "execution-evidence", "observation-evidence", "evidence-ingress"],
+        "stage": ["request", "policy", "change", "execution", "observation"]
+      }
+    }
   },
   {
     "slug": "when-rules-beat-decision-models",

@@ -33,6 +33,12 @@ test("profile leads to a readable article with local assets and working section 
     expect(await image.getAttribute("src")).toMatch(/^diagrams\/[a-z0-9-]+\.(svg|png)$/);
     expect(await image.getAttribute("alt")).not.toBe("");
   }
+  for (const diagram of await page.locator(".diagram-canvas svg").all()) {
+    await diagram.scrollIntoViewIfNeeded();
+    await expect(diagram).toBeVisible();
+    await expect(diagram).toHaveAttribute("role", "img");
+    expect(await diagram.getAttribute("aria-label")).not.toBe("");
+  }
   for (const href of await page.locator('.article-aside nav a').evaluateAll(links => links.map(link => link.getAttribute("href")))) {
     await expect(page.locator(href)).toHaveCount(1);
   }
@@ -116,6 +122,11 @@ test("blog works without JavaScript and at mobile widths", async ({ browser }) =
         await image.scrollIntoViewIfNeeded();
         await expect.poll(() => image.evaluate(element => element.complete && element.naturalWidth > 0)).toBe(true);
       }
+      for (const diagram of await page.locator(".diagram-canvas svg").all()) {
+        await diagram.scrollIntoViewIfNeeded();
+        await expect(diagram).toBeVisible();
+        await expect(page.locator(".diagram-controls")).toBeHidden();
+      }
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
       await page.screenshot({ path: `/tmp/${post.slug}-mobile.png`, fullPage: true });
       await page.screenshot({ path: `/tmp/${post.slug}-mobile-top.png` });
@@ -129,4 +140,67 @@ test("blog works without JavaScript and at mobile widths", async ({ browser }) =
   } finally {
     await context.close();
   }
+});
+
+test("workflow visibly animates, pauses by keyboard, expands, and honors reduced motion", async ({ page }) => {
+  const motionPost = posts.find(post => Object.keys(post.animatedDiagrams ?? {}).length);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto(`/hk-775/blog/${motionPost.slug}.html`);
+  const figure = page.locator("[data-diagram-motion]");
+  await figure.scrollIntoViewIfNeeded();
+  await expect(figure).toHaveAttribute("data-motion", "running");
+  const evidence = figure.locator(".diagram-evidence-flow").first();
+  const action = figure.locator(".diagram-action-marker").first();
+  const offset = element => element.evaluate(node => getComputedStyle(node).strokeDashoffset);
+  await expect(figure.locator("svg")).toBeVisible();
+  for (const path of [evidence, action]) {
+    expect(await path.evaluate(node => node.getTotalLength())).toBeGreaterThan(0);
+    const before = await offset(path);
+    await expect.poll(() => offset(path)).not.toBe(before);
+  }
+
+  // The user must be able to freeze motion without a mouse.
+  await page.getByRole("button", { name: "Pause animation", exact: true }).focus();
+  await page.keyboard.press("Space");
+  await expect(figure).toHaveAttribute("data-motion", "paused");
+  await expect.poll(() => evidence.evaluate(node => {
+    const animations = node.getAnimations();
+    return animations.length > 0 && animations.every(animation => !animation.pending && animation.playState === "paused");
+  })).toBe(true);
+  const frozen = await offset(evidence);
+  await page.waitForTimeout(200); // Observe a stationary state across actual frames.
+  expect(await offset(evidence)).toBe(frozen);
+  await page.getByRole("button", { name: "Play animation", exact: true }).press("Enter");
+  await expect(figure).toHaveAttribute("data-motion", "running");
+  await expect.poll(() => offset(evidence)).not.toBe(frozen);
+  await figure.screenshot({ path: "/tmp/evidence-diagram-motion-desktop.png" });
+
+  await page.getByRole("button", { name: "Expand diagram", exact: true }).click();
+  await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement))).toBe(true);
+  await page.screenshot({ path: "/tmp/evidence-diagram-motion-expanded.png" });
+  await page.getByRole("button", { name: "Exit full screen", exact: true }).click();
+  await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement))).toBe(false);
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(figure).toHaveAttribute("data-motion", "paused");
+  await page.reload();
+  await figure.scrollIntoViewIfNeeded();
+  await expect(page.getByRole("button", { name: "Play animation", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Play animation", exact: true })).toBeDisabled();
+  await expect(figure).toHaveAttribute("data-motion", "paused");
+  await expect.poll(() => evidence.evaluate(node => {
+    const animations = node.getAnimations();
+    return animations.every(animation => !animation.pending && animation.playState === "paused");
+  })).toBe(true);
+  const reduced = await offset(evidence);
+  await page.waitForTimeout(200);
+  expect(await offset(evidence)).toBe(reduced);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await figure.scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await figure.screenshot({ path: "/tmp/evidence-diagram-motion-mobile.png" });
+  await page.emulateMedia({ media: "print" });
+  await expect(figure.locator(".diagram-controls")).toBeHidden();
+  expect(await evidence.evaluate(node => getComputedStyle(node).animationName)).toBe("none");
 });
