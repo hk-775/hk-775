@@ -35,6 +35,34 @@ export async function loadPosts(root) {
       /^blog\/diagrams\/[a-z0-9-]+\.(?:svg|png|drawio)$/.test(asset)))
       throw new Error("Article assets must be explicitly listed local diagram files");
     for (const asset of post.assets) await access(resolve(root, "site", asset));
+    post.animatedDiagrams ??= {};
+    if (typeof post.animatedDiagrams !== "object" || Array.isArray(post.animatedDiagrams))
+      throw new Error("Animated diagrams must map reviewed SVG assets to named flow cells");
+    post.inlineDiagrams = new Map();
+    for (const [asset, flows] of Object.entries(post.animatedDiagrams)) {
+      if (!post.assets.includes(asset) || !asset.endsWith(".svg"))
+        throw new Error(`Unlisted animated diagram: ${asset}`);
+      const source = await readFile(resolve(root, "site", asset), "utf8");
+      // Only reviewed native drawing markup is embedded. Draw.io's editable
+      // metadata stays in the downloadable source rather than the article DOM.
+      let svg = source.match(/<svg\b[\s\S]*<\/svg>/)?.[0].replace(/\scontent="[^"]*"/, "");
+      if (!svg || /<(?:script|foreignObject|image|use|iframe|object|style)\b|\son[a-z]+\s*=|\b(?:xlink:)?href\s*=|url\s*\(/i.test(svg))
+        throw new Error(`Animated diagrams require native SVG without active or external content: ${asset}`);
+      const cells = new Set();
+      for (const [kind, ids] of Object.entries(flows)) {
+        if (!["action", "evidence", "stage"].includes(kind) || !Array.isArray(ids) || !ids.length)
+          throw new Error(`Invalid flow definition: ${asset}`);
+        for (const id of ids) {
+          const marker = `data-cell-id="${id}"`;
+          if (!/^[a-z0-9-]+$/.test(id) || cells.has(id) || !svg.includes(marker))
+            throw new Error(`Missing or duplicate diagram cell: ${id}`);
+          cells.add(id);
+          svg = svg.replace(marker, `${marker} data-flow="${kind}"`);
+        }
+      }
+      if (!cells.size) throw new Error(`Animated diagram has no flow cells: ${asset}`);
+      post.inlineDiagrams.set(asset, svg);
+    }
     slugs.add(post.slug);
     sources.add(post.source);
     post.markdown = await readFile(resolve(root, post.source), "utf8");
@@ -58,7 +86,7 @@ function footer() {
   <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>`;
 }
 
-function page({ title, description, url, type = "website", metadata, body, markdown }) {
+function page({ title, description, url, type = "website", metadata, body, markdown, diagramMotion = false }) {
   return `<!doctype html>
 <html lang="en"><head>
   <meta charset="utf-8">
@@ -70,7 +98,8 @@ function page({ title, description, url, type = "website", metadata, body, markd
   <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
   <link rel="alternate" type="text/markdown" href="${escape(markdown)}">
   <link rel="stylesheet" href="../styles.css?v=blog-1">
-  <link rel="stylesheet" href="blog.css?v=1">
+  <link rel="stylesheet" href="blog.css?v=2">
+${diagramMotion ? '  <script src="diagram-motion.js?v=1" defer></script>' : ""}
   <meta property="og:title" content="${escape(title)}">
   <meta property="og:description" content="${escape(description)}">
   <meta property="og:type" content="${type}">
@@ -116,6 +145,15 @@ function renderArticle(post) {
     if (!local || !/\.(svg|png)$/.test(local))
       throw new Error("Only allowlisted local diagram images can be embedded");
     if (!text.trim()) throw new Error("Article diagrams require descriptive alt text");
+    const diagram = post.inlineDiagrams.get(href.slice("../site/".length));
+    if (diagram) {
+      const svg = diagram.replace("<svg ", `<svg role="img" aria-label="${escape(text)}" `);
+      return `<figure class="article-figure animated-diagram" data-diagram-motion data-motion="paused">
+  <div class="diagram-controls" hidden><button type="button" data-diagram-toggle>Play animation</button><button type="button" data-diagram-expand>Expand diagram</button><span class="diagram-motion-note"></span></div>
+  <div class="diagram-canvas">${svg}</div>
+  <figcaption>Illustrative flow animation; movement does not represent measured execution timing.</figcaption>
+</figure>`;
+    }
     return `<figure class="article-figure"><a href="${escape(local)}" aria-label="Open full-size diagram"><img src="${escape(local)}" alt="${escape(text)}" loading="lazy" decoding="async"></a><figcaption>Open the diagram to view it at full size.</figcaption></figure>`;
   };
   renderer.paragraph = function (token) {
@@ -138,6 +176,7 @@ function renderArticle(post) {
   return page({
     title: post.title, description: post.description, url: post.url, type: "article",
     markdown: `${post.slug}.md`,
+    diagramMotion: post.inlineDiagrams.size > 0,
     metadata: {
       "@context": "https://schema.org", "@type": "BlogPosting",
       headline: post.title, alternativeHeadline: post.subtitle, description: post.description,

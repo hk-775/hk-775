@@ -24,10 +24,12 @@ in a production design.
 The diagram separates the recorded action path from the retained evidence and
 the checks a reviewer needs to perform. Dashed connectors show evidence
 references. The grouping describes the modeled tool surface; it does not imply
-an independently isolated collector.
+an independently isolated collector. The web diagram adds illustrative flow
+animation with pause and expand controls; the motion does not encode measured
+execution timings.
 
-[Full-size SVG](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.svg) ·
-[High-resolution PNG](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.png) ·
+[Static SVG](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.svg) ·
+[Static PNG (high resolution)](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.png) ·
 [Editable draw.io source](https://hk-775.github.io/hk-775/blog/diagrams/agent-action-evidence-workflow.drawio)
 
 ## Give each stage a separate evidence contract
@@ -331,4 +333,4 @@ assumptions that could invalidate it.
 ---
 Source: [blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md)
 
-Source SHA-256: `bbabf3b094f2664ea23f1a5c3e5a522f6acb314d3bef3909ca8e766c095dc229`
+Source SHA-256: `d33391b7571c744f25e5aed7dd9cc16145eb08c02b81cd99e64ffa42b35660ac`

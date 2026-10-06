@@ -58,6 +58,16 @@ through `../site/blog/diagrams/name.svg`; the generator resolves those paths for
 the published article. Images require descriptive alt text. Remote images are
 not embedded.
 
+For web workflow animation, add an `animatedDiagrams` entry keyed by an
+allowlisted SVG asset, with `action`, `evidence`, and `stage` arrays naming
+its draw.io cell IDs. The generator checks those cells and embeds the reviewed
+native SVG. `site/blog/diagram-motion.js` adds moving connectors and stage
+highlights, with pause/resume, full-screen viewing, and reduced-motion support.
+Reading and static diagrams work without JavaScript. Downloads remain static;
+animation is illustrative and does not represent measured execution timings.
+Verify actual movement over time and its paused/reduced-motion behavior, not
+only a screenshot or an HTTP 200.
+
 To rebuild the evidence-workflow artwork with Node and draw.io Desktop:
 
 ```sh
