@@ -36,10 +36,10 @@
     {
       "source": "README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/README.md",
-      "source_sha256": "97762508e3970c5525e1148c28e46e4dac11624a4f35e9c541063eb1841a884a",
+      "source_sha256": "3a7972efa68afed808f50a9b0680eb31c66f503b7cbfe7f4ffa6835db2fe4496",
       "markdown_url": "https://hk-775.github.io/hk-775/index.md",
-      "bytes": 4793,
-      "sha256": "158e299b5abe0fdb45252a5bff0943e41ac9143875c012a6549142808be26743"
+      "bytes": 4801,
+      "sha256": "b67892c584d1831bfeaf880e10ed811878c4cef742a01fb033d29334f49fff48"
     },
     {
       "source": "CASE_STUDY.md",
@@ -76,10 +76,18 @@
     {
       "source": "blog/README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/README.md",
-      "source_sha256": "86a7d9eb7187446dc912ee145efaee42d4a2822a68079c0eb2a60d68240d136e",
+      "source_sha256": "c799de6b3626b4e2b6ce6055be0c259232ec33f9e75c9f44a451f8275faafca9",
       "markdown_url": "https://hk-775.github.io/hk-775/blog/index.md",
-      "bytes": 4937,
-      "sha256": "006f4b3d0437bf6485534e5b8eeadd8344290ed8360c4d7d06fd4a99ed7f7100"
+      "bytes": 5922,
+      "sha256": "75cf78090abe5bf15ab55b731b6a9f67a69de5f4894707b116eede09c96f3a72"
+    },
+    {
+      "source": "blog/2026-10-08-testing-subscription-abuse-at-the-action-boundary.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-10-08-testing-subscription-abuse-at-the-action-boundary.md",
+      "source_sha256": "594202bb74b34561c02365bdc1f1432c113d20796a14ffaa4b701e88febc049b",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.md",
+      "bytes": 10141,
+      "sha256": "70d2f8b3f216c3cc1beabc866bb671e1c6fe10b7115058a9a22f29a423536deb"
     },
     {
       "source": "blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md",

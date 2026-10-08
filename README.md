@@ -11,7 +11,7 @@ Together, they support a development loop: **route → govern → test containme
 **[Start here → one workflow, its evidence, and the code](https://hk-775.github.io/hk-775/)**
 
 **[Engineering blog](https://hk-775.github.io/hk-775/blog/)** ·
-[Latest: Designing an Evidence Trail for Agent Actions](https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.html) ·
+[Latest: Testing subscription abuse at the action boundary](https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html) ·
 [RSS](https://hk-775.github.io/hk-775/blog/feed.xml)
 
 [Agent guide](https://hk-775.github.io/hk-775/llms.txt) ·

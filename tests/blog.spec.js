@@ -142,8 +142,8 @@ test("blog works without JavaScript and at mobile widths", async ({ browser }) =
   }
 });
 
-test("workflow visibly animates, pauses by keyboard, expands, and honors reduced motion", async ({ page }) => {
-  const motionPost = posts.find(post => Object.keys(post.animatedDiagrams ?? {}).length);
+for (const motionPost of posts.filter(post => Object.keys(post.animatedDiagrams ?? {}).length))
+test(`${motionPost.slug}: moving dashes, keyboard pause, expansion, and reduced motion`, async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto(`/hk-775/blog/${motionPost.slug}.html`);
   const figure = page.locator("[data-diagram-motion]");
@@ -173,11 +173,11 @@ test("workflow visibly animates, pauses by keyboard, expands, and honors reduced
   await page.getByRole("button", { name: "Play animation", exact: true }).press("Enter");
   await expect(figure).toHaveAttribute("data-motion", "running");
   await expect.poll(() => offset(evidence)).not.toBe(frozen);
-  await figure.screenshot({ path: "/tmp/evidence-diagram-motion-desktop.png" });
+  await figure.screenshot({ path: `/tmp/${motionPost.slug}-motion-desktop.png` });
 
   await page.getByRole("button", { name: "Expand diagram", exact: true }).click();
   await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement))).toBe(true);
-  await page.screenshot({ path: "/tmp/evidence-diagram-motion-expanded.png" });
+  await page.screenshot({ path: `/tmp/${motionPost.slug}-motion-expanded.png` });
   await page.getByRole("button", { name: "Exit full screen", exact: true }).click();
   await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement))).toBe(false);
 
@@ -199,7 +199,7 @@ test("workflow visibly animates, pauses by keyboard, expands, and honors reduced
   await page.setViewportSize({ width: 390, height: 844 });
   await figure.scrollIntoViewIfNeeded();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await figure.screenshot({ path: "/tmp/evidence-diagram-motion-mobile.png" });
+  await figure.screenshot({ path: `/tmp/${motionPost.slug}-motion-mobile.png` });
   await page.emulateMedia({ media: "print" });
   await expect(figure.locator(".diagram-controls")).toBeHidden();
   expect(await evidence.evaluate(node => getComputedStyle(node).animationName)).toBe("none");

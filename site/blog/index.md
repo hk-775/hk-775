@@ -10,6 +10,10 @@ connects a concrete question to implementation, evidence, and limitations.
 
 ## Articles
 
+- **8 October 2026 — [Testing subscription abuse at the action boundary](https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html).**
+  Cancellation and refund controls, confirmed consent, paid access, and the
+  difference between safe handling and completed business changes.
+  [Markdown source](https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.md).
 - **5 October 2026 — [Designing an Evidence Trail for Agent Actions](https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.html).**
   Correlating requests, policy decisions, execution, and observed state; verifying
   snapshot references; and defining the limits of event hashes and replay.
@@ -85,7 +89,17 @@ npm run discovery
 Original writing and site code use the repository's MIT-0 license. Linked
 projects, model weights, and third-party dependencies retain their own licenses.
 
+The subscription diagram uses the same native animation controls and palette.
+Run `node scripts/build-subscription-diagram.mjs`, then use the export commands
+above with `subscription-action-boundary` as the asset basename. Its static
+companions are also distributed with the Practical Eval Lab benchmark.
+
+AWS services reference architecture for these static blog articles: not
+applicable. The subscription article describes a local, provider-neutral
+in-memory evaluation and GitHub Pages publication. It defines no AWS deployment
+target or cloud resources.
+
 ---
 Source: [blog/README.md](https://github.com/hk-775/hk-775/blob/main/blog/README.md)
 
-Source SHA-256: `86a7d9eb7187446dc912ee145efaee42d4a2822a68079c0eb2a60d68240d136e`
+Source SHA-256: `c799de6b3626b4e2b6ce6055be0c259232ec33f9e75c9f44a451f8275faafca9`

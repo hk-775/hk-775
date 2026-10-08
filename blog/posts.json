@@ -1,5 +1,27 @@
 [
   {
+    "slug": "testing-subscription-abuse-at-the-action-boundary",
+    "source": "blog/2026-10-08-testing-subscription-abuse-at-the-action-boundary.md",
+    "title": "Testing subscription abuse at the action boundary",
+    "subtitle": "Evaluate cancellations, refunds, and paid access through their actual effects",
+    "description": "A synthetic subscription workflow compares permissions, business invariants, and deny-all controls, with recorded effects, explicit completion limits, and replayable evidence.",
+    "date": "2026-10-08",
+    "topics": ["Agent engineering", "Subscription workflows", "Evaluation"],
+    "evidence": "Synthetic billing and access simulation",
+    "assets": [
+      "blog/diagrams/subscription-action-boundary.drawio",
+      "blog/diagrams/subscription-action-boundary.svg",
+      "blog/diagrams/subscription-action-boundary.png"
+    ],
+    "animatedDiagrams": {
+      "blog/diagrams/subscription-action-boundary.svg": {
+        "action": ["candidate-guard", "guard-provider", "tool-feedback", "guard-feedback"],
+        "evidence": ["consent-guard", "provider-effects", "effects-grader", "reference-grader"],
+        "stage": ["candidate", "guard", "provider", "effects", "grader"]
+      }
+    }
+  },
+  {
     "slug": "designing-an-evidence-trail-for-agent-actions",
     "source": "blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md",
     "title": "Designing an Evidence Trail for Agent Actions",

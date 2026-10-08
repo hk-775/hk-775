@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testing subscription abuse at the action boundary · Harleen Kaur</title>
+  <meta name="description" content="A synthetic subscription workflow compares permissions, business invariants, and deny-all controls, with recorded effects, explicit completion limits, and replayable evidence.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="testing-subscription-abuse-at-the-action-boundary.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=2">
+  <script src="diagram-motion.js?v=1" defer></script>
+  <meta property="og:title" content="Testing subscription abuse at the action boundary">
+  <meta property="og:description" content="A synthetic subscription workflow compares permissions, business invariants, and deny-all controls, with recorded effects, explicit completion limits, and replayable evidence.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/share.png">
+  <meta property="og:image:alt" content="Harleen Kaur — Engineering notes. Decisions, experiments, and evidence for AI workloads.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-10-08">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Testing subscription abuse at the action boundary","alternativeHeadline":"Evaluate cancellations, refunds, and paid access through their actual effects","description":"A synthetic subscription workflow compares permissions, business invariants, and deny-all controls, with recorded effects, explicit completion limits, and replayable evidence.","datePublished":"2026-10-08","dateModified":"2026-10-08","url":"https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/share.png","keywords":["Agent engineering","Subscription workflows","Evaluation"],"isPartOf":{"@type":"Blog","name":"Engineering notes","url":"https://hk-775.github.io/hk-775/blog/"}}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Agent engineering · Subscription workflows · Evaluation</p>
+    <h1>Testing subscription abuse at the action boundary</h1>
+    <p class="article-subtitle">Evaluate cancellations, refunds, and paid access through their actual effects</p>
+    <p class="post-meta"><time datetime="2026-10-08">8 October 2026</time><span>7 min read</span><span>Synthetic billing and access simulation</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#follow-the-action-through-its-effects">Follow the action through its effects</a>
+<a href="#change-the-controls-keep-the-collaborator-fixed">Change the controls, keep the collaborator fixed</a>
+<a href="#inspect-the-failures-that-permissions-allow">Inspect the failures that permissions allow</a>
+<a href="#measure-completion-alongside-harm">Measure completion alongside harm</a>
+<a href="#make-the-evidence-reproducible">Make the evidence reproducible</a>
+<a href="#the-deployment-work-this-leaves-open">The deployment work this leaves open</a></nav>
+      <div class="article-tools"><a href="testing-subscription-abuse-at-the-action-boundary.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-10-08-testing-subscription-abuse-at-the-action-boundary.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="Testing subscription abuse at the action boundary"><p>A customer asks to stop a subscription at the end of its prepaid term. The
+workflow schedules the cancellation correctly, then removes access immediately.
+Both operations can be well formed and permitted. The customer still loses
+something they paid for.</p>
+<p>I built a small evaluation around that failure: <strong>can an agent workflow carry
+out a confirmed subscription change while keeping billing and access consistent
+with the request?</strong> The cases include duplicate refunds, incorrect subscription
+targets, consent replay, uncertain tool outcomes, and changes that happen after
+the workflow reads state.</p>
+<p>This is a synthetic subscription-abuse and state-preservation evaluation in
+Practical Eval Lab. It tests actions that could enable abuse or cause accidental
+harm. It does not classify fraudulent intent or measure fraud in a real business.
+The recorded candidates are deterministic scripts; no LLM, payment provider,
+customer data, or human reviewer ran in this comparison.</p>
+<p><a href="https://hk-775.github.io/practical-eval-lab/reports/subscription/comparison.html">Open the animated report and recorded traces</a>
+or <a href="https://hk-775.github.io/practical-eval-lab/subscription-workflow-protocol.html">read the protocol</a>.</p>
+<h2 id="follow-the-action-through-its-effects">Follow the action through its effects</h2>
+<p>The collaborator reads the requested subscription, proposes a billing
+cancellation, optionally proposes a refund, and updates access expiry. After
+each step it receives a tool response. It can correct certain denied proposals,
+look up an uncertain operation before retrying, or stop for clarification or
+handoff.</p>
+<figure class="article-figure animated-diagram" data-diagram-motion data-motion="paused">
+  <div class="diagram-controls" hidden><button type="button" data-diagram-toggle>Play animation</button><button type="button" data-diagram-expand>Expand diagram</button><span class="diagram-motion-note"></span></div>
+  <div class="diagram-canvas"><svg role="img" aria-label="Subscription workflow: a scripted collaborator proposes an action; a mutation guard checks current trusted consent and state before the serial billing or access provider commits it; feedback returns to the collaborator; an independent grader checks recorded effects and final state against private references." xmlns="http://www.w3.org/2000/svg" style="background: #F8F5F0; background-color: #F8F5F0; color-scheme: light;" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1541px" height="1101px" viewBox="0 0 1541 1101"><defs/><rect fill="#F8F5F0" width="100%" height="100%" x="0" y="0" style="fill: rgb(248, 245, 240);"/><g><g data-cell-id="0"><g data-cell-id="1"><g data-cell-id="canvas"><g><rect x="0" y="0" width="1540" height="1100" fill="#f8f5f0" stroke="none" pointer-events="all" style="fill: rgb(248, 245, 240);"/></g></g><g data-cell-id="title"><g><rect x="48" y="30" width="1444" height="64" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="start" font-size="39px" style="fill: rgb(13, 27, 42);"><text x="48" y="80.5">Protect the subscription change at every mutation</text></g></g></g><g data-cell-id="subtitle"><g><rect x="48" y="105" width="1444" height="35" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="24px" style="fill: rgb(82, 98, 112);"><text x="48" y="133.5">Synthetic reference workflow · scripted collaborator · serial in-memory provider</text></g></g></g><g data-cell-id="action-label"><g><rect x="48" y="191" width="1444" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="start" font-size="18px" style="fill: rgb(13, 27, 42);"><text x="48" y="213">REQUEST, CHECK, EXECUTE, OBSERVE</text></g></g></g><g data-cell-id="candidate" data-flow="stage"><g><rect x="48" y="264" width="300" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="candidate-title"><g><rect x="64" y="284" width="268" height="35" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="198" y="313">Propose an action</text></g></g></g><g data-cell-id="candidate-copy"><g><rect x="64" y="324" width="268" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="198" y="354">Read requested state</text><text x="198" y="379">Use tool feedback</text></g></g></g><g data-cell-id="guard" data-flow="stage"><g><rect x="468" y="264" width="300" height="138" rx="11.04" ry="11.04" fill="#0d1b2a" stroke="#0d1b2a" stroke-width="2" pointer-events="all" style="fill: rgb(13, 27, 42); stroke: rgb(13, 27, 42);"/></g></g><g data-cell-id="guard-title"><g><rect x="484" y="284" width="268" height="35" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#F8F5F0" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(248, 245, 240);"><text x="618" y="313">Mutation guard</text></g></g></g><g data-cell-id="guard-copy"><g><rect x="484" y="324" width="268" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#F8F5F0" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(248, 245, 240);"><text x="618" y="354">Current consent + scope</text><text x="618" y="379">Dates, budget + version</text></g></g></g><g data-cell-id="provider" data-flow="stage"><g><rect x="900" y="244" width="592" height="178" rx="14.24" ry="14.24" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="provider-title"><g><rect x="916" y="264" width="560" height="35" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="1196" y="293">Billing and access provider</text></g></g></g><g data-cell-id="provider-copy"><g><rect x="916" y="304" width="560" height="106" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="1196" y="341.5">Cancel → optional refund → set access expiry</text><text x="1196" y="366.5">Every new mutation passes the guard</text><text x="1196" y="391.5">Exact duplicate requests return a receipt</text></g></g></g><g data-cell-id="candidate-guard" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 348 333 L 453.65 333" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 464.65 333 L 453.65 338.5 L 453.65 327.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="guard-provider" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 768 333 L 885.65 333" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 896.65 333 L 885.65 338.5 L 885.65 327.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="proposal-label"><g><rect x="352" y="287" width="112" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="18px" style="fill: rgb(82, 98, 112);"><text x="408" y="309">Propose</text></g></g></g><g data-cell-id="allow-label"><g><rect x="775" y="287" width="118" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="18px" style="fill: rgb(82, 98, 112);"><text x="834" y="309">Allow</text></g></g></g><g data-cell-id="trusted"><g><rect x="468" y="507" width="300" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="trusted-title"><g><rect x="484" y="527" width="268" height="35" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="618" y="556">Trusted consent</text></g></g></g><g data-cell-id="trusted-copy"><g><rect x="484" y="567" width="268" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="618" y="597">Confirmed intent</text><text x="618" y="622">Stored outside candidate</text></g></g></g><g data-cell-id="consent-guard" data-flow="evidence"><g><path d="M 618 507 L 618 414.24" fill="none" stroke="#526270" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="10 10" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 618 404.24 L 623 414.24 L 613 414.24 Z" fill="#526270" stroke="#526270" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="consent-label"><g><rect x="644" y="441" width="246" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="18px" style="fill: rgb(82, 98, 112);"><text x="644" y="463">Check at the write</text></g></g></g><g data-cell-id="tool-feedback" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 1210 422 L 1210 474 L 836 474 L 836 691 L 194 691 L 194 416.35" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 194 405.35 L 199.5 416.35 L 188.5 416.35 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="guard-feedback" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 510 402 L 510 462 L 300 462 L 300 416.35" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 300 405.35 L 305.5 416.35 L 294.5 416.35 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="denial-label"><g><rect x="308" y="431" width="200" height="25" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="17px" style="fill: rgb(82, 98, 112);"><text x="308" y="451">Denied / correct or stop</text></g></g></g><g data-cell-id="feedback-label"><g><rect x="48" y="721" width="985" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="48" y="744.5">Tool feedback: read again · look up an uncertain operation · correct · hand off</text></g></g></g><g data-cell-id="effects" data-flow="stage"><g><rect x="1008" y="552" width="484" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="effects-title"><g><rect x="1024" y="572" width="452" height="35" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="1250" y="601">Observed effects</text></g></g></g><g data-cell-id="effects-copy"><g><rect x="1024" y="612" width="452" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="1250" y="642">Committed changes + final state</text><text x="1250" y="667">Retain harmful intermediate effects</text></g></g></g><g data-cell-id="provider-effects" data-flow="evidence"><g><path d="M 1398 422 L 1398 539.76" fill="none" stroke="#526270" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="10 10" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 1398 549.76 L 1393 539.76 L 1403 539.76 Z" fill="#526270" stroke="#526270" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="reference"><g><rect x="48" y="845" width="330" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="reference-title"><g><rect x="64" y="865" width="298" height="35" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="213" y="894">Private task reference</text></g></g></g><g data-cell-id="reference-copy"><g><rect x="64" y="905" width="298" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="213" y="935">Expected effects + terminal state</text><text x="213" y="960">Hidden from candidate and guard</text></g></g></g><g data-cell-id="grader" data-flow="stage"><g><rect x="550" y="845" width="942" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="grader-title"><g><rect x="566" y="865" width="910" height="35" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="1021" y="894">Independent outcome grading</text></g></g></g><g data-cell-id="grader-copy"><g><rect x="566" y="905" width="910" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="1021" y="935">Correct handling · legitimate completion · unsafe effects · duplicate refunds</text><text x="1021" y="960">Replay recorded commands; check effects, state and event links</text></g></g></g><g data-cell-id="effects-grader" data-flow="evidence"><g><path d="M 1250 690 L 1250 832.76" fill="none" stroke="#526270" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="10 10" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 1250 842.76 L 1245 832.76 L 1255 832.76 Z" fill="#526270" stroke="#526270" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="reference-grader" data-flow="evidence"><g><path d="M 378 914 L 537.76 914" fill="none" stroke="#526270" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="10 10" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 547.76 914 L 537.76 919 L 537.76 909 Z" fill="#526270" stroke="#526270" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="legend"><g><rect x="48" y="1021" width="1444" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" text-anchor="start" font-size="20px" style="fill: rgb(13, 27, 42);"><text x="48" y="1044">Cyan: requests and tool feedback     ·     Dashed references: consent and evaluation evidence</text></g></g></g><g data-cell-id="scope"><g><rect x="48" y="1060" width="1444" height="26" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="19px" style="fill: rgb(82, 98, 112);"><text x="48" y="1081.5">Motion illustrates direction only. No live model, payment service, human approval, or AWS deployment is depicted.</text></g></g></g></g></g></g></svg></div>
+  <figcaption>Illustrative flow animation; movement does not represent measured execution timing.</figcaption>
+</figure>
+<p>Moving dashes show the direction of requests, feedback, and evidence. The
+animation is illustrative; it does not represent execution timing or a live
+agent. Use the pause and expand controls to inspect the boundaries.</p>
+<p><a href="diagrams/subscription-action-boundary.svg">Static SVG</a> ·
+<a href="diagrams/subscription-action-boundary.png">Static PNG</a> ·
+<a href="diagrams/subscription-action-boundary.drawio">Editable draw.io source</a></p>
+<p>The guard reads trusted consent outside the candidate&#39;s input. It binds a
+mutation to the actor, tenant, subscription, operation, effective day, refund
+budget, and consent lifetime. It also checks the current record version at the
+mutation boundary. A collaborator&#39;s proposed parameters are requests to act;
+they do not create authority.</p>
+<p>The evaluator has a separate job. It compares every committed effect and the
+final state with a private task reference. It does not call the guard to decide
+whether the guard was right. Repairing the final state does not erase an earlier
+harmful effect.</p>
+<h2 id="change-the-controls-keep-the-collaborator-fixed">Change the controls, keep the collaborator fixed</h2>
+<p>I ran the same scripted pipeline under four profiles:</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Profile</th>
+<th>Controls at the mutation boundary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unrestricted</td>
+<td>Provider schema checks and idempotency</td>
+</tr>
+<tr>
+<td>Permissions</td>
+<td>Also check actor capability and tenant ownership</td>
+</tr>
+<tr>
+<td>Business invariants</td>
+<td>Also check current consent, exact scope, dates, versions, refund budget, and billing-before-access ordering</td>
+</tr>
+<tr>
+<td>Deny all</td>
+<td>Reject every mutation; allow reads, clarification, and handoff</td>
+</tr>
+</tbody></table>
+</div><p>Here, a <strong>business invariant</strong> is a condition that must remain true as the
+workflow changes state. For example, access must not end before the confirmed
+cancellation date, and total refunds must not exceed the confirmed budget.</p>
+<p>All four profiles have provider idempotency. This makes the duplicate-refund
+case useful: a collaborator submits another refund with a <strong>new</strong> idempotency
+key. The reference provider treats it as a new operation. The invariant guard
+checks the cumulative refund against the existing consent and rejects the
+additional payment.</p>
+<p>The collaborator can then discard that duplicate proposal and continue the
+required work. Its correction behavior is scripted. The result does not show
+that an arbitrary model will respond correctly to the same denial.</p>
+<h2 id="inspect-the-failures-that-permissions-allow">Inspect the failures that permissions allow</h2>
+<p>In the prepaid-access example, the test customer is entitled to service through
+day 60. The requested cancellation is also day 60. A faulty collaborator
+proposal sets access expiry to day 0.</p>
+<p>Under the permissions profile, the actor and tenant checks pass. The expiry
+changes, and the workflow claims completion. The grader records an unsafe effect
+and a false completion.</p>
+<p>Under the invariant profile, the guard returns <code>effective_date_mismatch</code>.
+The collaborator refreshes state and proposes the confirmed date. The workflow
+finishes with the expected billing and access state.</p>
+<p>Other cases probe different boundaries:</p>
+<ul>
+<li><strong>Wrong subscription:</strong> ownership of two subscriptions does not authorize
+applying this request to either one.</li>
+<li><strong>Expired, revoked, or reused consent:</strong> an earlier approval does not authorize
+every later mutation.</li>
+<li><strong>Concurrent renewal:</strong> a stale read can describe an obsolete paid-through
+date. The workflow must obtain current state and, when necessary, new intent.</li>
+<li><strong>Timeout after a refund commits:</strong> an uncertain response is followed by an
+operation lookup. A receipt prevents a second payment.</li>
+<li><strong>Unavailable access provider:</strong> the workflow reports unfinished work rather
+than claiming that both systems reached the requested state.</li>
+</ul>
+<p>The report lets readers switch profiles and step through the actual proposed
+commands, responses, committed effects, and final grading.</p>
+<h2 id="measure-completion-alongside-harm">Measure completion alongside harm</h2>
+<p>The recorded test has 40 cases, covering 20 conditions with two parameter
+variants each. Each profile runs all 40 cases, producing 160 recorded episodes.
+These are the results recorded on October 6, 2026:</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Control</th>
+<th align="right">Correct handling</th>
+<th align="right">Legitimate changes completed</th>
+<th align="right">Episodes with unsafe effects</th>
+<th align="right">Duplicate refund effects</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unrestricted</td>
+<td align="right">18/40</td>
+<td align="right">14/24</td>
+<td align="right">22/40</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>Permissions</td>
+<td align="right">22/40</td>
+<td align="right">14/24</td>
+<td align="right">18/40</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td>Business invariants</td>
+<td align="right">40/40</td>
+<td align="right">22/24</td>
+<td align="right">0/40</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Deny all</td>
+<td align="right">16/40</td>
+<td align="right">0/24</td>
+<td align="right">0/40</td>
+<td align="right">0</td>
+</tr>
+</tbody></table>
+</div><p><strong>Correct handling is not the same as completing every business change.</strong>
+It includes required clarification and truthful handoff. Two cases deliberately
+keep the access provider unavailable. The invariant profile accepts the billing
+change, leaves the access change pending, and hands off without claiming success.
+Those cases remain in the 24-change completion denominator.</p>
+<p>Deny-all also prevents unsafe mutations, but completes none of the legitimate
+changes. Reporting both outcomes makes the cost of refusing useful work visible.
+The invariant profile requests human intervention in 18 of 40 episodes;
+human response time is not simulated.</p>
+<p><a href="https://hk-775.github.io/practical-eval-lab/subscription-workflow-results.html">Inspect the full results and condition breakdown</a>
+and <a href="https://hk-775.github.io/practical-eval-lab/reports/subscription/comparison.json">download the recorded JSON</a>.</p>
+<h2 id="make-the-evidence-reproducible">Make the evidence reproducible</h2>
+<p>The suite has 40 development, 40 calibration, and 40 test cases. Their IDs,
+parameters, and wording differ, but <strong>the partitions share authored scenario
+templates</strong>. This is a public engineering regression suite. It is not a blind
+sample of enterprise traffic or a model-generalization benchmark. No threshold
+was fitted on the calibration partition for these deterministic profiles.</p>
+<p>The report preserves a protocol/content fingerprint, dataset fingerprint,
+commands, effects, state hashes, and event links. Its metadata explicitly records
+that the original run used a dirty worktree based on an earlier commit. The
+retained content hashes identify the evaluated implementation; I do not present
+the later publication commit as a pre-run freeze.</p>
+<p>From a source checkout of Practical Eval Lab:</p>
+<pre><code class="language-sh">uv sync --locked
+uv run --locked python -m benchmarks.subscription_workflow validate
+uv run --locked python -m benchmarks.subscription_workflow audit \
+  benchmarks/subscription_workflow/recordings/2026-10-06/comparison.json
+</code></pre>
+<p>The audit replays all 160 recorded episodes and checks effects, state, event
+chains, and aggregate and condition metrics. It verifies internal consistency;
+hashes do not establish independent attestation or trusted storage.</p>
+<p><a href="https://github.com/hk-775/practical-eval-lab/tree/a3a31ca78504e396000ba582f2d505ecb004f988/benchmarks/subscription_workflow">Inspect the evaluated source</a>
+and <a href="https://hk-775.github.io/practical-eval-lab/subscription-workflow.html#adapter-contract">adapt the candidate or policy gate</a>.</p>
+<h2 id="the-deployment-work-this-leaves-open">The deployment work this leaves open</h2>
+<p>The reference executor serializes writes in memory. A production implementation
+would need authenticated consent issuance, durable operation receipts,
+provider-specific idempotency, concurrency control, recovery across restarts,
+and reconciliation when services disagree. Tax, proration, webhook ordering,
+read confidentiality, and real service latency are outside this version.</p>
+<p>Practical Eval Lab executes and grades this comparison. An optional policy-gate
+adapter could connect Ostiari, and a candidate adapter could connect a model
+through AxonLLM. Those integrations were not exercised here. Escape Lab&#39;s runtime
+was not invoked either.</p>
+<p>The engineering decision supported by this fixture is specific: place checks
+for current business intent at the mutation boundary, then evaluate the effects
+independently. Permission checks and successful tool responses left failures
+visible in this comparison. The traces show exactly which ones.</p>
+
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>
