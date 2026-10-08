@@ -10,6 +10,10 @@ connects a concrete question to implementation, evidence, and limitations.
 
 ## Articles
 
+- **8 October 2026 — [Testing subscription abuse at the action boundary](https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html).**
+  Cancellation and refund controls, confirmed consent, paid access, and the
+  difference between safe handling and completed business changes.
+  [Markdown source](2026-10-08-testing-subscription-abuse-at-the-action-boundary.md).
 - **5 October 2026 — [Designing an Evidence Trail for Agent Actions](https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.html).**
   Correlating requests, policy decisions, execution, and observed state; verifying
   snapshot references; and defining the limits of event hashes and replay.
@@ -84,3 +88,13 @@ npm run discovery
 
 Original writing and site code use the repository's MIT-0 license. Linked
 projects, model weights, and third-party dependencies retain their own licenses.
+
+The subscription diagram uses the same native animation controls and palette.
+Run `node scripts/build-subscription-diagram.mjs`, then use the export commands
+above with `subscription-action-boundary` as the asset basename. Its static
+companions are also distributed with the Practical Eval Lab benchmark.
+
+AWS services reference architecture for these static blog articles: not
+applicable. The subscription article describes a local, provider-neutral
+in-memory evaluation and GitHub Pages publication. It defines no AWS deployment
+target or cloud resources.
