@@ -36,6 +36,9 @@ export async function loadPosts(root) {
       throw new Error("Article assets must be explicitly listed local diagram files");
     for (const asset of post.assets) await access(resolve(root, "site", asset));
     post.animatedDiagrams ??= {};
+    post.diagramMotionStyle ??= "dashes";
+    if (!["dashes", "dots"].includes(post.diagramMotionStyle))
+      throw new Error("Diagram motion style must be dashes or dots");
     if (typeof post.animatedDiagrams !== "object" || Array.isArray(post.animatedDiagrams))
       throw new Error("Animated diagrams must map reviewed SVG assets to named flow cells");
     post.inlineDiagrams = new Map();
@@ -98,8 +101,8 @@ function page({ title, description, url, type = "website", metadata, body, markd
   <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
   <link rel="alternate" type="text/markdown" href="${escape(markdown)}">
   <link rel="stylesheet" href="../styles.css?v=blog-1">
-  <link rel="stylesheet" href="blog.css?v=2">
-${diagramMotion ? '  <script src="diagram-motion.js?v=1" defer></script>' : ""}
+  <link rel="stylesheet" href="blog.css?v=3">
+${diagramMotion ? '  <script src="diagram-motion.js?v=2" defer></script>' : ""}
   <meta property="og:title" content="${escape(title)}">
   <meta property="og:description" content="${escape(description)}">
   <meta property="og:type" content="${type}">
@@ -148,7 +151,7 @@ function renderArticle(post) {
     const diagram = post.inlineDiagrams.get(href.slice("../site/".length));
     if (diagram) {
       const svg = diagram.replace("<svg ", `<svg role="img" aria-label="${escape(text)}" `);
-      return `<figure class="article-figure animated-diagram" data-diagram-motion data-motion="paused">
+      return `<figure class="article-figure animated-diagram" data-diagram-motion data-diagram-style="${post.diagramMotionStyle}" data-motion="paused">
   <div class="diagram-controls" hidden><button type="button" data-diagram-toggle>Play animation</button><button type="button" data-diagram-expand>Expand diagram</button><span class="diagram-motion-note"></span></div>
   <div class="diagram-canvas">${svg}</div>
   <figcaption>Illustrative flow animation; movement does not represent measured execution timing.</figcaption>

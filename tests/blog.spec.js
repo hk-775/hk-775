@@ -143,16 +143,42 @@ test("blog works without JavaScript and at mobile widths", async ({ browser }) =
 });
 
 for (const motionPost of posts.filter(post => Object.keys(post.animatedDiagrams ?? {}).length))
-test(`${motionPost.slug}: moving dashes, keyboard pause, expansion, and reduced motion`, async ({ page }) => {
+test(`${motionPost.slug}: moving ${motionPost.diagramMotionStyle === "dots" ? "circles" : "dashes"}, keyboard pause, expansion, and reduced motion`, async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto(`/hk-775/blog/${motionPost.slug}.html`);
   const figure = page.locator("[data-diagram-motion]");
   await figure.scrollIntoViewIfNeeded();
   await expect(figure).toHaveAttribute("data-motion", "running");
-  const evidence = figure.locator(".diagram-evidence-flow").first();
-  const action = figure.locator(".diagram-action-marker").first();
-  const offset = element => element.evaluate(node => getComputedStyle(node).strokeDashoffset);
+  const usesDots = motionPost.diagramMotionStyle === "dots";
+  const evidence = figure.locator(usesDots ? '[data-flow="evidence"] .diagram-flow-dot' : ".diagram-evidence-flow").first();
+  const action = figure.locator(usesDots ? '[data-flow="action"] .diagram-flow-dot' : ".diagram-action-marker").first();
+  const offset = element => element.evaluate(node => {
+    if (!node.classList.contains("diagram-flow-dot")) return getComputedStyle(node).strokeDashoffset;
+    const rect = node.getBoundingClientRect();
+    return JSON.stringify([rect.x.toFixed(3), rect.y.toFixed(3)]);
+  });
+  const motionPaused = element => element.evaluate(node => {
+    if (node.classList.contains("diagram-flow-dot")) return node.closest("svg").animationsPaused();
+    const animations = node.getAnimations();
+    return animations.every(animation => !animation.pending && animation.playState === "paused");
+  });
   await expect(figure.locator("svg")).toBeVisible();
+  if (usesDots) {
+    await expect(figure.locator(".diagram-action-marker, .diagram-evidence-flow")).toHaveCount(0);
+    const cells = Object.values(motionPost.animatedDiagrams).flatMap(flow => [...flow.action, ...flow.evidence]);
+    await expect(figure.locator(".diagram-flow-dot")).toHaveCount(cells.length);
+    for (const circle of await figure.locator(".diagram-flow-dot").all()) {
+      expect(await circle.evaluate(node =>
+        node.querySelector("animateMotion").getAttribute("path")
+          === node.parentElement.querySelector("path").getAttribute("d"))).toBe(true);
+      expect(await circle.evaluate(node => getComputedStyle(node).fill)).toBe("rgb(0, 180, 216)");
+    }
+    const staticLine = figure.locator('[data-flow="evidence"] path').first();
+    const before = await offset(staticLine);
+    await page.waitForTimeout(100);
+    expect(await offset(staticLine)).toBe(before);
+    expect(await staticLine.evaluate(node => getComputedStyle(node).animationName)).toBe("none");
+  }
   for (const path of [evidence, action]) {
     expect(await path.evaluate(node => node.getTotalLength())).toBeGreaterThan(0);
     const before = await offset(path);
@@ -163,10 +189,7 @@ test(`${motionPost.slug}: moving dashes, keyboard pause, expansion, and reduced 
   await page.getByRole("button", { name: "Pause animation", exact: true }).focus();
   await page.keyboard.press("Space");
   await expect(figure).toHaveAttribute("data-motion", "paused");
-  await expect.poll(() => evidence.evaluate(node => {
-    const animations = node.getAnimations();
-    return animations.length > 0 && animations.every(animation => !animation.pending && animation.playState === "paused");
-  })).toBe(true);
+  await expect.poll(() => motionPaused(evidence)).toBe(true);
   const frozen = await offset(evidence);
   await page.waitForTimeout(200); // Observe a stationary state across actual frames.
   expect(await offset(evidence)).toBe(frozen);
@@ -188,10 +211,7 @@ test(`${motionPost.slug}: moving dashes, keyboard pause, expansion, and reduced 
   await expect(page.getByRole("button", { name: "Play animation", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Play animation", exact: true })).toBeDisabled();
   await expect(figure).toHaveAttribute("data-motion", "paused");
-  await expect.poll(() => evidence.evaluate(node => {
-    const animations = node.getAnimations();
-    return animations.every(animation => !animation.pending && animation.playState === "paused");
-  })).toBe(true);
+  await expect.poll(() => motionPaused(evidence)).toBe(true);
   const reduced = await offset(evidence);
   await page.waitForTimeout(200);
   expect(await offset(evidence)).toBe(reduced);
@@ -203,4 +223,5 @@ test(`${motionPost.slug}: moving dashes, keyboard pause, expansion, and reduced 
   await page.emulateMedia({ media: "print" });
   await expect(figure.locator(".diagram-controls")).toBeHidden();
   expect(await evidence.evaluate(node => getComputedStyle(node).animationName)).toBe("none");
+  if (usesDots) await expect(evidence).toBeHidden();
 });

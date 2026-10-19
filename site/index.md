@@ -11,7 +11,7 @@ Together, they support a development loop: **route → govern → test containme
 **[Start here → one workflow, its evidence, and the code](https://hk-775.github.io/hk-775/)**
 
 **[Engineering blog](https://hk-775.github.io/hk-775/blog/)** ·
-[Latest: Testing subscription abuse at the action boundary](https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html) ·
+[Latest: Your AI remembers you. Can it remember a lie?](https://hk-775.github.io/hk-775/blog/your-ai-remembers-you-can-it-remember-a-lie.html) ·
 [RSS](https://hk-775.github.io/hk-775/blog/feed.xml)
 
 [Agent guide](https://hk-775.github.io/hk-775/llms.txt) ·
@@ -54,4 +54,4 @@ Practical Eval Lab's bundled candidates use local rules. Its teaching datasets c
 ---
 Source: [README.md](https://github.com/hk-775/hk-775/blob/main/README.md)
 
-Source SHA-256: `3a7972efa68afed808f50a9b0680eb31c66f503b7cbfe7f4ffa6835db2fe4496`
+Source SHA-256: `d1e14105be0c6d5d733cea7a2d5776bf674d7db03e03611441026f2e88e3853e`

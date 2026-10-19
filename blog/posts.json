@@ -1,5 +1,28 @@
 [
   {
+    "slug": "your-ai-remembers-you-can-it-remember-a-lie",
+    "source": "blog/2026-10-19-your-ai-remembers-you-can-it-remember-a-lie.md",
+    "title": "Your AI remembers you. Can it remember a lie?",
+    "subtitle": "What happens when a remembered claim becomes permission to act",
+    "description": "Follow a false approval across sessions, inspect 40 synthetic memory-authority episodes, and see why provenance and current permission need separate checks.",
+    "date": "2026-10-19",
+    "topics": ["Agent memory", "AI security", "Evaluation"],
+    "evidence": "Synthetic cross-session example; no model calls",
+    "diagramMotionStyle": "dots",
+    "assets": [
+      "blog/diagrams/memory-authority-boundary.drawio",
+      "blog/diagrams/memory-authority-boundary.svg",
+      "blog/diagrams/memory-authority-boundary.png"
+    ],
+    "animatedDiagrams": {
+      "blog/diagrams/memory-authority-boundary.svg": {
+        "action": ["email-writer", "writer-memory", "request-recall", "recall-proposal", "proposal-guard", "guard-effects"],
+        "evidence": ["memory-recall", "registry-guard"],
+        "stage": ["email", "writer", "memory", "recall", "proposal", "guard", "effects"]
+      }
+    }
+  },
+  {
     "slug": "testing-subscription-abuse-at-the-action-boundary",
     "source": "blog/2026-10-08-testing-subscription-abuse-at-the-action-boundary.md",
     "title": "Testing subscription abuse at the action boundary",
