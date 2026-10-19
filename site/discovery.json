@@ -36,10 +36,10 @@
     {
       "source": "README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/README.md",
-      "source_sha256": "3a7972efa68afed808f50a9b0680eb31c66f503b7cbfe7f4ffa6835db2fe4496",
+      "source_sha256": "d1e14105be0c6d5d733cea7a2d5776bf674d7db03e03611441026f2e88e3853e",
       "markdown_url": "https://hk-775.github.io/hk-775/index.md",
-      "bytes": 4801,
-      "sha256": "b67892c584d1831bfeaf880e10ed811878c4cef742a01fb033d29334f49fff48"
+      "bytes": 4791,
+      "sha256": "00c26df1e66bd936b525f8af361bbb55972c5ca6f23ac30615a0a5cf67a41d40"
     },
     {
       "source": "CASE_STUDY.md",
@@ -76,10 +76,18 @@
     {
       "source": "blog/README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/README.md",
-      "source_sha256": "c799de6b3626b4e2b6ce6055be0c259232ec33f9e75c9f44a451f8275faafca9",
+      "source_sha256": "4184fcb2094f5b9e3f8cee148432f6bb30009bf7eabbe99245e92862f03d8cd0",
       "markdown_url": "https://hk-775.github.io/hk-775/blog/index.md",
-      "bytes": 5922,
-      "sha256": "75cf78090abe5bf15ab55b731b6a9f67a69de5f4894707b116eede09c96f3a72"
+      "bytes": 6992,
+      "sha256": "f0fe9494f040d8057578ad879a5276821eedea6fa653193a3bc34d28fc786d64"
+    },
+    {
+      "source": "blog/2026-10-19-your-ai-remembers-you-can-it-remember-a-lie.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-10-19-your-ai-remembers-you-can-it-remember-a-lie.md",
+      "source_sha256": "8afb233e1cf7d5371aa77af7bf6aeeced9e55a9fc0a91e6bbd57087e84827b33",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/your-ai-remembers-you-can-it-remember-a-lie.md",
+      "bytes": 10843,
+      "sha256": "565dd7a75b678263640765eaad3e4977fbdb136320a740340d366ddd549dd39f"
     },
     {
       "source": "blog/2026-10-08-testing-subscription-abuse-at-the-action-boundary.md",

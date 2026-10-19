@@ -6,24 +6,46 @@ for (const figure of document.querySelectorAll("[data-diagram-motion]")) {
   const toggle = figure.querySelector("[data-diagram-toggle]");
   const expand = figure.querySelector("[data-diagram-expand]");
   const note = figure.querySelector(".diagram-motion-note");
+  const usesDots = figure.dataset.diagramStyle === "dots";
   let wantsMotion = !motionPreference.matches;
   let visible = false;
 
-  // Keep each solid action arrow and overlay a small traveling dash.
-  for (const [index, cell] of [...svg.querySelectorAll('[data-flow="action"]')].entries()) {
-    const line = cell.querySelector("path");
-    if (!line) continue;
-    const marker = line.cloneNode(false);
-    marker.removeAttribute("style");
-    marker.classList.add("diagram-action-marker");
-    marker.style.animationDelay = `${index * -0.3}s`;
-    marker.setAttribute("aria-hidden", "true");
-    line.after(marker);
-  }
-  // Reference links move toward retained evidence. The horizontal association
-  // bus stays static: it does not imply a left-to-right execution sequence.
-  for (const cell of svg.querySelectorAll('[data-flow="evidence"]')) {
-    cell.querySelector("path")?.classList.add("diagram-evidence-flow");
+  if (usesDots) {
+    // Native SVG motion follows the reviewed path, including elbows and
+    // reverse-direction links. Keep the underlying line style unchanged.
+    const ns = "http://www.w3.org/2000/svg";
+    for (const [index, cell] of [...svg.querySelectorAll('[data-flow="action"], [data-flow="evidence"]')].entries()) {
+      const line = cell.querySelector("path");
+      if (!line) continue;
+      const dot = document.createElementNS(ns, "circle");
+      dot.classList.add("diagram-flow-dot");
+      dot.setAttribute("r", "7");
+      dot.setAttribute("aria-hidden", "true");
+      const motion = document.createElementNS(ns, "animateMotion");
+      motion.setAttribute("path", line.getAttribute("d"));
+      motion.setAttribute("dur", `${Math.max(2.2, Math.min(9, line.getTotalLength() / 85))}s`);
+      motion.setAttribute("begin", `${index * -0.55}s`);
+      motion.setAttribute("repeatCount", "indefinite");
+      motion.setAttribute("calcMode", "paced");
+      dot.append(motion);
+      // Share the path's parent so draw.io's local translation still applies.
+      line.parentElement.append(dot);
+    }
+  } else {
+    for (const [index, cell] of [...svg.querySelectorAll('[data-flow="action"]')].entries()) {
+      const line = cell.querySelector("path");
+      if (!line) continue;
+      const marker = line.cloneNode(false);
+      marker.removeAttribute("style");
+      marker.classList.add("diagram-action-marker");
+      marker.style.animationDelay = `${index * -0.3}s`;
+      marker.setAttribute("aria-hidden", "true");
+      line.after(marker);
+    }
+    // Reference links move toward retained evidence. Association buses stay static.
+    for (const cell of svg.querySelectorAll('[data-flow="evidence"]')) {
+      cell.querySelector("path")?.classList.add("diagram-evidence-flow");
+    }
   }
   for (const [index, cell] of [...svg.querySelectorAll('[data-flow="stage"]')].entries()) {
     const shape = cell.querySelector("rect, path");
@@ -38,6 +60,10 @@ for (const figure of document.querySelectorAll("[data-diagram-motion]")) {
 
   function update() {
     figure.dataset.motion = wantsMotion && !motionPreference.matches && visible && !document.hidden ? "running" : "paused";
+    if (usesDots) {
+      if (figure.dataset.motion === "running") svg.unpauseAnimations();
+      else svg.pauseAnimations();
+    }
     toggle.disabled = motionPreference.matches;
     toggle.textContent = wantsMotion ? "Pause animation" : "Play animation";
     note.textContent = motionPreference.matches && !wantsMotion ? "Reduced motion is on" : "";

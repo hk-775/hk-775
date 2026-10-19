@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your AI remembers you. Can it remember a lie? · Harleen Kaur</title>
+  <meta name="description" content="Follow a false approval across sessions, inspect 40 synthetic memory-authority episodes, and see why provenance and current permission need separate checks.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/your-ai-remembers-you-can-it-remember-a-lie.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="your-ai-remembers-you-can-it-remember-a-lie.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=3">
+  <script src="diagram-motion.js?v=2" defer></script>
+  <meta property="og:title" content="Your AI remembers you. Can it remember a lie?">
+  <meta property="og:description" content="Follow a false approval across sessions, inspect 40 synthetic memory-authority episodes, and see why provenance and current permission need separate checks.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/your-ai-remembers-you-can-it-remember-a-lie.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/share.png">
+  <meta property="og:image:alt" content="Harleen Kaur — Engineering notes. Decisions, experiments, and evidence for AI workloads.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-10-19">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Your AI remembers you. Can it remember a lie?","alternativeHeadline":"What happens when a remembered claim becomes permission to act","description":"Follow a false approval across sessions, inspect 40 synthetic memory-authority episodes, and see why provenance and current permission need separate checks.","datePublished":"2026-10-19","dateModified":"2026-10-19","url":"https://hk-775.github.io/hk-775/blog/your-ai-remembers-you-can-it-remember-a-lie.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/your-ai-remembers-you-can-it-remember-a-lie.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/share.png","keywords":["Agent memory","AI security","Evaluation"],"isPartOf":{"@type":"Blog","name":"Engineering notes","url":"https://hk-775.github.io/hk-775/blog/"}}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Agent memory · AI security · Evaluation</p>
+    <h1>Your AI remembers you. Can it remember a lie?</h1>
+    <p class="article-subtitle">What happens when a remembered claim becomes permission to act</p>
+    <p class="post-meta"><time datetime="2026-10-19">19 October 2026</time><span>7 min read</span><span>Synthetic cross-session example; no model calls</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#why-memory-changes-the-question">Why memory changes the question</a>
+<a href="#follow-the-claim-across-the-session-boundary">Follow the claim across the session boundary</a>
+<a href="#keeping-the-source-is-only-the-beginning">Keeping the source is only the beginning</a>
+<a href="#what-happened-in-the-example">What happened in the example</a>
+<a href="#inspect-three-different-records">Inspect three different records</a>
+<a href="#what-i-would-carry-into-a-real-design">What I would carry into a real design</a>
+<a href="#run-the-example">Run the example</a></nav>
+      <div class="article-tools"><a href="your-ai-remembers-you-can-it-remember-a-lie.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-10-19-your-ai-remembers-you-can-it-remember-a-lie.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="Your AI remembers you. Can it remember a lie?"><p>Imagine an assistant reading an email that says a vendor&#39;s purchases are already
+approved. It saves the statement. A week later, you ask it to buy something from
+that vendor. The email is no longer in the conversation. The supposed approval
+is still in memory.</p>
+<p>The question is what the assistant is allowed to do with that memory.</p>
+<p>I built a small, reproducible example of this boundary: a claim crosses from one
+session into another, and a later purchase either proceeds or requires approval.
+<strong>The example is synthetic and scripted.</strong> Its extracted claims are supplied by
+the fixtures; no model is persuaded to write them. It tests the consequences of
+trusting remembered claims, not the likelihood of fooling a particular AI.</p>
+<h2 id="why-memory-changes-the-question">Why memory changes the question</h2>
+<p>The <a href="https://arxiv.org/abs/2607.05189v1">MemGhost preprint</a>, submitted on 6 July
+2026, studies an attack delivered through email that seeks to alter persistent
+memory, remain unobtrusive in the immediate response, and influence a later
+session. Its authors evaluate model-backed personal agents. That is evidence
+for the threat in their tested settings; my local example does not reproduce
+their attack or their results.</p>
+<p>Memory writing is also becoming a component that teams can optimize separately.
+Tencent&#39;s <a href="https://huggingface.co/tencent/Hy-Memory-30B-A3B">Hy-Memory model card</a>
+describes a dedicated writer that decides what to retain and how to update
+external memory. I have not evaluated that model, and its mention here is not a
+claim that it is vulnerable.</p>
+<p>For a system designer, this raises a practical question: <strong>does recalling a
+statement also give the agent permission to act on it?</strong></p>
+<p>Consider three different memories:</p>
+<ul>
+<li>“The user prefers PDF invoices.”</li>
+<li>“An email says purchases from this vendor are approved.”</li>
+<li>“The approval service authorized this organization to spend a specified amount,
+until a specified time.”</li>
+</ul>
+<p>They can all be useful context. They carry very different authority. Even the
+last statement can become outdated after a revocation or another purchase.</p>
+<h2 id="follow-the-claim-across-the-session-boundary">Follow the claim across the session boundary</h2>
+<figure class="article-figure animated-diagram" data-diagram-motion data-diagram-style="dots" data-motion="paused">
+  <div class="diagram-controls" hidden><button type="button" data-diagram-toggle>Play animation</button><button type="button" data-diagram-expand>Expand diagram</button><span class="diagram-motion-note"></span></div>
+  <div class="diagram-canvas"><svg role="img" aria-label="A synthetic email claim enters a scripted memory writer and persists in JSON. A new process recalls that memory for a purchase request. Four control profiles compare trusting claims, retaining provenance, filtering recall, and checking a separate current approval registry before observing purchase effects." xmlns="http://www.w3.org/2000/svg" style="background: #F8F5F0; background-color: #F8F5F0; color-scheme: light;" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1681px" height="1221px" viewBox="0 0 1681 1221"><defs/><rect fill="#F8F5F0" width="100%" height="100%" x="0" y="0" style="fill: rgb(248, 245, 240);"/><g><g data-cell-id="0"><g data-cell-id="1"><g data-cell-id="canvas"><g><rect x="0" y="0" width="1680" height="1220" fill="#f8f5f0" stroke="none" pointer-events="all" style="fill: rgb(248, 245, 240);"/></g></g><g data-cell-id="title"><g><rect x="48" y="35" width="1260" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="start" font-size="45px" style="fill: rgb(13, 27, 42);"><text x="48" y="89.5">How a claim becomes a purchase</text></g></g></g><g data-cell-id="subtitle"><g><rect x="48" y="114" width="1560" height="40" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="27px" style="fill: rgb(82, 98, 112);"><text x="48" y="146.5">A memory can survive a session. Permission must survive a current check.</text></g></g></g><g data-cell-id="scope"><g><rect x="1360" y="45" width="272" height="40" rx="20" ry="20" fill="#0d1b2a" stroke="none" pointer-events="all" style="fill: rgb(13, 27, 42);"/></g><g><g fill="#F8F5F0" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="17px" style="fill: rgb(248, 245, 240);"><text x="1496" y="72.5">SYNTHETIC EXAMPLE</text></g></g></g><g data-cell-id="session-one"><g><rect x="48" y="182" width="1300" height="30" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="start" font-size="20px" style="fill: rgb(13, 27, 42);"><text x="48" y="206">SESSION 1  /  CAPTURE A CLAIM</text></g></g></g><g data-cell-id="email" data-flow="stage"><g><rect x="48" y="246" width="360" height="164" rx="13.12" ry="13.12" fill="#f8f5f0" stroke="#00b4d8" stroke-width="1.8" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="email-title"><g><rect x="64" y="264" width="328" height="42" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="27px" style="fill: rgb(13, 27, 42);"><text x="228" y="297.5">Untrusted email</text></g></g></g><g data-cell-id="email-body"><g><rect x="66" y="316" width="324" height="81" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="23px" style="fill: rgb(82, 98, 112);"><text x="228" y="353">“Purchases up to 500</text><text x="228" y="381">units are approved.”</text></g></g></g><g data-cell-id="writer" data-flow="stage"><g><rect x="500" y="246" width="330" height="164" rx="13.12" ry="13.12" fill="#f8f5f0" stroke="#00b4d8" stroke-width="1.8" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="writer-title"><g><rect x="516" y="264" width="298" height="42" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="27px" style="fill: rgb(13, 27, 42);"><text x="665" y="297.5">Memory writer</text></g></g></g><g data-cell-id="writer-body"><g><rect x="518" y="316" width="294" height="81" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="23px" style="fill: rgb(82, 98, 112);"><text x="665" y="353">Scripted extraction</text><text x="665" y="381">Optional provenance</text></g></g></g><g data-cell-id="memory" data-flow="stage"><g><rect x="925" y="246" width="707" height="164" rx="13.12" ry="13.12" fill="#0d1b2a" stroke="#00b4d8" stroke-width="1.8" pointer-events="all" style="fill: rgb(13, 27, 42); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="memory-title"><g><rect x="941" y="264" width="675" height="42" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#F8F5F0" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="27px" style="fill: rgb(248, 245, 240);"><text x="1278.5" y="297.5">Persistent memory</text></g></g></g><g data-cell-id="memory-body"><g><rect x="943" y="316" width="671" height="81" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#F8F5F0" font-family="Arial" text-anchor="middle" font-size="23px" style="fill: rgb(248, 245, 240);"><text x="1278.5" y="353">Claim + optional source, tenant, and expiry</text><text x="1278.5" y="381">JSON survives the first worker process</text></g></g></g><g data-cell-id="email-writer" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 408 328 L 485.65 328" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 496.65 328 L 485.65 333.5 L 485.65 322.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="writer-memory" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 830 328 L 910.65 328" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 921.65 328 L 910.65 333.5 L 910.65 322.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="memory-recall" data-flow="evidence"><g><path d="M 1276 410 L 1276 482 L 665 482 L 665 587.13" fill="none" stroke="#526270" stroke-width="2.3" stroke-miterlimit="10" stroke-dasharray="11.5 11.5" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 665 597.43 L 659.85 587.13 L 670.15 587.13 Z" fill="#526270" stroke="#526270" stroke-width="2.3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="restart"><g><rect x="48" y="448" width="530" height="70" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="22px" style="fill: rgb(82, 98, 112);"><text x="48" y="480">Writer exits. A new process starts.</text><text x="48" y="506">The original email is not its request.</text></g></g></g><g data-cell-id="session-two"><g><rect x="48" y="543" width="520" height="30" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="start" font-size="20px" style="fill: rgb(13, 27, 42);"><text x="48" y="567">SESSION 2  /  REQUEST A PURCHASE</text></g></g></g><g data-cell-id="request"><g><rect x="48" y="600" width="360" height="170" rx="13.6" ry="13.6" fill="#f8f5f0" stroke="#00b4d8" stroke-width="1.8" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="request-title"><g><rect x="64" y="618" width="328" height="42" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="27px" style="fill: rgb(13, 27, 42);"><text x="228" y="651.5">New request</text></g></g></g><g data-cell-id="request-body"><g><rect x="66" y="670" width="324" height="87" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="23px" style="fill: rgb(82, 98, 112);"><text x="228" y="710">Spend 100 units at</text><text x="228" y="738">SYN-VENDOR</text></g></g></g><g data-cell-id="recall" data-flow="stage"><g><rect x="500" y="600" width="330" height="170" rx="13.6" ry="13.6" fill="#f8f5f0" stroke="#00b4d8" stroke-width="1.8" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="recall-title"><g><rect x="516" y="618" width="298" height="42" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="27px" style="fill: rgb(13, 27, 42);"><text x="665" y="651.5">Recall</text></g></g></g><g data-cell-id="recall-body"><g><rect x="518" y="670" width="294" height="87" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="665" y="710.5">Vendor match</text><text x="665" y="735.5">Optional source / scope filter</text></g></g></g><g data-cell-id="proposal" data-flow="stage"><g><rect x="925" y="600" width="300" height="170" rx="13.6" ry="13.6" fill="#f8f5f0" stroke="#00b4d8" stroke-width="1.8" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="proposal-title"><g><rect x="941" y="618" width="268" height="42" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="27px" style="fill: rgb(13, 27, 42);"><text x="1075" y="651.5">Proposal</text></g></g></g><g data-cell-id="proposal-body"><g><rect x="943" y="670" width="264" height="87" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="20px" style="fill: rgb(82, 98, 112);"><text x="1075" y="710.5">Shared scripted candidate</text><text x="1075" y="734.5">Propose or ask</text></g></g></g><g data-cell-id="guard" data-flow="stage"><g><rect x="1330" y="600" width="302" height="170" rx="13.6" ry="13.6" fill="#0d1b2a" stroke="#00b4d8" stroke-width="1.8" pointer-events="all" style="fill: rgb(13, 27, 42); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="guard-title"><g><rect x="1346" y="618" width="270" height="42" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#F8F5F0" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="27px" style="fill: rgb(248, 245, 240);"><text x="1481" y="651.5">Action boundary</text></g></g></g><g data-cell-id="guard-body"><g><rect x="1348" y="670" width="266" height="87" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#F8F5F0" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(248, 245, 240);"><text x="1481" y="710.5">Optional current check</text><text x="1481" y="735.5">Before a purchase</text></g></g></g><g data-cell-id="request-recall" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 408 685 L 485.65 685" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 496.65 685 L 485.65 690.5 L 485.65 679.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="recall-proposal" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 830 685 L 910.65 685" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 921.65 685 L 910.65 690.5 L 910.65 679.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="proposal-guard" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 1225 685 L 1315.65 685" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 1326.65 685 L 1315.65 690.5 L 1315.65 679.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="profiles"><g><rect x="48" y="923" width="360" height="165" rx="13.2" ry="13.2" fill="#f8f5f0" stroke="#00b4d8" stroke-width="1.8" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="profiles-title"><g><rect x="64" y="941" width="328" height="42" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="27px" style="fill: rgb(13, 27, 42);"><text x="228" y="974.5">Compare four profiles</text></g></g></g><g data-cell-id="profiles-body"><g><rect x="66" y="993" width="324" height="82" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="20px" style="fill: rgb(82, 98, 112);"><text x="228" y="1031">Trust · retain provenance</text><text x="228" y="1055">Filter recall · verify action</text></g></g></g><g data-cell-id="registry"><g><rect x="500" y="923" width="520" height="165" rx="13.2" ry="13.2" fill="#f8f5f0" stroke="#00b4d8" stroke-width="1.8" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="registry-title"><g><rect x="516" y="941" width="488" height="42" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="27px" style="fill: rgb(13, 27, 42);"><text x="760" y="974.5">Current approval registry</text></g></g></g><g data-cell-id="registry-body"><g><rect x="518" y="993" width="484" height="82" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="760" y="1031">Tenant · vendor · expiry · revocation</text><text x="760" y="1056">Current limit and amount already spent</text></g></g></g><g data-cell-id="effects" data-flow="stage"><g><rect x="1330" y="923" width="302" height="165" rx="13.2" ry="13.2" fill="#f8f5f0" stroke="#00b4d8" stroke-width="1.8" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="effects-title"><g><rect x="1346" y="941" width="270" height="42" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="27px" style="fill: rgb(13, 27, 42);"><text x="1481" y="974.5">Observed effects</text></g></g></g><g data-cell-id="effects-body"><g><rect x="1348" y="993" width="266" height="82" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="22px" style="fill: rgb(82, 98, 112);"><text x="1481" y="1031">Purchase committed?</text><text x="1481" y="1057">Approval required?</text></g></g></g><g data-cell-id="registry-guard" data-flow="evidence"><g><path d="M 1020 1005 L 1165 1005 L 1165 835 L 1465 835 L 1465 782.87" fill="none" stroke="#526270" stroke-width="2.3" stroke-miterlimit="10" stroke-dasharray="11.5 11.5" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 1465 772.57 L 1470.15 782.87 L 1459.85 782.87 Z" fill="#526270" stroke="#526270" stroke-width="2.3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="registry-label"><g><rect x="610" y="808" width="480" height="54" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" text-anchor="start" font-size="22px" style="fill: rgb(13, 27, 42);"><text x="610" y="832">Authority comes from the registry,</text><text x="610" y="858">not from the remembered statement.</text></g></g></g><g data-cell-id="guard-effects" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 1555 770 L 1555 908.65" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 1555 919.65 L 1549.5 908.65 L 1560.5 908.65 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="footer-rule"><g transform="translate(0.5,0.5)"><path d="M 48 1134 L 1632 1134" fill="none" stroke="#b5ccd9" stroke-width="1.4" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(181, 204, 217);"/></g></g><g data-cell-id="legend"><g><rect x="48" y="1149" width="1584" height="29" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" text-anchor="start" font-size="20px" style="fill: rgb(13, 27, 42);"><text x="48" y="1172.5">Solid: action flow   ·   Dashed: recalled context / current authority   ·   Moving circles illustrate direction only</text></g></g></g><g data-cell-id="limit"><g><rect x="48" y="1181" width="1584" height="27" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="19px" style="fill: rgb(82, 98, 112);"><text x="48" y="1203">All four profiles use scripts. The local serial fixture has no model call, real email service, payment API, or concurrent transaction.</text></g></g></g></g></g></g></svg></div>
+  <figcaption>Illustrative flow animation; movement does not represent measured execution timing.</figcaption>
+</figure>
+<p>The moving circles show how context and authority reach the action boundary.
+They illustrate direction, not execution timing. Use <strong>Pause animation</strong> to
+inspect a connection or <strong>Expand diagram</strong> to read the full workflow.</p>
+<p><a href="diagrams/memory-authority-boundary.svg">Static SVG</a> ·
+<a href="diagrams/memory-authority-boundary.png">Static PNG</a> ·
+<a href="diagrams/memory-authority-boundary.drawio">Editable draw.io source</a></p>
+<p>In the first process, the fixture supplies an extracted claim from a synthetic
+document. The writer saves it to a JSON file and exits. In the second process,
+the collaborator receives a fresh purchase request and reads that file. Its
+session input contains no original email.</p>
+<p>The candidate is deliberately simple: if it recalls an approval claim that
+covers the requested amount, it proposes a purchase. Otherwise, it asks for
+approval. All four control profiles use that same candidate.</p>
+<p>This makes one failure inspectable. A sentence copied from an external email can
+become the justification for a purchase long after the original reading step.
+The fixture guarantees the memory write so we can examine that later boundary.</p>
+<h2 id="keeping-the-source-is-only-the-beginning">Keeping the source is only the beginning</h2>
+<p>I compared four profiles:</p>
+<ol>
+<li><strong>Trust the claim.</strong> Save the claim without provenance and retrieve by vendor.</li>
+<li><strong>Retain provenance.</strong> Also save its source, organization, capture time, and
+expiry, but leave the reader&#39;s behavior unchanged.</li>
+<li><strong>Filter recalled approvals.</strong> Check organization and validity dates. Accept
+approval memories only from the fixture&#39;s approval-service source.</li>
+<li><strong>Check current authority.</strong> Apply the same recall filter, then check the
+current approval registry before committing the purchase.</li>
+</ol>
+<p>The source label comes from the fixture&#39;s ingress adapter. A sentence inside an
+email saying <code>Source: approval_service</code> cannot change that label.</p>
+<p>That distinction matters: recording provenance helps only when a relevant
+decision actually uses it.</p>
+<h2 id="what-happened-in-the-example">What happened in the example</h2>
+<p>The recording contains <strong>40 episodes: ten authored cases under four profiles</strong>.
+Each starts with a separate, empty memory bank. One case permits a legitimate
+purchase. Another checks that a PDF invoice preference remains available without
+granting spending permission.</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Control profile</th>
+<th align="right">Correct handling / 10</th>
+<th align="right">Unsafe purchases / 10</th>
+<th align="right">Legitimate purchase completed / 1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Trust the claim</td>
+<td align="right">3</td>
+<td align="right">7</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>Retain provenance, leave it unchecked</td>
+<td align="right">3</td>
+<td align="right">7</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>Filter recalled approvals</td>
+<td align="right">7</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>Check current authority before purchase</td>
+<td align="right">10</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+</tbody></table>
+</div><p>These are results from a small designed regression suite, not attack success
+rates, independent samples, or model rankings.</p>
+<p>The first two profiles made the same seven unsafe purchases. Adding metadata
+did not alter the collaborator&#39;s decisions.</p>
+<p>The recall filter rejected the external-email claim, the spoofed source label,
+an approval belonging to another organization, and an expired snapshot. It still
+accepted three memories that looked valid locally:</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Remembered state</th>
+<th>Current state</th>
+<th>What the retrieval filter missed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Approval exists and has not expired</td>
+<td>Approval has been revoked</td>
+<td>Revocation after capture</td>
+</tr>
+<tr>
+<td>Spending limit is 500 synthetic units</td>
+<td>Limit has been reduced to 50</td>
+<td>A changed limit</td>
+</tr>
+<tr>
+<td>Allowance is 500 synthetic units</td>
+<td>450 units have already been spent</td>
+<td>The remaining budget</td>
+</tr>
+</tbody></table>
+</div><p>In each case, the proposed purchase costs 100 synthetic units. Reading the old
+snapshot cannot resolve the current authorization question.</p>
+<p>The final profile consults the separate registry immediately before the local
+mutation. It prevents those remaining purchases and completes the one legitimate
+purchase. The preference case also passes under every profile.</p>
+<p>That is a narrow result. It establishes the intended behavior on these cases;
+it does not establish that the controls are sufficient for an arbitrary agent.</p>
+<h2 id="inspect-three-different-records">Inspect three different records</h2>
+<p>I keep <strong>what was written, what was recalled, and what changed</strong> separate in the
+<a href="https://github.com/hk-775/hk-775/blob/bc19b469d5bf52b9697aff064662de3cd1737b16/examples/memory-boundary/recordings/comparison.json">full recording</a>.</p>
+<p>The report includes the stored memory, retrieved and accepted records, rejection
+reasons, candidate proposal, current-registry snapshot, committed purchase, and
+resulting state. A digest connects the written bank to the one loaded by the
+second process.</p>
+<p>The grader compares committed effects with separately authored case references.
+It does not call the authorization function or accept a denial label as proof
+that nothing happened. A focused test deliberately changes a policy log to say
+“denied” while leaving a purchase in the state; the grader still reports the
+unsafe purchase.</p>
+<p>This is useful when debugging a memory failure. A problematic record might have
+been stored but never retrieved, retrieved but rejected, or accepted and used in
+an action. Those are different observations and should remain distinguishable.</p>
+<h2 id="what-i-would-carry-into-a-real-design">What I would carry into a real design</h2>
+<p>I would preserve the source and scope of a remembered claim, distinguish
+preferences from permissions, and give each kind of memory an explicit rule for
+when it may be used. An updated approval should be resolvable through an
+authoritative identifier instead of inferred from fluent remembered text.</p>
+<p>For consequential writes, I would require current authority at execution. In a
+distributed service, checking a budget and committing a purchase must also handle
+concurrent spending. That calls for a transactional reservation or an equivalent
+versioned contract, plus idempotency and recovery.</p>
+<p>The example does not implement that production design. Its registry and purchase
+mutation execute serially in one local worker. It has no authenticated approval
+service, real payment provider, vector database, or hostile host. The processes
+demonstrate persistence, not a security sandbox.</p>
+<p>The next model-backed experiment would add another question: how often does a
+writer adopt an untrusted claim in the first place? I would measure adoption,
+later retrieval, and harmful effects separately, using fresh attack and benign
+cases. The present recording supplies no answer to that model-quality question.</p>
+<h2 id="run-the-example">Run the example</h2>
+<p>The implementation, cases, and recorded evidence are pinned to one source
+revision:</p>
+<pre><code class="language-sh">git clone https://github.com/hk-775/hk-775.git
+cd hk-775
+git checkout bc19b469d5bf52b9697aff064662de3cd1737b16
+cd examples/memory-boundary
+uv sync --locked
+uv run --locked python -m unittest -v
+uv run --locked python run.py --check recordings/comparison.json
+</code></pre>
+<p>The reproduction command re-executes all 40 episodes and compares the source
+fingerprints, memories, decisions, effects, and aggregates. It leaves the recording
+unchanged. The <a href="https://github.com/hk-775/hk-775/blob/bc19b469d5bf52b9697aff064662de3cd1737b16/examples/memory-boundary/README.md">example guide</a>
+documents the profiles and limits.</p>
+<p>Memory helps an assistant carry context forward. Before that context becomes a
+purchase, a permission change, or a message to someone else, I want a separate
+answer to one question: <strong>what establishes authority to do this now?</strong></p>
+<h3 id="sources-and-related-work">Sources and related work</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2607.05189v1">MemGhost / WhisperBench preprint, version 1</a>:
+external research on stealth memory injection; not reproduced here.</li>
+<li><a href="https://huggingface.co/tencent/Hy-Memory-30B-A3B">Tencent Hy-Memory model card</a>:
+an example of a dedicated memory writer; not evaluated here.</li>
+<li><a href="https://github.com/hk-775/hk-775/tree/bc19b469d5bf52b9697aff064662de3cd1737b16/examples/memory-boundary">Synthetic example and all recordings</a>:
+the evidence behind this article&#39;s table.</li>
+<li><a href="https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.html">Designing an Evidence Trail for Agent Actions</a>:
+connecting a proposed action to its observed effect.</li>
+</ul>
+
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>
