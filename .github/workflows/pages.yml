@@ -46,6 +46,8 @@ jobs:
           uv sync --locked
           uv run --locked python -m unittest -v
           uv run --locked python run.py --check recordings/comparison.json
+          # Replay recorded responses only. CI never calls a model or needs API keys.
+          uv run --locked python model_eval.py replay recordings/model-gpt-4o-mini-2026-10-20.json
       - name: Reproduce the synthetic workflow and verify published evidence
         working-directory: examples/customer-summary
         run: |

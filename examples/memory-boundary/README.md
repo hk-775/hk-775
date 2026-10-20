@@ -11,6 +11,17 @@ This is an executable example of a memory/authorization contract, not an
 LLM susceptibility benchmark, MemGhost reproduction, or production security test.
 All organizations, vendors, approvals, messages, and purchase values are invented.
 
+## Add a real memory writer
+
+The optional [model evaluation](MODEL_EVALUATION.md) extends this example with a
+real model call at memory-writing time. It compares two writer prompts on a
+separate twenty-document corpus and replays each model output through the four
+scripted action profiles. It records unsupported approvals, retrieval,
+acceptance, actual purchase effects, and useful completion separately.
+
+The original ten-case baseline and its recording below are unchanged. The model
+extension has its own cases, commands, recording, and offline replay.
+
 ## Run and reproduce
 
 ```sh
