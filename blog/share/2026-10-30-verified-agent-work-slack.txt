@@ -1,0 +1,8 @@
+New write-up: Improving Agents Starts with Verifying the Work
+
+I used RSI Engine and AutoHelix to compare completion counters with verified outputs in a synthetic AI workflow. Verified feedback achieved 120/120 correct outcomes in every run, including justified handoffs.
+
+For SAs: define “done” through observable effects, keep grading outside the agent’s control, and distinguish completed work from correct escalation.
+
+Includes an animated workflow, reproducible results, and clear limitations:
+https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html
