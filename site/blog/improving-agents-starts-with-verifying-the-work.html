@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Improving Agents Starts with Verifying the Work · Harleen Kaur</title>
+  <meta name="description" content="I compared reported completion with verified outputs in a live AutoHelix experiment. Inspect the results, scripted cheating controls, and limits of editing the improvement strategy.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="improving-agents-starts-with-verifying-the-work.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=3">
+  <script src="diagram-motion.js?v=2" defer></script>
+  <meta property="og:title" content="Improving Agents Starts with Verifying the Work">
+  <meta property="og:description" content="I compared reported completion with verified outputs in a live AutoHelix experiment. Inspect the results, scripted cheating controls, and limits of editing the improvement strategy.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/share.png">
+  <meta property="og:image:alt" content="Harleen Kaur — Engineering notes. Decisions, experiments, and evidence for AI workloads.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-10-30">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Improving Agents Starts with Verifying the Work","alternativeHeadline":"What a controlled AutoHelix experiment reveals about completion, recovery, and reward","description":"I compared reported completion with verified outputs in a live AutoHelix experiment. Inspect the results, scripted cheating controls, and limits of editing the improvement strategy.","datePublished":"2026-10-30","dateModified":"2026-10-30","url":"https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/share.png","keywords":["Agent improvement","Reward design","Evaluation"],"isPartOf":{"@type":"Blog","name":"Engineering notes","url":"https://hk-775.github.io/hk-775/blog/"}}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Agent improvement · Reward design · Evaluation</p>
+    <h1>Improving Agents Starts with Verifying the Work</h1>
+    <p class="article-subtitle">What a controlled AutoHelix experiment reveals about completion, recovery, and reward</p>
+    <p class="post-meta"><time datetime="2026-10-30">30 October 2026</time><span>7 min read</span><span>48 live model calls; synthetic workload</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#what-the-agent-had-to-do">What the agent had to do</a>
+<a href="#two-definitions-of-success">Two definitions of success</a>
+<a href="#what-improvement-meant-in-this-experiment">What “improvement” meant in this experiment</a>
+<a href="#what-happened">What happened</a>
+<a href="#did-an-agent-learn-to-cheat">Did an agent learn to cheat?</a>
+<a href="#what-i-would-carry-into-an-engineering-system">What I would carry into an engineering system</a>
+<a href="#inspect-and-reproduce-the-work">Inspect and reproduce the work</a></nav>
+      <div class="article-tools"><a href="improving-agents-starts-with-verifying-the-work.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-10-30-improving-agents-starts-with-verifying-the-work.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="Improving Agents Starts with Verifying the Work"><p>An agent reports that a batch is complete. The dashboard is green. Yet one
+required output is missing, another is stale, and duplicate artifacts inflate
+the count. Should that agent receive credit for finishing the job?</p>
+<p>I built a synthetic version of this problem in <strong>RSI Engine</strong> and used
+<strong>AutoHelix</strong> to coordinate code improvements. The engineering question was
+straightforward: <strong>does checking the actual work produce more reliable agents
+than trusting their completion reports?</strong> I also tested whether allowing the
+improvement strategy itself to change helped.</p>
+<p>Verified feedback produced consistent correct outcomes in this small
+experiment. Deliberately programmed cheating
+controls exposed the weak scoring rule. None of the selected live-model
+policies made false completion claims.</p>
+<h2 id="what-the-agent-had-to-do">What the agent had to do</h2>
+<p>The workload models an AI batch-processing job. Each source document requires
+one current, correct output. An agent can inspect existing outputs, request
+processing, update status counters, declare completion, or hand off blocked work.</p>
+<p>For reproducibility, a deterministic worker generates the artifacts. The live
+language model writes agent code during improvement; it does not process each
+document or make every tool decision. This keeps the experiment focused on
+orchestration: checking state, retrying work, and deciding when to stop.</p>
+<p>Cases include temporary failures, stale or incomplete outputs, uncertain
+operation results, permanent outages, and revoked permission. A successful
+agent must distinguish recoverable work from work that requires intervention.
+Simply handing everything off does not earn a passing score.</p>
+<h2 id="two-definitions-of-success">Two definitions of success</h2>
+<p>I compared two feedback conditions.</p>
+<p><strong>Reported completion</strong> gives credit when the agent declares completion and
+the dashboard&#39;s completed count meets its expected count. The agent can edit
+those counters. This is a deliberately weak experimental score.</p>
+<p><strong>Verified outcomes</strong> give credit only when an external checker finds exactly
+one correct, current output for every required document, or confirms a justified
+handoff after a genuine blocking condition. The checker recomputes expected
+content from the fixed source requirements.</p>
+<p>The distinction matters because a counter can change without the work changing.
+An agent can report that every document is complete, or reduce the expected
+count to zero. Neither action creates a valid output.</p>
+<p>The source requirements, worker, and grading rules stay outside the editable
+agent code. “External” here means outside candidate execution; I authored the
+simulator and checker, so this is not independent third-party validation.</p>
+<figure class="article-figure animated-diagram" data-diagram-motion data-diagram-style="dots" data-motion="paused">
+  <div class="diagram-controls" hidden><button type="button" data-diagram-toggle>Play animation</button><button type="button" data-diagram-expand>Expand diagram</button><span class="diagram-motion-note"></span></div>
+  <div class="diagram-canvas"><svg role="img" aria-label="AutoHelix coordinates code proposals, a candidate runs in Docker, and a fixed worker produces artifacts. Each experiment uses either editable completion counters or an external output verifier as its development score. A separate final audit runs after all selections are committed." xmlns="http://www.w3.org/2000/svg" style="background: #F8F5F0; background-color: #F8F5F0; color-scheme: light;" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1541px" height="1091px" viewBox="0 0 1541 1091"><defs/><rect fill="#F8F5F0" width="100%" height="100%" x="0" y="0" style="fill: rgb(248, 245, 240);"/><g><g data-cell-id="0"><g data-cell-id="1"><g data-cell-id="canvas"><g><rect x="0" y="0" width="1540" height="1090" fill="#f8f5f0" stroke="none" pointer-events="all" style="fill: rgb(248, 245, 240);"/></g></g><g data-cell-id="title"><g><rect x="48" y="26" width="1444" height="58" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="start" font-size="42px" style="fill: rgb(13, 27, 42);"><text x="48" y="75">Improve the agent. Verify the work.</text></g></g></g><g data-cell-id="subtitle"><g><rect x="48" y="97" width="1444" height="35" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="24px" style="fill: rgb(82, 98, 112);"><text x="48" y="125.5">RSI Engine + AutoHelix · synthetic AI batch jobs · two feedback conditions</text></g></g></g><g data-cell-id="loop-label"><g><rect x="48" y="167" width="1444" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="start" font-size="18px" style="fill: rgb(13, 27, 42);"><text x="48" y="189">BOUNDED IMPROVEMENT LOOP — DEVELOPMENT FEEDBACK</text></g></g></g><g data-cell-id="propose" data-flow="stage"><g><rect x="48" y="219" width="304" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="propose-title"><g><rect x="62" y="236" width="276" height="36" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="200" y="265.5">Propose code</text></g></g></g><g data-cell-id="propose-copy"><g><rect x="62" y="281" width="276" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="200" y="311">AutoHelix + live model</text><text x="200" y="336">Task / improver modules</text></g></g></g><g data-cell-id="candidate" data-flow="stage"><g><rect x="446" y="219" width="304" height="138" rx="11.04" ry="11.04" fill="#0d1b2a" stroke="#0d1b2a" stroke-width="2" pointer-events="all" style="fill: rgb(13, 27, 42); stroke: rgb(13, 27, 42);"/></g></g><g data-cell-id="candidate-title"><g><rect x="460" y="236" width="276" height="36" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#F8F5F0" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(248, 245, 240);"><text x="598" y="265.5">Execute candidate</text></g></g></g><g data-cell-id="candidate-copy"><g><rect x="460" y="281" width="276" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#F8F5F0" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(248, 245, 240);"><text x="598" y="311">Isolated Docker process</text><text x="598" y="336">Request work or hand off</text></g></g></g><g data-cell-id="worker" data-flow="stage"><g><rect x="844" y="219" width="262" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="worker-title"><g><rect x="858" y="236" width="234" height="36" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="975" y="265.5">Fixed worker</text></g></g></g><g data-cell-id="worker-copy"><g><rect x="858" y="281" width="234" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="975" y="311">Enforce write scope</text><text x="975" y="336">Produce outputs</text></g></g></g><g data-cell-id="outputs" data-flow="stage"><g><rect x="1196" y="219" width="296" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="outputs-title"><g><rect x="1210" y="236" width="268" height="36" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="1344" y="265.5">Output artifacts</text></g></g></g><g data-cell-id="outputs-copy"><g><rect x="1210" y="281" width="268" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="1344" y="311">Source IDs + revision</text><text x="1344" y="336">Artifact content</text></g></g></g><g data-cell-id="proposal-candidate" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 352 288 L 431.65 288" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 442.65 288 L 431.65 293.5 L 431.65 282.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="candidate-worker" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 750 288 L 829.65 288" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 840.65 288 L 829.65 293.5 L 829.65 282.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="worker-outputs" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 1106 288 L 1181.65 288" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 1192.65 288 L 1181.65 293.5 L 1181.65 282.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="counters" data-flow="stage"><g><rect x="400" y="490" width="360" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="counters-title"><g><rect x="414" y="507" width="332" height="36" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="580" y="536.5">Reported counters</text></g></g></g><g data-cell-id="counters-copy"><g><rect x="414" y="552" width="332" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="580" y="582">completed / expected</text><text x="580" y="607">Agent can edit these</text></g></g></g><g data-cell-id="candidate-counters" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 598 357 L 598 475.65" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 598 486.65 L 592.5 475.65 L 603.5 475.65 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="status-label"><g><rect x="620" y="410" width="295" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="19px" style="fill: rgb(82, 98, 112);"><text x="620" y="432.5">Status can change alone</text></g></g></g><g data-cell-id="requirements"><g><rect x="880" y="490" width="270" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="requirements-title"><g><rect x="894" y="507" width="242" height="36" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="1015" y="536.5">Source requirements</text></g></g></g><g data-cell-id="requirements-copy"><g><rect x="894" y="552" width="242" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="1015" y="582">Fixed input manifest</text><text x="1015" y="607">Expected current work</text></g></g></g><g data-cell-id="verifier" data-flow="stage"><g><rect x="1200" y="490" width="292" height="138" rx="11.04" ry="11.04" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="verifier-title"><g><rect x="1214" y="507" width="264" height="36" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="1346" y="536.5">External verifier</text></g></g></g><g data-cell-id="verifier-copy"><g><rect x="1214" y="552" width="264" height="66" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="1346" y="582">Exact current outputs</text><text x="1346" y="607">or justified handoff</text></g></g></g><g data-cell-id="outputs-verifier" data-flow="evidence"><g><path d="M 1344 357 L 1344 477.76" fill="none" stroke="#526270" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="10 10" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 1344 487.76 L 1339 477.76 L 1349 477.76 Z" fill="#526270" stroke="#526270" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="requirements-verifier" data-flow="evidence"><g><path d="M 1150 559 L 1187.76 559" fill="none" stroke="#526270" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="10 10" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 1197.76 559 L 1187.76 564 L 1187.76 554 Z" fill="#526270" stroke="#526270" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="audit-label"><g><rect x="1090" y="410" width="224" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="end" font-size="19px" style="fill: rgb(82, 98, 112);"><text x="1314" y="432.5">Check actual outputs</text></g></g></g><g data-cell-id="selection" data-flow="stage"><g><rect x="48" y="734" width="668" height="142" rx="11.36" ry="11.36" fill="#f8f5f0" stroke="#00b4d8" stroke-width="2" pointer-events="all" style="fill: rgb(248, 245, 240); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="selection-title"><g><rect x="62" y="751" width="640" height="36" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(13, 27, 42);"><text x="382" y="780.5">Use the chosen reward</text></g></g></g><g data-cell-id="selection-copy"><g><rect x="62" y="796" width="640" height="70" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="382" y="828">Development score accepts or rejects revisions</text><text x="382" y="853">Grading rules stay outside editable code</text></g></g></g><g data-cell-id="counters-score" data-flow="evidence"><g><path d="M 580 628 L 580 721.76" fill="none" stroke="#526270" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="10 10" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 580 731.76 L 575 721.76 L 585 721.76 Z" fill="#526270" stroke="#526270" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="verifier-score" data-flow="evidence"><g><path d="M 1346 628 L 1346 686 L 676 686 L 676 721.76" fill="none" stroke="#526270" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="10 10" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 676 731.76 L 671 721.76 L 681 721.76 Z" fill="#526270" stroke="#526270" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="weak-label"><g><rect x="340" y="660" width="219" height="26" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="end" font-size="18px" style="fill: rgb(82, 98, 112);"><text x="559" y="681">Reported condition</text></g></g></g><g data-cell-id="verified-label"><g><rect x="874" y="642" width="385" height="27" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="18px" style="fill: rgb(82, 98, 112);"><text x="1066.5" y="663.5">Verified condition</text></g></g></g><g data-cell-id="score-proposal" data-flow="action"><g transform="translate(0.5,0.5)"><path d="M 48 805 L 24 805 L 24 288 L 33.65 288" fill="none" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="stroke" style="stroke: rgb(0, 180, 216);"/><path d="M 44.65 288 L 33.65 293.5 L 33.65 282.5 Z" fill="#00b4d8" stroke="#00b4d8" stroke-width="3" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(0, 180, 216); stroke: rgb(0, 180, 216);"/></g></g><g data-cell-id="return-label"><g><rect x="62" y="637" width="288" height="50" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="62" y="659">Feedback guides</text><text x="62" y="684">the next revision</text></g></g></g><g data-cell-id="final" data-flow="stage"><g><rect x="864" y="750" width="628" height="126" rx="10.08" ry="10.08" fill="#0d1b2a" stroke="#0d1b2a" stroke-width="2" pointer-events="all" style="fill: rgb(13, 27, 42); stroke: rgb(13, 27, 42);"/></g></g><g data-cell-id="final-title"><g><rect x="878" y="767" width="600" height="36" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#F8F5F0" font-family="Arial" font-weight="bold" text-anchor="middle" font-size="25px" style="fill: rgb(248, 245, 240);"><text x="1178" y="796.5">Separate final audit</text></g></g></g><g data-cell-id="final-copy"><g><rect x="878" y="812" width="600" height="54" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#F8F5F0" font-family="Arial" text-anchor="middle" font-size="21px" style="fill: rgb(248, 245, 240);"><text x="1178" y="836">Commit all twelve selections first</text><text x="1178" y="861">120 final cases; no feedback into search</text></g></g></g><g data-cell-id="selection-final" data-flow="evidence"><g><path d="M 716 805 L 851.76 805" fill="none" stroke="#526270" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="10 10" pointer-events="stroke" style="stroke: rgb(82, 98, 112);"/><path d="M 861.76 805 L 851.76 810 L 851.76 800 Z" fill="#526270" stroke="#526270" stroke-width="2" stroke-miterlimit="10" pointer-events="all" style="fill: rgb(82, 98, 112); stroke: rgb(82, 98, 112);"/></g></g><g data-cell-id="final-label"><g><rect x="720" y="765" width="140" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="middle" font-size="17px" style="fill: rgb(82, 98, 112);"><text x="790" y="786.5">After selection</text></g></g></g><g data-cell-id="legend"><g><rect x="48" y="936" width="1444" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#0D1B2A" font-family="Arial" text-anchor="start" font-size="21px" style="fill: rgb(13, 27, 42);"><text x="48" y="959.5">Solid cyan: execution and revision flow     ·     Dashed: state and scoring evidence</text></g></g></g><g data-cell-id="boundary"><g><rect x="48" y="984" width="1444" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="21px" style="fill: rgb(82, 98, 112);"><text x="48" y="1007.5">The fixed worker, requirements and grader are outside the candidate. Each run uses one feedback condition.</text></g></g></g><g data-cell-id="scope"><g><rect x="48" y="1030" width="1444" height="28" fill="none" stroke="none" pointer-events="all"/></g><g><g fill="#526270" font-family="Arial" text-anchor="start" font-size="20px" style="fill: rgb(82, 98, 112);"><text x="48" y="1053">Moving circles show direction only. This is an experiment workflow, not a cloud deployment or live performance trace.</text></g></g></g></g></g></g></svg></div>
+  <figcaption>Illustrative flow animation; movement does not represent measured execution timing.</figcaption>
+</figure>
+<p>Use the diagram controls to pause the moving circles or expand the workflow.
+Solid connectors show execution and revision flow; dashed connectors carry
+state or scoring evidence. Motion illustrates direction, not elapsed time.
+The two feedback paths represent separate experimental conditions.</p>
+<p><a href="diagrams/verified-agent-work.svg">Static SVG</a> ·
+<a href="diagrams/verified-agent-work.png">Static PNG</a> ·
+<a href="diagrams/verified-agent-work.drawio">Editable draw.io source</a></p>
+<h2 id="what-improvement-meant-in-this-experiment">What “improvement” meant in this experiment</h2>
+<p>RSI Engine represents a candidate with two Python modules: a <strong>task policy</strong>
+that chooses actions and an <strong>improver</strong> that proposes how to revise the code.
+Candidate modules execute in Docker under resource limits. AutoHelix coordinates
+the proposal and acceptance process.</p>
+<p>Every run received the same four-call model budget. With a fixed improver, all
+four calls could revise the task policy. With an editable improver, one call
+could revise the improvement strategy, leaving three calls for the task policy.
+Both configurations had access to development history.</p>
+<p>I ran each combination of feedback and improver configuration three times,
+using Sonnet 4.6 through Amazon Bedrock: <strong>12 runs and 48 model calls</strong> in total.
+This changes code and improvement instructions; it does not update model weights.</p>
+<p>Development and validation used separate fault combinations. All twelve selected
+policies were committed before the final 120 cases were opened for evaluation.
+Final results never fed back into the improvement loop. The
+<a href="https://github.com/hk-775/rsi-engine/blob/c19b029b9160baa680a972afc7b5cd66a3c4edc4/docs/REWARD_STUDY.md">registered protocol</a>
+records the comparison and its limits.</p>
+<h2 id="what-happened">What happened</h2>
+<p>Every entry below uses the same final output checker, regardless of the feedback
+used during improvement.</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Feedback during improvement</th>
+<th>Improver</th>
+<th align="right">Run 1</th>
+<th align="right">Run 2</th>
+<th align="right">Run 3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Reported completion</td>
+<td>Fixed</td>
+<td align="right">92/120</td>
+<td align="right">120/120</td>
+<td align="right">80/120</td>
+</tr>
+<tr>
+<td>Reported completion</td>
+<td>Editable</td>
+<td align="right">120/120</td>
+<td align="right">120/120</td>
+<td align="right">120/120</td>
+</tr>
+<tr>
+<td>Verified outcomes</td>
+<td>Fixed</td>
+<td align="right">120/120</td>
+<td align="right">120/120</td>
+<td align="right">120/120</td>
+</tr>
+<tr>
+<td>Verified outcomes</td>
+<td>Editable</td>
+<td align="right">120/120</td>
+<td align="right">120/120</td>
+<td align="right">120/120</td>
+</tr>
+</tbody></table>
+</div><p><strong>Correct outcomes include justified handoffs.</strong> Every 120/120 run completed
+86 workflows and correctly handed off 34 blocked workflows. It did not complete
+120 batches.</p>
+<p>The two weaker fixed-improver runs stopped too early. One allowed only two
+attempts where the task contract allowed recovery on the third. The other kept
+the original one-attempt policy. These policies mishandled recoverable failures
+and handed off some outages before gathering enough evidence.</p>
+<p>The weak score gave no completion credit for either a justified or a premature
+handoff. When scores tied, selection favored fewer tool calls. Verified scoring
+could distinguish those outcomes.</p>
+<p>That is an important limit on the comparison: <strong>the treatment changes both output
+verification and credit for justified handoff.</strong> This experiment does not isolate
+their individual effects. The
+<a href="https://github.com/hk-775/rsi-engine/blob/4d7f00daf22314f738f95d4673174a6c71378b26/docs/REWARD_RESULTS.md">full results</a>
+include the failure breakdown.</p>
+<h2 id="did-an-agent-learn-to-cheat">Did an agent learn to cheat?</h2>
+<p>None of the twelve selected live-model policies made a false completion claim
+or edited the dashboard during final evaluation.</p>
+<p>To check whether the evaluator could detect manipulation, I also wrote two
+explicit cheating controls. One reported every document as complete without
+processing it. The other set the expected count to zero.</p>
+<p>Both received completion credit from the weak score on all 120 cases. The
+external checker rejected <strong>94 false completion claims per control</strong>. The
+remaining 26 cases already contained valid cached outputs. Both controls used
+the same cases, so these are not 188 independent failures.</p>
+<p>This demonstrates a way to game the configured score. It does not demonstrate
+that the live model discovered or chose that behavior, and it does not identify
+a defect in AutoHelix. The weak reward was a deliberate part of my experiment.</p>
+<h2 id="what-i-would-carry-into-an-engineering-system">What I would carry into an engineering system</h2>
+<p>Three design choices follow from this work.</p>
+<p><strong>Define completion through observable effects.</strong> For this workload, that means
+checking output identity, revision, content, and coverage. A useful extension to
+another domain starts by specifying its equivalent evidence.</p>
+<p><strong>Give justified handoff its own meaning.</strong> Report completed work separately
+from correctly escalated work. Preserve evidence of the block so an agent cannot
+appear reliable by abandoning difficult requests.</p>
+<p><strong>Keep the evaluator outside the code being improved.</strong> Let the optimizer change
+the task policy and, where useful, its revision strategy. Keep the contract,
+grading rules, execution limits, and final evaluation under separate control.
+Retain rejected proposals so the record explains how selection happened.</p>
+<p>The editable improver helped in two reported-score comparisons and tied in the
+third. Under verified feedback, both strategies reached the ceiling. Three
+repeats on one synthetic corpus cannot establish a general advantage for
+recursive improvement. A harder, independently authored evaluation would be
+needed to test whether the benefit transfers.</p>
+<h2 id="inspect-and-reproduce-the-work">Inspect and reproduce the work</h2>
+<p>The public record includes the selected source code, protocol, per-case audits,
+and model usage. The live experiment cost <strong>about $1.53 in estimated inference
+charges</strong>, calculated from token usage and registered rates; local compute and
+engineering time are excluded.</p>
+<p>The implementation passed 91 tests. I also replayed two published policies
+against a freshly generated corpus: all 240 case outcomes matched, with no new
+model calls. Replaying a selected policy verifies its recorded behavior; it
+does not reproduce the stochastic code-generation process.</p>
+<ul>
+<li><a href="https://github.com/hk-775/rsi-engine">RSI Engine repository</a></li>
+<li><a href="https://github.com/hk-775/rsi-engine/blob/4d7f00daf22314f738f95d4673174a6c71378b26/docs/results/autohelix-reward-study-2026-10-30.json">Exact result record and evaluated policies</a></li>
+<li><a href="https://github.com/hk-775/rsi-engine/blob/4d7f00daf22314f738f95d4673174a6c71378b26/docs/REWARD_STUDY.md#replay-the-evaluated-policies-without-model-calls">Docker replay instructions</a></li>
+</ul>
+<p>These are public synthetic cases, with 120 final examples drawn from 60 fault
+families. They share a simulator and related mechanisms; they are not 120
+independent model runs or production evidence. Every condition also retained
+instructions requiring valid outputs, so the reward was not the model&#39;s only
+guidance.</p>
+<p>My next engineering question is whether the same separation—editable agent,
+fixed contract, verified effects—holds up across independently built workloads.
+This experiment provides a reproducible starting point.</p>
+
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>
