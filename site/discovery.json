@@ -36,10 +36,10 @@
     {
       "source": "README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/README.md",
-      "source_sha256": "d1e14105be0c6d5d733cea7a2d5776bf674d7db03e03611441026f2e88e3853e",
+      "source_sha256": "dfb71f9dcd60b3775dffe45f1a46e77446f8fa4d818ca3ed0de58a088967de61",
       "markdown_url": "https://hk-775.github.io/hk-775/index.md",
-      "bytes": 4791,
-      "sha256": "00c26df1e66bd936b525f8af361bbb55972c5ca6f23ac30615a0a5cf67a41d40"
+      "bytes": 4797,
+      "sha256": "64ef932cda817161a9f36f98685ae44ad037ab6d65ca1379282dc3e5868cc455"
     },
     {
       "source": "CASE_STUDY.md",
@@ -76,10 +76,18 @@
     {
       "source": "blog/README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/README.md",
-      "source_sha256": "4184fcb2094f5b9e3f8cee148432f6bb30009bf7eabbe99245e92862f03d8cd0",
+      "source_sha256": "0e6db6b85c57812905c0f055374bfac0d0186f627d241e5c337ca2037313aa49",
       "markdown_url": "https://hk-775.github.io/hk-775/blog/index.md",
-      "bytes": 6992,
-      "sha256": "f0fe9494f040d8057578ad879a5276821eedea6fa653193a3bc34d28fc786d64"
+      "bytes": 7920,
+      "sha256": "874e21ecb82af98752bc128d3e575af4669a13b762172e06bedbfd4b556304ea"
+    },
+    {
+      "source": "blog/2026-10-30-improving-agents-starts-with-verifying-the-work.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-10-30-improving-agents-starts-with-verifying-the-work.md",
+      "source_sha256": "7c97104ea9b700750fe8945aa23a9e24f7ce87e9d6b8ddd94f988b1dbe4f9ad0",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.md",
+      "bytes": 10246,
+      "sha256": "8bd2a25de9054d19b02e76b8b4af0533325514868aeadd3c401eb8ba1428bfe2"
     },
     {
       "source": "blog/2026-10-19-your-ai-remembers-you-can-it-remember-a-lie.md",

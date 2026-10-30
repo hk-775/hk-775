@@ -10,6 +10,10 @@ connects a concrete question to implementation, evidence, and limitations.
 
 ## Articles
 
+- **30 October 2026 — [Improving Agents Starts with Verifying the Work](https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html).**
+  A live AutoHelix experiment compares completion reports with verified outputs,
+  tests scripted cheating controls, and examines whether editing the improver helps.
+  [Markdown source](2026-10-30-improving-agents-starts-with-verifying-the-work.md).
 - **19 October 2026 — [Your AI remembers you. Can it remember a lie?](https://hk-775.github.io/hk-775/blog/your-ai-remembers-you-can-it-remember-a-lie.html).**
   A false approval persists across sessions; four synthetic control profiles
   show why stored provenance and current authority need separate checks.
@@ -112,3 +116,11 @@ in-memory evaluation and GitHub Pages publication. It defines no AWS deployment
 target or cloud resources.
 The memory article likewise describes a local, provider-neutral Python fixture;
 it defines no AWS production target or resources.
+
+The agent-improvement article uses `scripts/build-reward-diagram.mjs` and the
+`verified-agent-work` asset basename. Its solid moving circles use the existing
+`dots` animation mode and navy/cyan/cream palette. The article cites pinned,
+public RSI Engine results; the blog runs no models or candidate code. Its
+diagram explains a local experiment with model inference through Bedrock,
+not an AWS deployment topology. No AWS architecture or resource change is
+part of this publication.

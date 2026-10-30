@@ -1,5 +1,28 @@
 [
   {
+    "slug": "improving-agents-starts-with-verifying-the-work",
+    "source": "blog/2026-10-30-improving-agents-starts-with-verifying-the-work.md",
+    "title": "Improving Agents Starts with Verifying the Work",
+    "subtitle": "What a controlled AutoHelix experiment reveals about completion, recovery, and reward",
+    "description": "I compared reported completion with verified outputs in a live AutoHelix experiment. Inspect the results, scripted cheating controls, and limits of editing the improvement strategy.",
+    "date": "2026-10-30",
+    "topics": ["Agent improvement", "Reward design", "Evaluation"],
+    "evidence": "48 live model calls; synthetic workload",
+    "diagramMotionStyle": "dots",
+    "assets": [
+      "blog/diagrams/verified-agent-work.drawio",
+      "blog/diagrams/verified-agent-work.svg",
+      "blog/diagrams/verified-agent-work.png"
+    ],
+    "animatedDiagrams": {
+      "blog/diagrams/verified-agent-work.svg": {
+        "action": ["proposal-candidate", "candidate-worker", "worker-outputs", "candidate-counters", "score-proposal"],
+        "evidence": ["outputs-verifier", "requirements-verifier", "counters-score", "verifier-score", "selection-final"],
+        "stage": ["propose", "candidate", "worker", "outputs", "counters", "verifier", "selection", "final"]
+      }
+    }
+  },
+  {
     "slug": "your-ai-remembers-you-can-it-remember-a-lie",
     "source": "blog/2026-10-19-your-ai-remembers-you-can-it-remember-a-lie.md",
     "title": "Your AI remembers you. Can it remember a lie?",
