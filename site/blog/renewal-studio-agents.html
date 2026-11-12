@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Renewal Studio, Part 7: Let Agents Work Within a Boundary · Harleen Kaur</title>
+  <meta name="description" content="An agent can propose a plan without gaining permission to accept for the buyer. Explore provider boundaries, durable scheduling and execution-based evaluations.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/renewal-studio-agents.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="renewal-studio-agents.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=3">
+
+  <link rel="stylesheet" href="renewal-explorers.css?v=2">
+  <script type="module" src="renewal-explorers.js?v=2"></script>
+  <meta property="og:title" content="Renewal Studio, Part 7: Let Agents Work Within a Boundary">
+  <meta property="og:description" content="An agent can propose a plan without gaining permission to accept for the buyer. Explore provider boundaries, durable scheduling and execution-based evaluations.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/renewal-studio-agents.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/diagrams/renewal-agents-cover.png">
+  <meta property="og:image:alt" content="Renewal Studio, Part 7: Let Agents Work Within a Boundary. Structured plans, durable jobs and tested authority.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-11-12">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Renewal Studio, Part 7: Let Agents Work Within a Boundary","alternativeHeadline":"Structured plans, durable jobs and tested authority","description":"An agent can propose a plan without gaining permission to accept for the buyer. Explore provider boundaries, durable scheduling and execution-based evaluations.","datePublished":"2026-11-12","dateModified":"2026-11-12","url":"https://hk-775.github.io/hk-775/blog/renewal-studio-agents.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/renewal-studio-agents.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/diagrams/renewal-agents-cover.png","keywords":["Renewal Studio","Workflow engineering","Synthetic evidence"],"isPartOf":{"@type":"CollectionPage","name":"Renewal Studio: Building a System for Software and API Contract Renewals","url":"https://hk-775.github.io/hk-775/blog/renewal-studio.html"},"position":7}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Renewal Studio · Workflow engineering · Synthetic evidence</p>
+    <h1>Renewal Studio, Part 7: Let Agents Work Within a Boundary</h1>
+    <p class="article-subtitle">Structured plans, durable jobs and tested authority</p>
+    <p class="post-meta"><time datetime="2026-11-12">12 November 2026</time><span>6 min read</span><span>Implementation review; synthetic replay</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#give-the-planner-a-bounded-job">Give the planner a bounded job</a>
+<a href="#recheck-evidence-after-the-model-responds">Recheck evidence after the model responds</a>
+<a href="#scheduling-is-a-state-problem">Scheduling is a state problem</a>
+<a href="#durable-delivery-is-part-of-agent-execution">Durable delivery is part of agent execution</a>
+<a href="#evaluate-effects-as-well-as-proposed-text">Evaluate effects as well as proposed text</a>
+<a href="#expand-authority-only-after-observing-the-boundary">Expand authority only after observing the boundary</a></nav>
+      <div class="article-tools"><a href="renewal-studio-agents.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-agents.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="Renewal Studio, Part 7: Let Agents Work Within a Boundary"><div class="series-callout"><strong>Part 7 of 9 · Renewal Studio</strong><p>Renewal Studio: Building a System for Software and API Contract Renewals</p><a href="renewal-studio.html">Explore the series and reading order →</a> · <a href="renewal-studio-forecasting.html">Next: Part 8 →</a></div><p>An agent proposes three steps: inspect usage, prepare an offer and accept it for the customer.</p>
+<p>The first two may be useful. The third crosses an authority boundary. A system that validates only whether the output is well-formed JSON will miss the most important defect.</p>
+<p>Renewal Studio separates the provider that proposes a plan from the executor that decides whether each action is allowed. The same distinction applies whether the proposal comes from OpenAI, Anthropic, a compatible API or a CLI adapter.</p>
+<h2 id="give-the-planner-a-bounded-job">Give the planner a bounded job</h2>
+<p>The agent workspace starts with a scoped evidence packet for known accounts. The plan binds that evidence through a fingerprint.</p>
+<p>The executor accepts four tools:</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Permitted work</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>scan_risk</code></td>
+<td>Refresh risk analysis from current evidence</td>
+</tr>
+<tr>
+<td><code>prepare_standard</code></td>
+<td>Attempt standard preparation through existing eligibility rules</td>
+</tr>
+<tr>
+<td><code>draft_check_in</code></td>
+<td>Draft a customer check-in for its approval workflow</td>
+</tr>
+<tr>
+<td><code>open_handoff</code></td>
+<td>Open post-sale work with the existing domain controls</td>
+</tr>
+</tbody></table>
+</div><p>Plans contain at most six unique steps across one to five known customers. The boundary excludes buyer acceptance, commercial approval, message approval, termination and arbitrary code execution.</p>
+<figure class="renewal-explorer" data-renewal="agent" data-motion="paused" aria-labelledby="flow-agent">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 20</span><h3 id="flow-agent">A planner proposes; the executor authorizes</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="A planner proposes; the executor authorizes" class="renewal-svg landscape">
+<title>A planner proposes; the executor authorizes</title>
+<desc>Synthetic explanatory workflow. Scoped evidence packet leads to Provider adapter. Provider adapter leads to Validate plan boundary. Validate plan boundary leads to Domain executor. Domain executor leads to Record each step. Validate plan boundary leads to Reject the proposal. Domain executor leads to Reject the proposal.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 20</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 544 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 390) rotate(90)"/>
+<path data-edge="5" d="M 176 314 V 365 H 544 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 390) rotate(90)"/>
+<g data-node="packet"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Scoped evidence packet</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Known accounts + fingerprint</text></g>
+<g data-node="planner"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Provider adapter</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Structured plan proposal</text></g>
+<g data-node="validate"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Validate plan boundary</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Tools, scope, size, uniqueness</text></g>
+<g data-node="execute"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Domain executor</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Current authority + source checks</text></g>
+<g data-node="record"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Record each step</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Result or rollback reason</text></g>
+<g data-node="reject"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reject the proposal</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">No forbidden action executes</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="A planner proposes; the executor authorizes" class="renewal-svg portrait">
+<title>A planner proposes; the executor authorizes</title>
+<desc>Synthetic explanatory workflow. Scoped evidence packet leads to Provider adapter. Provider adapter leads to Validate plan boundary. Validate plan boundary leads to Domain executor. Domain executor leads to Record each step. Validate plan boundary leads to Reject the proposal. Domain executor leads to Reject the proposal.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 20</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 359 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<path data-edge="5" d="M 314 481 H 327 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="packet"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Scoped evidence packet</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Known accounts + fingerprint</text></g>
+<g data-node="planner"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Provider adapter</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Structured plan proposal</text></g>
+<g data-node="validate"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Validate plan boundary</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Tools, scope, size, uniqueness</text></g>
+<g data-node="execute"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Domain executor</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Current authority + source checks</text></g>
+<g data-node="record"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Record each step</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Result or rollback reason</text></g>
+<g data-node="reject"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reject the proposal</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">No forbidden action executes</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose a plan condition</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Permitted plan</button><button type="button" data-scenario="1" aria-pressed="false">Accept for the buyer</button><button type="button" data-scenario="2" aria-pressed="false">Evidence changes</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>Useful work runs through existing domain controls</strong><p data-result-detail>The executor permits risk scanning, standard preparation, check-in drafting and opening a handoff. Each step retains its result or failure reason.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-agent.svg" download>Download SVG</a><a href="diagrams/renewal-agent.png" download>Download PNG</a><a href="diagrams/renewal-agent.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>The planner can explain a recommendation. The executor still checks tool identity, structure, scope, uniqueness, budgets and current source evidence. Domain functions enforce their own policy and authority checks.</p>
+<p>For example, <code>prepare_standard</code> means “attempt the standard preparation workflow.” It does not mean “produce an offer regardless of eligibility.” An unverified record can still enter a data hold.</p>
+<p>This makes an adapter replaceable without making its output authoritative.</p>
+<h2 id="recheck-evidence-after-the-model-responds">Recheck evidence after the model responds</h2>
+<p>Planning takes time. While a provider is generating a proposal, usage may arrive, a buyer may request cancellation or someone may change the contract record.</p>
+<p>The application performs provider I/O outside the store lock. Before saving the proposed plan, it rechecks the evidence and model budget. Execution checks the plan against current evidence again.</p>
+<p>Without those checks, a valid plan could become unsafe simply by waiting.</p>
+<p>Each permitted step records a result or failure reason. A failed step rolls back its local state changes independently. That does not imply that a real external API call could be rolled back by restoring local memory; remote effects need the receipt and reconciliation design from earlier parts.</p>
+<p>The public deployment uses the deterministic fixture provider. It makes no paid model calls. Optional adapters exist for OpenAI Responses, Anthropic Messages, compatible APIs, Codex CLI and Claude Code. Their availability is not evidence that their live output quality or operational reliability has been measured.</p>
+<p>The scheduled agent always uses fixture mode in this demonstration, independently of an interactive provider configuration.</p>
+<h2 id="scheduling-is-a-state-problem">Scheduling is a state problem</h2>
+<p>An agent that works only when someone presses a button is an assistant. A renewal operation also needs work to happen when nobody has the page open.</p>
+<p>The runner refreshes synthetic feeds, scans risk, prepares eligible offers, drafts reminders, captures weekly forecasts and escalates overdue source tasks. Background execution is an explicit opt-in; automatic template approval and bounded fixture-agent execution are separate opt-ins.</p>
+<figure class="renewal-explorer" data-renewal="scheduler" data-motion="paused" aria-labelledby="flow-scheduler">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 21</span><h3 id="flow-scheduler">The worker needs durable memory</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="The worker needs durable memory" class="renewal-svg landscape">
+<title>The worker needs durable memory</title>
+<desc>Synthetic explanatory workflow. Persisted due time leads to Conditional workspace edit. Conditional workspace edit leads to Run bounded due work. Run bounded due work leads to Committed tick. Run bounded due work leads to Retry eligible failure. Retry eligible failure leads to Dead-letter job.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 21</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 544 314 V 355 H 176 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 324 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="due"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Persisted due time</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Workspace + business date</text></g>
+<g data-node="claim"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Conditional workspace edit</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Recheck due time and expiry</text></g>
+<g data-node="run"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Run bounded due work</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Results stored with the job</text></g>
+<g data-node="done"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Committed tick</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Repeated date is idempotent</text></g>
+<g data-node="retry"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Retry eligible failure</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Retain attempt and cause</text></g>
+<g data-node="dead"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Dead-letter job</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Operator resolves and retries</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="The worker needs durable memory" class="renewal-svg portrait">
+<title>The worker needs durable memory</title>
+<desc>Synthetic explanatory workflow. Persisted due time leads to Conditional workspace edit. Conditional workspace edit leads to Run bounded due work. Run bounded due work leads to Committed tick. Run bounded due work leads to Retry eligible failure. Retry eligible failure leads to Dead-letter job.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 21</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 314 359 H 321 V 603 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 603) rotate(180)"/>
+<path data-edge="4" d="M 170 644 L 170 684" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 684) rotate(90)"/>
+<g data-node="due"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Persisted due time</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Workspace + business date</text></g>
+<g data-node="claim"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Conditional workspace edit</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Recheck due time and expiry</text></g>
+<g data-node="run"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Run bounded due work</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Results stored with the job</text></g>
+<g data-node="done"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Committed tick</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Repeated date is idempotent</text></g>
+<g data-node="retry"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Retry eligible failure</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Retain attempt and cause</text></g>
+<g data-node="dead"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Dead-letter job</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Operator resolves and retries</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose a job event</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Two workers see due work</button><button type="button" data-scenario="1" aria-pressed="false">Recoverable job failure</button><button type="button" data-scenario="2" aria-pressed="false">Attempts exhausted</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>The committed due time decides who proceeds</strong><p data-result-detail>A competing worker rechecks the persisted state. It cannot repeat an already committed tick merely because its earlier read saw work due.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-scheduler.svg" download>Download SVG</a><a href="diagrams/renewal-scheduler.png" download>Download PNG</a><a href="diagrams/renewal-scheduler.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>The persisted due time is the critical input. Two workers can both observe that work appears due. The conditional workspace edit rechecks the due time and expiry before committing. A competing worker cannot repeat an already committed tick using its earlier observation.</p>
+<p>Jobs retain results and a bounded attempt count. Completed work is idempotent within its business date. Failed work can retry, then enter a dead letter when the demonstration&#39;s attempts are exhausted. An operator resolves the cause before manual replay.</p>
+<p>There are two clocks to keep distinct: the real interval that determines when a worker wakes up, and the synthetic business date that determines which renewal work is due. Advancing one is not proof that the other was observed in production.</p>
+<h2 id="durable-delivery-is-part-of-agent-execution">Durable delivery is part of agent execution</h2>
+<p>A plan that drafts a reminder has not delivered it. A worker that initiates an action has not necessarily verified its effect.</p>
+<p>The downstream communication and connector workflows retain approvals, stable action identities, independent simulated provider records and receipts. Delivery can fail, reconcile or enter a dead letter.</p>
+<p>Current cancellation and suppression checks apply at delivery. A correct draft can become inappropriate while waiting in a queue.</p>
+<p>This is where the earlier parts connect. The agent does not get a shortcut around quote approval, source reconciliation, financial reservations or buyer consent. It calls into the same workflows a human operator uses, with a smaller action surface.</p>
+<h2 id="evaluate-effects-as-well-as-proposed-text">Evaluate effects as well as proposed text</h2>
+<p>The offline evaluation workspace exercises actual validation and disposable execution. Cases include valid tools, forbidden authority, scope violations, malformed or refused output, duplicate steps, budgets, stale evidence, injected names, customer roles and retries.</p>
+<p>The deliberately broken fixture corrupts valid tool names. It should fail the evaluation while the application controls remain unchanged.</p>
+<figure class="renewal-explorer" data-renewal="evals" data-motion="paused" aria-labelledby="flow-evals">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 22</span><h3 id="flow-evals">Test the boundary before changing a provider</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Test the boundary before changing a provider" class="renewal-svg landscape">
+<title>Test the boundary before changing a provider</title>
+<desc>Synthetic explanatory workflow. Offline case set leads to Candidate plan fixture. Candidate plan fixture leads to Real validation path. Real validation path leads to Inspect effects. Inspect effects leads to Review release evidence. Real validation path leads to Regression visible.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 22</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 544 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 390) rotate(90)"/>
+<g data-node="cases"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Offline case set</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Valid, forbidden, stale, malformed</text></g>
+<g data-node="fixture"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Candidate plan fixture</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">No paid model call</text></g>
+<g data-node="validate"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Real validation path</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Disposable execution state</text></g>
+<g data-node="observe"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Inspect effects</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Allowed work + forbidden absence</text></g>
+<g data-node="gate"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Review release evidence</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Compare with baseline</text></g>
+<g data-node="fail"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Regression visible</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Application controls stay intact</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Test the boundary before changing a provider" class="renewal-svg portrait">
+<title>Test the boundary before changing a provider</title>
+<desc>Synthetic explanatory workflow. Offline case set leads to Candidate plan fixture. Candidate plan fixture leads to Real validation path. Real validation path leads to Inspect effects. Inspect effects leads to Review release evidence. Real validation path leads to Regression visible.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 22</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 359 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="cases"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Offline case set</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Valid, forbidden, stale, malformed</text></g>
+<g data-node="fixture"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Candidate plan fixture</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">No paid model call</text></g>
+<g data-node="validate"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Real validation path</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Disposable execution state</text></g>
+<g data-node="observe"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Inspect effects</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Allowed work + forbidden absence</text></g>
+<g data-node="gate"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Review release evidence</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Compare with baseline</text></g>
+<g data-node="fail"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Regression visible</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Application controls stay intact</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose an evaluation condition</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Baseline fixture</button><button type="button" data-scenario="1" aria-pressed="false">Broken tool names</button><button type="button" data-scenario="2" aria-pressed="false">Real model comparison</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>A passing run is bounded evidence</strong><p data-result-detail>Cases exercise actual validation and disposable execution. The displayed gate is evidence for review; it does not automatically block a deployment pipeline.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-evals.svg" download>Download SVG</a><a href="diagrams/renewal-evals.png" download>Download PNG</a><a href="diagrams/renewal-evals.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>The useful assertion is specific: permitted work occurred, or forbidden work did not occur, with the expected reason and resulting state.</p>
+<p>The displayed release gate is review evidence. It is not connected to an automatic deployment block. A production pipeline would need to consume the evaluation result and enforce its own release policy.</p>
+<p>Offline fixture results also leave important questions open. Representative live-model evaluation would need to measure wording quality, evidence faithfulness, refusals, malformed responses, token usage, latency and paid cost. Repeating a deterministic fixture cannot answer those questions.</p>
+<h2 id="expand-authority-only-after-observing-the-boundary">Expand authority only after observing the boundary</h2>
+<p>A sensible expansion starts with a narrowly defined action and a failure model. Identify its required authority, inputs, source versions, allowed effects, duplicate behavior and recovery path. Add representative checks before adding the tool to an executor.</p>
+<p>For a first live pilot, I would keep plan generation and draft preparation separate from commercial approval and customer consent. The team could inspect accepted and rejected plans, stale-evidence failures, intervention frequency and unresolved effects before considering broader autonomy.</p>
+<p>That is a proposed pilot approach, not a claim that Renewal Studio has already operated one.</p>
+<p>Try <a href="https://d11wfkflwovvog.cloudfront.net/agents">Agent workspace</a>, <a href="https://d11wfkflwovvog.cloudfront.net/automation">Automation</a> and <a href="https://d11wfkflwovvog.cloudfront.net/evaluations">AI evaluations</a>. The blog figures execute locally; the application uses isolated synthetic state. Implementation was reviewed on 12 November 2026, with executed public checks in the <a href="evidence/renewal-series.json">series replay record</a>.</p>
+<p>Once the work runs, the business needs to understand what is likely to happen next. <a href="renewal-studio-forecasting.html">Part 8 connects forecasts to saved evidence and effective outcomes</a>.</p>
+<nav class="series-reading-nav" aria-label="Continue the series">
+    <a rel="prev" href="renewal-studio-finance.html"><small>← Part 6</small>Follow the Money</a>
+    <a rel="next" href="renewal-studio-forecasting.html"><small>Part 8 →</small>Forecast the Business from the Work</a>
+  </nav>
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>

@@ -1,0 +1,20 @@
+<mxfile host="app.diagrams.net"><diagram name="Turn a sale into an outcome plan"><mxGraphModel page="1" pageWidth="720" pageHeight="520" background="#FAF8F3"><root><mxCell id="0"/><mxCell id="1" parent="0"/>
+<mxCell id="agreement" value="Accepted agreement
+Preserved scope + consent" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="74" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="handoff" value="Confirm the handoff
+Owner acknowledges responsibility" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="74" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="kickoff" value="Goals and kickoff
+Customer outcome defined" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="232" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="integrate" value="Integration milestone
+Prerequisites + blocker evidence" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="232" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="outcome" value="First useful outcome
+Observed result + review" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="390" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="blocked" value="Blocked milestone
+Named owner + next action" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="390" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="agreement" target="handoff"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="handoff" target="kickoff"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="kickoff" target="integrate"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="integrate" target="outcome"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="integrate" target="blocked"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="kickoff" target="blocked"><mxGeometry relative="1" as="geometry"/></mxCell>
+</root></mxGraphModel></diagram></mxfile>

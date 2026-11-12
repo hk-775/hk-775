@@ -1,0 +1,19 @@
+<mxfile host="app.diagrams.net"><diagram name="Stress the workflow across renewal cycles"><mxGraphModel page="1" pageWidth="720" pageHeight="520" background="#FAF8F3"><root><mxCell id="0"/><mxCell id="1" parent="0"/>
+<mxCell id="seed" value="Disposable cohort
+Seed + accounts + cycle count" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="74" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="cycle" value="Actual domain functions
+Prepare, accept, fulfill, promote" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="74" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="provider" value="Synthetic provider events
+Outages + receipts + payments" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="232" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="check" value="Check invariants
+Balances, duplicates, recovery" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="232" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="report" value="Bounded evidence report
+Digest + sampled histories" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="390" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="backlog" value="Unresolved outage backlog
+Do not label as completed" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="390" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="seed" target="cycle"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="cycle" target="provider"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="provider" target="check"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="check" target="report"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="provider" target="backlog"><mxGeometry relative="1" as="geometry"/></mxCell>
+</root></mxGraphModel></diagram></mxfile>

@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Renewal Studio, Part 3: Renewing a Commitment When Usage Changes · Harleen Kaur</title>
+  <meta name="description" content="A precise shortfall projection can still rest on bad data. Follow reconciled usage through intervention, evidence review and commitment rightsizing.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/renewal-studio-consumption.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="renewal-studio-consumption.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=3">
+
+  <link rel="stylesheet" href="renewal-explorers.css?v=2">
+  <script type="module" src="renewal-explorers.js?v=2"></script>
+  <meta property="og:title" content="Renewal Studio, Part 3: Renewing a Commitment When Usage Changes">
+  <meta property="og:description" content="A precise shortfall projection can still rest on bad data. Follow reconciled usage through intervention, evidence review and commitment rightsizing.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/renewal-studio-consumption.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/diagrams/renewal-consumption-cover.png">
+  <meta property="og:image:alt" content="Renewal Studio, Part 3: Renewing a Commitment When Usage Changes. Turn a trusted usage picture into a deliberate offer.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-11-12">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Renewal Studio, Part 3: Renewing a Commitment When Usage Changes","alternativeHeadline":"Turn a trusted usage picture into a deliberate offer","description":"A precise shortfall projection can still rest on bad data. Follow reconciled usage through intervention, evidence review and commitment rightsizing.","datePublished":"2026-11-12","dateModified":"2026-11-12","url":"https://hk-775.github.io/hk-775/blog/renewal-studio-consumption.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/renewal-studio-consumption.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/diagrams/renewal-consumption-cover.png","keywords":["Renewal Studio","Workflow engineering","Synthetic evidence"],"isPartOf":{"@type":"CollectionPage","name":"Renewal Studio: Building a System for Software and API Contract Renewals","url":"https://hk-775.github.io/hk-775/blog/renewal-studio.html"},"position":3}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Renewal Studio · Workflow engineering · Synthetic evidence</p>
+    <h1>Renewal Studio, Part 3: Renewing a Commitment When Usage Changes</h1>
+    <p class="article-subtitle">Turn a trusted usage picture into a deliberate offer</p>
+    <p class="post-meta"><time datetime="2026-11-12">12 November 2026</time><span>6 min read</span><span>Implementation review; synthetic replay</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#start-with-a-ledger-that-can-explain-its-balance">Start with a ledger that can explain its balance</a>
+<a href="#make-unknown-a-useful-state">Make “unknown” a useful state</a>
+<a href="#a-risk-case-should-survive-the-intervention">A risk case should survive the intervention</a>
+<a href="#the-next-commitment-is-a-commercial-decision">The next commitment is a commercial decision</a>
+<a href="#activation-starts-a-new-accounting-period">Activation starts a new accounting period</a>
+<a href="#try-a-gap-before-trying-a-recovery">Try a gap before trying a recovery</a></nav>
+      <div class="article-tools"><a href="renewal-studio-consumption.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-consumption.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="Renewal Studio, Part 3: Renewing a Commitment When Usage Changes"><div class="series-callout"><strong>Part 3 of 9 · Renewal Studio</strong><p>Renewal Studio: Building a System for Software and API Contract Renewals</p><a href="renewal-studio.html">Explore the series and reading order →</a> · <a href="renewal-studio-retention.html">Next: Part 4 →</a></div><p>A customer committed $120,000 for the year. With 180 days remaining, the ledger shows $45,000 consumed and a recent burn rate of $250 per day.</p>
+<p>At that rate, projected consumption is $90,000. The apparent shortfall is $30,000.</p>
+<p>The multiplication is easy. The engineering question is whether the $45,000 is reconciled, whether the recent days are complete, and who should act on the result. A precise projection can still rest on bad evidence.</p>
+<p>This part connects consumption monitoring to recovery work and a reviewed commitment offer. It builds on the approval boundaries in <a href="renewal-studio-exceptions.html">Part 2</a>.</p>
+<h2 id="start-with-a-ledger-that-can-explain-its-balance">Start with a ledger that can explain its balance</h2>
+<p>Renewal Studio reconstructs consumed value from a verified opening balance, usage events and credits. Usage is append-only. A repeated event with identical content deduplicates; conflicting content under the same event ID is rejected. An expected source version protects against applying a change to a superseded record.</p>
+<p>That gives the system a concrete question to answer: which observations support this balance?</p>
+<p>A day with an explicit zero is evidence. A day with no observation is a gap. Treating both as zero would lower the apparent burn rate and might create a false shortfall.</p>
+<figure class="renewal-explorer" data-renewal="burndown" data-motion="paused" aria-labelledby="flow-burndown">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 08</span><h3 id="flow-burndown">Project from the last trusted observation</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Project from the last trusted observation" class="renewal-svg landscape">
+<title>Project from the last trusted observation</title>
+<desc>Synthetic explanatory workflow. Reconciled ledger leads to Coverage check. Coverage check leads to Recent net burn rate. Recent net burn rate leads to Term-end projection. Term-end projection leads to Owned risk case. Coverage check leads to Withhold the projection.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 08</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 544 156 V 207 H 360 V 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="ledger"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reconciled ledger</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Opening balance + usage + credits</text></g>
+<g data-node="coverage"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Coverage check</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Complete, current, nonconflicting</text></g>
+<g data-node="rate"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Recent net burn rate</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Last 30 complete days</text></g>
+<g data-node="project"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Term-end projection</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Observed balance + future burn</text></g>
+<g data-node="risk"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Owned risk case</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Shortfall or early depletion</text></g>
+<g data-node="hold"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Withhold the projection</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Resolve missing evidence</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Project from the last trusted observation" class="renewal-svg portrait">
+<title>Project from the last trusted observation</title>
+<desc>Synthetic explanatory workflow. Reconciled ledger leads to Coverage check. Coverage check leads to Recent net burn rate. Recent net burn rate leads to Term-end projection. Term-end projection leads to Owned risk case. Coverage check leads to Withhold the projection.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 08</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 237 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="ledger"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reconciled ledger</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Opening balance + usage + credits</text></g>
+<g data-node="coverage"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Coverage check</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Complete, current, nonconflicting</text></g>
+<g data-node="rate"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Recent net burn rate</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Last 30 complete days</text></g>
+<g data-node="project"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Term-end projection</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Observed balance + future burn</text></g>
+<g data-node="risk"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Owned risk case</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Shortfall or early depletion</text></g>
+<g data-node="hold"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Withhold the projection</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Resolve missing evidence</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose the telemetry condition</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Complete ledger</button><button type="button" data-scenario="1" aria-pressed="false">Missing observation</button><button type="button" data-scenario="2" aria-pressed="false">Credit arrives</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>A projection carries its coverage boundary</strong><p data-result-detail>The worked example uses $45,000 consumed, $250 per day and 180 remaining days: $90,000 projected against a $120,000 commitment. This is a deterministic scenario.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-burndown.svg" download>Download SVG</a><a href="diagrams/renewal-burndown.png" download>Download PNG</a><a href="diagrams/renewal-burndown.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>The demo uses the last 30 complete days for the recent net burn rate. It projects from the coverage boundary of the observations, rather than pretending that unobserved days were measured. Amounts use integer cents and rational intermediate calculations, with half-up rounding at the final cent.</p>
+<p>For the opening example, assume that the evidence really supports the stated balance, rate and remaining window:</p>
+<pre><code class="language-text">Projected consumption = 45,000 + (250 × 180) = 90,000 USD
+Projected utilization = 90,000 / 120,000 = 75%
+Projected unused commitment = 120,000 − 90,000 = 30,000 USD
+</code></pre>
+<p>This is an illustrative calculation. It is not a forecast of a real customer&#39;s demand.</p>
+<h2 id="make-unknown-a-useful-state">Make “unknown” a useful state</h2>
+<p>The fixture flags projected utilization below 95% as shortfall risk. It also detects projected depletion more than 14 days before term end. Those thresholds are configured demonstration policies.</p>
+<p>The data-quality checks come first. Stale telemetry, incomplete coverage, duplicate or conflicting observations, an unverified balance and an invalid recent net rate can withhold the projection.</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Observation</th>
+<th>Appropriate system response</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Complete evidence, low projected utilization</td>
+<td>Open an owned shortfall case</td>
+</tr>
+<tr>
+<td>Complete evidence, early depletion</td>
+<td>Open a capacity investigation</td>
+</tr>
+<tr>
+<td>Explicit zero-consumption day</td>
+<td>Include the zero in the observed window</td>
+</tr>
+<tr>
+<td>Missing or stale observations</td>
+<td>Withhold the estimate and request reconciliation</td>
+</tr>
+<tr>
+<td>Credit or corrected source version</td>
+<td>Reconcile, refresh the evidence and rescan</td>
+</tr>
+</tbody></table>
+</div><p>An “unknown” case should identify what is missing and who can supply it. Otherwise, withholding a number merely moves the ambiguity into a queue.</p>
+<p>The same boundary matters for generated explanations. A model may summarize reconciled evidence. It must not turn an unavailable projection into a confident narrative about the customer&#39;s plans.</p>
+<h2 id="a-risk-case-should-survive-the-intervention">A risk case should survive the intervention</h2>
+<p>A useful risk case preserves its original baseline, source fingerprint, owner and chosen playbook. If the plan changes, prior work should remain understandable instead of disappearing from history.</p>
+<p>Imagine that the customer reports an integration blocker. The owner chooses an adoption recovery plan, assigns the integration work and records the intended customer outcome. Completing those actions establishes that the team did the work. It does not establish that consumption recovered.</p>
+<figure class="renewal-explorer" data-renewal="intervention" data-motion="paused" aria-labelledby="flow-intervention">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 09</span><h3 id="flow-intervention">Closing tasks is not proof of recovery</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Closing tasks is not proof of recovery" class="renewal-svg landscape">
+<title>Closing tasks is not proof of recovery</title>
+<desc>Synthetic explanatory workflow. Risk baseline leads to Approved playbook. Approved playbook leads to Complete the work. Complete the work leads to New observations. New observations leads to Fresh on-track scan. Complete the work leads to Keep the case open. New observations leads to Keep the case open.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 09</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 544 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 390) rotate(90)"/>
+<path data-edge="5" d="M 176 314 V 365 H 544 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 390) rotate(90)"/>
+<g data-node="case"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Risk baseline</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Source fingerprint + owner</text></g>
+<g data-node="plan"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Approved playbook</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Explicit actions and goals</text></g>
+<g data-node="work"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Complete the work</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Evidence for each action</text></g>
+<g data-node="observe"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">New observations</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Changed source + seven days</text></g>
+<g data-node="review"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Fresh on-track scan</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Reviewer records the outcome</text></g>
+<g data-node="open"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Keep the case open</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Missing or stale evidence</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Closing tasks is not proof of recovery" class="renewal-svg portrait">
+<title>Closing tasks is not proof of recovery</title>
+<desc>Synthetic explanatory workflow. Risk baseline leads to Approved playbook. Approved playbook leads to Complete the work. Complete the work leads to New observations. New observations leads to Fresh on-track scan. Complete the work leads to Keep the case open. New observations leads to Keep the case open.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 09</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 359 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<path data-edge="5" d="M 314 481 H 327 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="case"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Risk baseline</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Source fingerprint + owner</text></g>
+<g data-node="plan"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Approved playbook</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Explicit actions and goals</text></g>
+<g data-node="work"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Complete the work</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Evidence for each action</text></g>
+<g data-node="observe"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">New observations</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Changed source + seven days</text></g>
+<g data-node="review"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Fresh on-track scan</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Reviewer records the outcome</text></g>
+<g data-node="open"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Keep the case open</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Missing or stale evidence</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose the recovery evidence</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Evidence supports closure</button><button type="button" data-scenario="1" aria-pressed="false">Tasks done, no new data</button><button type="button" data-scenario="2" aria-pressed="false">Evidence changed</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>Close against new observations</strong><p data-result-detail>Commitment recovery needs completed actions, a new data version, at least seven days, a fresh on-track scan and a review note. The original baseline remains available.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-intervention.svg" download>Download SVG</a><a href="diagrams/renewal-intervention.png" download>Download PNG</a><a href="diagrams/renewal-intervention.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>In the demo, closing a commitment recovery case requires an active plan, all required actions, a new data version, at least seven days, a fresh on-track scan and a review note. Changes to the evidence or business date require a current scan.</p>
+<p>That design makes the outcome review harder to fake accidentally. An old scan cannot close a case after its underlying data changes. A completed checklist cannot replace the observation window.</p>
+<p>The synthetic scenario can increase usage after a plan starts. That is useful for exercising closure and history. It does not prove that the intervention caused the increase. The simulator chose both the intervention context and the later observations.</p>
+<p>In a real pilot, the team would need to separate work performed, observed behavior and causal claims. The case history gives them material to inspect; it does not answer the causal question automatically.</p>
+<h2 id="the-next-commitment-is-a-commercial-decision">The next commitment is a commercial decision</h2>
+<p>A low projection does not determine the correct next commitment. The customer may be consolidating workloads, delayed on an integration or planning a launch outside the observed window. An early-depletion signal may reflect sustained growth or a temporary batch.</p>
+<p>Renewal Studio offers three synthetic choices: keep the current commitment, rightsize to 80%, or expand to 125%. An unchanged eligible amount within the configured standard limit can take the standard path. Resizing, expansion and larger amounts require Deal Desk review.</p>
+<figure class="renewal-explorer" data-renewal="rightsize" data-motion="paused" aria-labelledby="flow-rightsize">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 10</span><h3 id="flow-rightsize">Choose the next commitment deliberately</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Choose the next commitment deliberately" class="renewal-svg landscape">
+<title>Choose the next commitment deliberately</title>
+<desc>Synthetic explanatory workflow. Current usage picture leads to Select commitment. Select commitment leads to Standard policy path. Standard policy path leads to Publish current offer. Publish current offer leads to Buyer accepts. Select commitment leads to Deal Desk approval. Deal Desk approval leads to Publish current offer.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 10</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 544 156 V 207 H 360 V 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<path data-edge="5" d="M 692 431 H 708 V 214 H 176 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 232) rotate(90)"/>
+<g data-node="evidence"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Current usage picture</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Coverage + utilization + risk</text></g>
+<g data-node="option"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Select commitment</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Renew, rightsize or expand</text></g>
+<g data-node="standard"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Standard policy path</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Unchanged amount within limit</text></g>
+<g data-node="publish"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Publish current offer</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Versioned amount and term</text></g>
+<g data-node="accept"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Buyer accepts</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">New pool starts at term start</text></g>
+<g data-node="review"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Deal Desk approval</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Resized, expanded or above limit</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Choose the next commitment deliberately" class="renewal-svg portrait">
+<title>Choose the next commitment deliberately</title>
+<desc>Synthetic explanatory workflow. Current usage picture leads to Select commitment. Select commitment leads to Standard policy path. Standard policy path leads to Publish current offer. Publish current offer leads to Buyer accepts. Select commitment leads to Deal Desk approval. Deal Desk approval leads to Publish current offer.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 10</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 237 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<path data-edge="5" d="M 314 725 H 327 V 481 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 481) rotate(180)"/>
+<g data-node="evidence"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Current usage picture</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Coverage + utilization + risk</text></g>
+<g data-node="option"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Select commitment</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Renew, rightsize or expand</text></g>
+<g data-node="standard"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Standard policy path</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Unchanged amount within limit</text></g>
+<g data-node="publish"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Publish current offer</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Versioned amount and term</text></g>
+<g data-node="accept"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Buyer accepts</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">New pool starts at term start</text></g>
+<g data-node="review"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Deal Desk approval</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Resized, expanded or above limit</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose a commercial option</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Keep the amount</button><button type="button" data-scenario="1" aria-pressed="false">Right size</button><button type="button" data-scenario="2" aria-pressed="false">Expand</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>An unchanged eligible commitment can follow standard policy</strong><p data-result-detail>The demo supports an unchanged commitment within its configured standard limit. Data quality, buyer authority and current terms remain required.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-rightsize.svg" download>Download SVG</a><a href="diagrams/renewal-rightsize.png" download>Download PNG</a><a href="diagrams/renewal-rightsize.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>Using the fictional $120,000 agreement, those choices are $120,000, $96,000 and $150,000. The 75% utilization projection is evidence for the recommendation; it is not authority to choose any of them for the buyer.</p>
+<p>The quote binds the proposed amount, contract, policy, buyer, billing identity, evidence and relevant dates. If those inputs change before acceptance, the system needs a current proposal and any required approvals.</p>
+<p>This protects both sides of the decision. The seller cannot unknowingly publish a recommendation based on old consumption. The buyer cannot accidentally accept a different commitment through a stale page.</p>
+<h2 id="activation-starts-a-new-accounting-period">Activation starts a new accounting period</h2>
+<p>After acceptance, the renewal waits for its effective date. Activation archives the prior consumption ledger and starts the new commitment pool with zero consumed.</p>
+<p>The demo does not silently carry unused value into the next term. Carryforward would be a commercial rule requiring explicit implementation and agreement, not a consequence of having an unused balance.</p>
+<p>Billing and access still need verified target states. The expansion fixture can fail its first access update after billing succeeds. Reconciliation preserves the completed billing write and retries the missing access step.</p>
+<p>That connects the entire chain: trusted observations support a recommendation; review authorizes the proposal; consent creates the agreement; activation starts the new pool; provider verification establishes completion.</p>
+<h2 id="try-a-gap-before-trying-a-recovery">Try a gap before trying a recovery</h2>
+<p>Open <a href="https://d11wfkflwovvog.cloudfront.net/consumption">Consumption risk</a> and inspect the coverage evidence before the projection. Explore a data-quality hold, then a shortfall case with an active recovery plan. Use <a href="https://d11wfkflwovvog.cloudfront.net/deals">Commitment deals</a> to compare unchanged and resized proposals.</p>
+<p>The figures run locally in the blog. Application data, usage changes and provider effects are synthetic. Implementation was reviewed on 12 November 2026; the <a href="evidence/renewal-series.json">series replay record</a> separates executed public checks from these explanatory scenarios. No observed demonstration establishes retention lift or intervention effectiveness.</p>
+<p>Some customers have no commitment to renew. <a href="renewal-studio-retention.html">Part 4 follows PAYG value, cancellation and a customer&#39;s return</a>.</p>
+<nav class="series-reading-nav" aria-label="Continue the series">
+    <a rel="prev" href="renewal-studio-exceptions.html"><small>← Part 2</small>When the Standard Path Ends</a>
+    <a rel="next" href="renewal-studio-retention.html"><small>Part 4 →</small>Retention Beyond the Renewal Date</a>
+  </nav>
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>

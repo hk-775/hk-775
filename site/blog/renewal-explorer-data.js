@@ -1,4 +1,5 @@
 // Shared, deterministic teaching scenarios. These do not execute renewals.
+import { seriesExplorers } from "./renewal-series-data.js";
 export const explorers = {
   journey: {
     number: "01", title: "One renewal, six checkpoints", prompt: "Choose a checkpoint",
@@ -72,4 +73,5 @@ export const explorers = {
       { label: "Retry access", nodes: ["billing", "reconcile", "retry", "complete"], edges: [2, 3, 4], title: "Complete after reconciliation", detail: "Read the existing billing state, skip the matching update, then retry access. The example ends with one billing update and one successful access update across two access attempts.", metrics: [1, 2, 1], state: "complete" },
     ],
   },
+  ...seriesExplorers,
 };

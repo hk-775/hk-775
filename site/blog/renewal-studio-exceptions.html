@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Renewal Studio, Part 2: When the Standard Path Ends · Harleen Kaur</title>
+  <meta name="description" content="A shorter term and a new clause turn one renewal into several decisions. Explore commercial routing, versioned approvals and strategic procurement.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="renewal-studio-exceptions.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=3">
+
+  <link rel="stylesheet" href="renewal-explorers.css?v=2">
+  <script type="module" src="renewal-explorers.js?v=2"></script>
+  <meta property="og:title" content="Renewal Studio, Part 2: When the Standard Path Ends">
+  <meta property="og:description" content="A shorter term and a new clause turn one renewal into several decisions. Explore commercial routing, versioned approvals and strategic procurement.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/diagrams/renewal-exceptions-cover.png">
+  <meta property="og:image:alt" content="Renewal Studio, Part 2: When the Standard Path Ends. Terms, approvals and the people who own exceptions.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-11-12">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Renewal Studio, Part 2: When the Standard Path Ends","alternativeHeadline":"Terms, approvals and the people who own exceptions","description":"A shorter term and a new clause turn one renewal into several decisions. Explore commercial routing, versioned approvals and strategic procurement.","datePublished":"2026-11-12","dateModified":"2026-11-12","url":"https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/diagrams/renewal-exceptions-cover.png","keywords":["Renewal Studio","Workflow engineering","Synthetic evidence"],"isPartOf":{"@type":"CollectionPage","name":"Renewal Studio: Building a System for Software and API Contract Renewals","url":"https://hk-775.github.io/hk-775/blog/renewal-studio.html"},"position":2}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Renewal Studio · Workflow engineering · Synthetic evidence</p>
+    <h1>Renewal Studio, Part 2: When the Standard Path Ends</h1>
+    <p class="article-subtitle">Terms, approvals and the people who own exceptions</p>
+    <p class="post-meta"><time datetime="2026-11-12">12 November 2026</time><span>6 min read</span><span>Implementation review; synthetic replay</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#an-exception-needs-more-than-a-queue">An exception needs more than a queue</a>
+<a href="#a-quote-is-a-versioned-object">A quote is a versioned object</a>
+<a href="#approval-expires-when-its-subject-changes">Approval expires when its subject changes</a>
+<a href="#strategic-accounts-have-dependency-graphs">Strategic accounts have dependency graphs</a>
+<a href="#what-to-hand-back-to-automation">What to hand back to automation</a>
+<a href="#try-the-decision-then-change-its-evidence">Try the decision, then change its evidence</a></nav>
+      <div class="article-tools"><a href="renewal-studio-exceptions.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-exceptions.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="Renewal Studio, Part 2: When the Standard Path Ends"><div class="series-callout"><strong>Part 2 of 9 · Renewal Studio</strong><p>Renewal Studio: Building a System for Software and API Contract Renewals</p><a href="renewal-studio.html">Explore the series and reading order →</a> · <a href="renewal-studio-consumption.html">Next: Part 3 →</a></div><p>A renewal is ready to go. The customer asks for a shorter term, quarterly invoices and a replacement clause. The system can produce a polished answer in seconds. None of those changes is authorized by the old offer.</p>
+<p>That is where a renewal system earns its keep. <a href="renewal-studio-standard-renewal.html">Part 1</a> followed the standard path. This installment follows the work that leaves it: commercial exceptions, custom agreements, legal review and strategic procurement.</p>
+<p>The useful output is a specific decision waiting for the right owner, with enough evidence to make that decision.</p>
+<h2 id="an-exception-needs-more-than-a-queue">An exception needs more than a queue</h2>
+<p>Consider three fictional accounts. One wants a discount. One has a billing identity that disagrees with its contract record. One wants a clause changed. Calling all three “human review” hides the actual work.</p>
+<p>The discount needs commercial judgment. The identity conflict needs source reconciliation. The clause needs legal authority. Each case should carry the failed checks, proposed terms, source versions, accountable owner and next action. An explanation of the failure is more useful than an unexplained risk score.</p>
+<figure class="renewal-explorer" data-renewal="exception" data-motion="paused" aria-labelledby="flow-exception">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 05</span><h3 id="flow-exception">Give the exception an owner</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Give the exception an owner" class="renewal-svg landscape">
+<title>Give the exception an owner</title>
+<desc>Synthetic explanatory workflow. Renewal packet leads to Classify the exception. Classify the exception leads to Deal Desk review. Deal Desk review leads to Current approved quote. Classify the exception leads to Source reconciliation. Classify the exception leads to Legal text review.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 05</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 544 156 V 207 H 360 V 431 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 431) rotate(180)"/>
+<path data-edge="4" d="M 544 156 V 207 H 360 V 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="record"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Renewal packet</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Terms + usage + open issues</text></g>
+<g data-node="check"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Classify the exception</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Explain the failed checks</text></g>
+<g data-node="deal"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Deal Desk review</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Price, scope or negotiation</text></g>
+<g data-node="ready"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Current approved quote</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Eligible for publication</text></g>
+<g data-node="data"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Source reconciliation</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Evidence owner resolves it</text></g>
+<g data-node="legal"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Legal text review</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Exact clause version</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Give the exception an owner" class="renewal-svg portrait">
+<title>Give the exception an owner</title>
+<desc>Synthetic explanatory workflow. Renewal packet leads to Classify the exception. Classify the exception leads to Deal Desk review. Deal Desk review leads to Current approved quote. Classify the exception leads to Source reconciliation. Classify the exception leads to Legal text review.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 05</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 314 237 H 321 V 603 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 603) rotate(180)"/>
+<path data-edge="4" d="M 314 237 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="record"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Renewal packet</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Terms + usage + open issues</text></g>
+<g data-node="check"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Classify the exception</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Explain the failed checks</text></g>
+<g data-node="deal"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Deal Desk review</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Price, scope or negotiation</text></g>
+<g data-node="ready"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Current approved quote</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Eligible for publication</text></g>
+<g data-node="data"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Source reconciliation</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Evidence owner resolves it</text></g>
+<g data-node="legal"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Legal text review</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Exact clause version</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose the failed check</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Commercial change</button><button type="button" data-scenario="1" aria-pressed="false">Untrusted source</button><button type="button" data-scenario="2" aria-pressed="false">Clause change</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>A commercial owner receives a decision packet</strong><p data-result-detail>Send proposed terms, the failed policy checks, source versions and the reason for the change to Deal Desk. Publication still requires a current approval.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-exception.svg" download>Download SVG</a><a href="diagrams/renewal-exception.png" download>Download PNG</a><a href="diagrams/renewal-exception.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>In Renewal Studio, an unverified standard contract enters a data hold. An open negotiation leaves the standard path for commercial review. The custom-contract workspace supports reviewed proposals, while legal review records a decision about the proposal&#39;s actual text.</p>
+<p>Those distinctions prevent a subtle failure: using approval as a substitute for evidence. A person saying “looks fine” cannot make the wrong billing identity correct. The record must be reconciled before a new proposal can depend on it.</p>
+<p>An agent can assemble the packet and recommend a next action. It does not acquire the authority of every specialist whose work it summarizes.</p>
+<h2 id="a-quote-is-a-versioned-object">A quote is a versioned object</h2>
+<p>Custom contracts widen the set of supported decisions. They also widen the evidence that has to remain connected.</p>
+<p>The synthetic catalog has independent USD, EUR, GBP and CAD prices. Quantities and volume tiers determine unit pricing; a reviewed proposal discount is then applied. Supported renewal terms include 1, 3, 6, 12, 18, 24 and 36 calendar months. Billing can be upfront, monthly, quarterly or annual, with configured payment terms.</p>
+<p>These are implemented demo choices, not universal commercial conventions. The important design is that the service calculates from a controlled catalog and preserves the complete proposal.</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Field in the proposal</th>
+<th>Why a reviewer needs it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Source agreements and versions</td>
+<td>Identifies what is being renewed or replaced</td>
+</tr>
+<tr>
+<td>Products, quantities and currency</td>
+<td>Prevents an ambiguous change in scope</td>
+</tr>
+<tr>
+<td>Term, effective dates and billing frequency</td>
+<td>Separates service duration from payment timing</td>
+</tr>
+<tr>
+<td>Price, discount, service credits and fictional tax</td>
+<td>Explains the amount the buyer will see</td>
+</tr>
+<tr>
+<td>Legal text and review state</td>
+<td>Connects approval to the clause actually offered</td>
+</tr>
+<tr>
+<td>Procurement dependencies</td>
+<td>Shows decisions that still block publication</td>
+</tr>
+</tbody></table>
+</div><p>For a simple worked example, assume a fictional annual service price of $12,000, an 18-month renewal and no tax or credit. The service charge is $18,000. Quarterly billing creates six $3,000 installments. Annual value, service charge and the next invoice are three different amounts, even in this easy case.</p>
+<p>An amendment is harder. The application uses ACT/365 with inclusive service days for amendment and coterm adjustments, rounding each charge and source credit to cents. It preserves the charge and unused-service credit separately. That makes it possible to explain the invoice instead of presenting one unexplained net number.</p>
+<h2 id="approval-expires-when-its-subject-changes">Approval expires when its subject changes</h2>
+<p>Suppose Deal Desk approves proposal version 3. Legal then replaces a clause. The application changes the quote version and invalidates the earlier commercial approval.</p>
+<p>This can feel repetitive until the alternative becomes concrete: version 3 was reviewed, version 4 was published, and nobody approved the combination of commercial terms and legal text that the buyer accepted.</p>
+<figure class="renewal-explorer" data-renewal="terms" data-motion="paused" aria-labelledby="flow-terms">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 06</span><h3 id="flow-terms">An approval belongs to one version</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="An approval belongs to one version" class="renewal-svg landscape">
+<title>An approval belongs to one version</title>
+<desc>Synthetic explanatory workflow. Catalog + contracts leads to Proposal version. Proposal version leads to Required approvals. Required approvals leads to Publish exact terms. Publish exact terms leads to Buyer acceptance. Required approvals leads to Prepare and review again. Buyer acceptance leads to Prepare and review again.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 06</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 544 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 390) rotate(90)"/>
+<path data-edge="5" d="M 324 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="catalog"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Catalog + contracts</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Currency, quantities, dates</text></g>
+<g data-node="quote"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Proposal version</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Price + clauses + schedule</text></g>
+<g data-node="review"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Required approvals</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Commercial + legal</text></g>
+<g data-node="publish"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Publish exact terms</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Current evidence only</text></g>
+<g data-node="consent"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Buyer acceptance</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Immutable terms receipt</text></g>
+<g data-node="rebuild"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Prepare and review again</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Earlier consent stays fixed</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="An approval belongs to one version" class="renewal-svg portrait">
+<title>An approval belongs to one version</title>
+<desc>Synthetic explanatory workflow. Catalog + contracts leads to Proposal version. Proposal version leads to Required approvals. Required approvals leads to Publish exact terms. Publish exact terms leads to Buyer acceptance. Required approvals leads to Prepare and review again. Buyer acceptance leads to Prepare and review again.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 06</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 359 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<path data-edge="5" d="M 170 644 L 170 684" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 684) rotate(90)"/>
+<g data-node="catalog"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Catalog + contracts</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Currency, quantities, dates</text></g>
+<g data-node="quote"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Proposal version</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Price + clauses + schedule</text></g>
+<g data-node="review"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Required approvals</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Commercial + legal</text></g>
+<g data-node="publish"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Publish exact terms</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Current evidence only</text></g>
+<g data-node="consent"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Buyer acceptance</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Immutable terms receipt</text></g>
+<g data-node="rebuild"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Prepare and review again</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Earlier consent stays fixed</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose what changes after review</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Unchanged proposal</button><button type="button" data-scenario="1" aria-pressed="false">Edit before acceptance</button><button type="button" data-scenario="2" aria-pressed="false">Edit after acceptance</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>Approval and consent refer to the same terms</strong><p data-result-detail>The catalog supplies prices. Review covers the proposal, including its payment schedule and legal text. The buyer accepts that exact published version.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-terms.svg" download>Download SVG</a><a href="diagrams/renewal-terms.png" download>Download PNG</a><a href="diagrams/renewal-terms.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>Every custom proposal needs Deal Desk approval in the demo. Required legal review covers the current text. Publication and acceptance check that the relevant approvals and evidence are still current.</p>
+<p>The buyer then accepts a specific proposal. The application records an immutable terms receipt with a digest. This is in-product consent evidence; the demo does not connect to an external signature service or establish real-world signer authority.</p>
+<p>A later catalog edit cannot rewrite that receipt. Before acceptance, changed evidence can require rebuilding the quote. After acceptance, a new commercial change needs its own agreement. The system needs to know which side of that boundary it is on.</p>
+<h2 id="strategic-accounts-have-dependency-graphs">Strategic accounts have dependency graphs</h2>
+<p>A large renewal may have procurement steps that must happen in order. Completing a final checklist item does not help if an earlier review reopens.</p>
+<p>The strategic workspace records stakeholders, negotiation plans, owners, blockers and an executive brief. Its procurement dependencies affect whether a quote can be published or accepted. Reopening an upstream dependency reopens downstream work.</p>
+<figure class="renewal-explorer" data-renewal="procurement" data-motion="paused" aria-labelledby="flow-procurement">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 07</span><h3 id="flow-procurement">A strategic renewal has dependencies</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="A strategic renewal has dependencies" class="renewal-svg landscape">
+<title>A strategic renewal has dependencies</title>
+<desc>Synthetic explanatory workflow. Negotiation plan leads to Upstream review. Upstream review leads to Procurement decision. Procurement decision leads to Quote approvals. Quote approvals leads to Publish and accept. Upstream review leads to Reopen downstream work.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 07</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 544 156 V 207 H 360 V 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="plan"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Negotiation plan</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Stakeholders + accountable owners</text></g>
+<g data-node="security"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Upstream review</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Evidence for procurement</text></g>
+<g data-node="procure"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Procurement decision</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Dependent work completed</text></g>
+<g data-node="approve"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Quote approvals</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Current commercial evidence</text></g>
+<g data-node="publish"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Publish and accept</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Buyer reviews exact terms</text></g>
+<g data-node="reopen"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reopen downstream work</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Publication and consent blocked</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="A strategic renewal has dependencies" class="renewal-svg portrait">
+<title>A strategic renewal has dependencies</title>
+<desc>Synthetic explanatory workflow. Negotiation plan leads to Upstream review. Upstream review leads to Procurement decision. Procurement decision leads to Quote approvals. Quote approvals leads to Publish and accept. Upstream review leads to Reopen downstream work.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 07</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 237 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="plan"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Negotiation plan</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Stakeholders + accountable owners</text></g>
+<g data-node="security"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Upstream review</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Evidence for procurement</text></g>
+<g data-node="procure"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Procurement decision</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Dependent work completed</text></g>
+<g data-node="approve"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Quote approvals</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Current commercial evidence</text></g>
+<g data-node="publish"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Publish and accept</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Buyer reviews exact terms</text></g>
+<g data-node="reopen"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reopen downstream work</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Publication and consent blocked</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose the procurement state</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Dependencies complete</button><button type="button" data-scenario="1" aria-pressed="false">Upstream review reopens</button><button type="button" data-scenario="2" aria-pressed="false">Negotiation changes terms</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>The quote can proceed once its dependencies hold</strong><p data-result-detail>An executive brief explains decisions, owners and blockers. It does not substitute for completed procurement steps or buyer acceptance.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-procurement.svg" download>Download SVG</a><a href="diagrams/renewal-procurement.png" download>Download PNG</a><a href="diagrams/renewal-procurement.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>For example, a security review may have supported procurement approval for a particular deployment scope. If that scope changes, procurement&#39;s earlier completion is no longer sufficient. The interface should expose the reopened dependency and who owns it.</p>
+<p>An executive conversation still matters. It can clarify priorities, resolve a blocker or change the proposed arrangement. The resulting decision should enter the same controlled workflow. Otherwise, the most consequential accounts become the least inspectable part of the operation.</p>
+<h2 id="what-to-hand-back-to-automation">What to hand back to automation</h2>
+<p>Human review should return a usable decision: approved current terms, a rejected proposal with a reason, or a request for specific missing evidence.</p>
+<p>Once a current proposal has the necessary approvals, the system can publish it and collect buyer consent. At the effective date, billing and access still need independent verification. A difficult negotiation does not eliminate the recovery requirements from Part 1.</p>
+<p>The handoff back to automation should therefore include the proposal version, effective date, required target states and remaining blockers. “The deal is done” is too vague to drive provisioning.</p>
+<p>This also creates a practical way to improve the system. Examine which exception reasons recur, how often packets arrive incomplete, how many proposals need rework and which decisions are waiting for an owner. Those observations can guide better data validation or policy design. They do not, by themselves, justify removing review.</p>
+<h2 id="try-the-decision-then-change-its-evidence">Try the decision, then change its evidence</h2>
+<p>Open <a href="https://d11wfkflwovvog.cloudfront.net/commercial">Custom contracts</a>, prepare a proposal and inspect its financial breakdown. Use <a href="https://d11wfkflwovvog.cloudfront.net/governance">Catalog &amp; legal</a> to change a clause. Observe that the earlier approval cannot authorize the changed quote. Then explore the dependency controls in <a href="https://d11wfkflwovvog.cloudfront.net/strategic">Strategic accounts</a>.</p>
+<p>The blog figures are local teaching examples. The linked application performs state transitions in an isolated synthetic workspace. Its prices, tax codes, legal text and authority are fictional; the article describes implementation reviewed on 12 November 2026. The <a href="evidence/renewal-series.json">series replay record</a> identifies the public checks actually executed.</p>
+<p>The next question is what terms to propose when consumption changes. <a href="renewal-studio-consumption.html">Part 3 follows the ledger, the risk case and the next commitment</a>.</p>
+<nav class="series-reading-nav" aria-label="Continue the series">
+    <a rel="prev" href="renewal-studio-standard-renewal.html"><small>← Part 1</small>The Standard Renewal, End to End</a>
+    <a rel="next" href="renewal-studio-consumption.html"><small>Part 3 →</small>Renewing a Commitment When Usage Changes</a>
+  </nav>
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>

@@ -1,0 +1,20 @@
+<mxfile host="app.diagrams.net"><diagram name="Delegate the work, retain the decision"><mxGraphModel page="1" pageWidth="720" pageHeight="520" background="#FAF8F3"><root><mxCell id="0"/><mxCell id="1" parent="0"/>
+<mxCell id="source" value="Source workflow task
+Current version + prerequisites" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="74" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="assign" value="Scoped assignment
+Eligible task + instructions" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="74" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="partner" value="Partner submits evidence
+Assigned account and task only" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="232" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="review" value="Internal reviewer
+Accept or return the submission" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="232" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="complete" value="Source task progresses
+Domain checks still apply" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="390" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="deny" value="Assignment denied
+Authority or scope mismatch" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="390" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="source" target="assign"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="assign" target="partner"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="partner" target="review"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="review" target="complete"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="assign" target="deny"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="partner" target="deny"><mxGeometry relative="1" as="geometry"/></mxCell>
+</root></mxGraphModel></diagram></mxfile>

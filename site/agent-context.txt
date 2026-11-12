@@ -1,6 +1,6 @@
 Harleen Kaur — public engineering context
 
-Generated from 11 allowlisted public documents. Source fingerprints describe the documentation; reported experiments retain their own dates and source revisions. Follow the cited evidence when evaluating a claim.
+Generated from 19 allowlisted public documents. Source fingerprints describe the documentation; reported experiments retain their own dates and source revisions. Follow the cited evidence when evaluating a claim.
 
 ===== FILE: README.md =====
 Published Markdown: https://hk-775.github.io/hk-775/index.md
@@ -18,7 +18,7 @@ Together, they support a development loop: **route → govern → test containme
 **[Start here → one workflow, its evidence, and the code](https://hk-775.github.io/hk-775/)**
 
 **[Engineering blog](https://hk-775.github.io/hk-775/blog/)** ·
-[Latest: Renewal Studio — The Standard Renewal, End to End](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.html) ·
+[Complete: Renewal Studio — nine parts, 28 interactive workflows](https://hk-775.github.io/hk-775/blog/renewal-studio.html) ·
 [Renewal Studio series](https://hk-775.github.io/hk-775/blog/renewal-studio.html) ·
 [RSS](https://hk-775.github.io/hk-775/blog/feed.xml)
 
@@ -62,7 +62,7 @@ Practical Eval Lab's bundled candidates use local rules. Its teaching datasets c
 ---
 Source: [README.md](https://github.com/hk-775/hk-775/blob/main/README.md)
 
-Source SHA-256: `c772a2b2519682caf34d091a817b9b785eb5a3ae80d1d85812f392af31af72af`
+Source SHA-256: `2af6eac733f046ca187392be9dbcaec04158822d3e85e6aaf05327dbda5f0d59`
 
 ===== FILE: CASE_STUDY.md =====
 Published Markdown: https://hk-775.github.io/hk-775/case-study.md
@@ -381,16 +381,30 @@ part of this publication.
 
 ## Renewal Studio series
 
-`series.json` defines the reading order. Only a part with a slug resolving to an
-allowlisted article is published; the remaining eight parts are explicitly
-planned and have no placeholder article links. The series index is generated
-with the blog, along with its Markdown companion and sitemap entry.
+`series.json` defines the complete nine-part reading order. Each part resolves to
+an allowlisted article with an explicit `seriesPart`. Articles published on the
+same date sort in reading order. The index, previous/next navigation, Markdown
+companions, RSS and sitemap are generated from these sources.
 
-The four Part 1 workflow explorers use original native SVG in the existing
-navy/cyan/cream palette. Their scenario text lives in
-`site/blog/renewal-explorer-data.js`; the renderer is
-`scripts/renewal-artwork.mjs`. The article allows only four known explorer
-identifiers through its `interactiveDiagrams` manifest. Raw Markdown HTML is
+All nine parts are published on 12 November 2026:
+
+| Part | Article | Main implemented workflows |
+| --- | --- | --- |
+| 1 | [The Standard Renewal, End to End](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.html) | Eligibility, consent, activation and recovery |
+| 2 | [When the Standard Path Ends](https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.html) | Exceptions, custom contracts, catalog/legal and strategic procurement |
+| 3 | [Renewing a Commitment When Usage Changes](https://hk-775.github.io/hk-775/blog/renewal-studio-consumption.html) | Consumption evidence, risk cases and commitment deals |
+| 4 | [Retention Beyond the Renewal Date](https://hk-775.github.io/hk-775/blog/renewal-studio-retention.html) | PAYG, cancellation, save and winback |
+| 5 | [The Work After the Sale](https://hk-775.github.io/hk-775/blog/renewal-studio-post-sale.html) | Post-sale milestones, queues, scoped partners and conversations |
+| 6 | [Follow the Money](https://hk-775.github.io/hk-775/blog/renewal-studio-finance.html) | Collections, disputes, refunds and service allocation |
+| 7 | [Let Agents Work Within a Boundary](https://hk-775.github.io/hk-775/blog/renewal-studio-agents.html) | Provider-neutral plans, automation, delivery and evaluations |
+| 8 | [Forecast the Business from the Work](https://hk-775.github.io/hk-775/blog/renewal-studio-forecasting.html) | Forecasts, predictions, performance and portfolio simulations |
+| 9 | [From Demonstration to an Operational System](https://hk-775.github.io/hk-775/blog/renewal-studio-operations.html) | AWS topology, identity, connectors, resilience and proposed pilot |
+
+The 28 workflow explorers use original native SVG in the existing
+navy/cyan/cream palette. Part 1 has four figures; each later part has three.
+Scenario text lives in `site/blog/renewal-explorer-data.js` and
+`site/blog/renewal-series-data.js`; `scripts/renewal-artwork.mjs` renders it.
+Each article allowlists its known explorer identifiers. Raw Markdown HTML is
 still escaped. The browser never calls the application or a model.
 
 With the locked Node dependencies and Chromium installed:
@@ -403,8 +417,9 @@ npm run discovery:check
 npm test
 ```
 
-The artwork command produces four SVG, PNG and editable draw.io companions
-plus an article-specific 1200×630 social cover. Mobile uses a vertical SVG
+The artwork command produces 28 SVG, PNG and editable draw.io companions,
+nine article-specific 1200×630 social covers and a complete-series cover.
+Mobile uses a vertical SVG
 layout. Browser checks cover real connector and dot motion, keyboard controls,
 independent scenarios, recovery counters, pause, reduced motion, full screen,
 no-JavaScript reading, mobile layout and local-only browser requests.
@@ -416,6 +431,31 @@ session, without replacing the article's existing record:
 ```sh
 node scripts/capture-renewal-demo.mjs --capture --output /tmp/renewal-check.json
 ```
+
+Parts 2–9 have a separate replay and allowlisted observation record:
+
+```sh
+node scripts/capture-renewal-series.mjs --capture --output /tmp/renewal-series-check.json
+```
+
+The published records are immutable observations, not regenerated by CI or
+presentation changes. Their script hashes identify their assertions; frontend
+hashes do not identify the backend revision. The replay has no access to the
+private application repository and publishes no raw workspace exports.
+
+The complete context download includes all 14 engineering articles and remains
+bounded at 210,000 characters. Readers with smaller context windows can use the
+individual Markdown documents and source manifest.
+
+For Part 9, the AWS architecture checkpoint applies: the original topology was
+derived from the application's CDK definition and deployment documentation
+reviewed on 12 November 2026. It includes CloudFront/WAF, private S3, the protected
+Lambda API, DynamoDB, the scheduler/worker path, the scheduler-delivery SQS queue
+and CloudWatch. SVG, PNG and editable draw.io companions are published. The prose
+identifies supplementary logging and separates configured synthetic runtime,
+public replay observations and proposed real integrations. No live account
+audit, infrastructure change or application-repository visibility change is
+part of this publication.
 
 The record includes the capture-script hash and observed public frontend asset
 hashes. The demo does not expose its backend revision, so these hashes do not
@@ -433,7 +473,7 @@ figures describe business transitions, not a cloud topology.
 ---
 Source: [blog/README.md](https://github.com/hk-775/hk-775/blob/main/blog/README.md)
 
-Source SHA-256: `91cc593572fc56004d32743887cf8309151d0ae5e237a6cfe63f53d05a364074`
+Source SHA-256: `dea29df4b93f7d79bec721ef2ce8cf741257190d7f20940306d5c89b058a8d21`
 
 ===== FILE: blog/2026-11-12-renewal-studio-standard-renewal.md =====
 Published Markdown: https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.md
@@ -530,14 +570,836 @@ The evidence supports the two tested examples: a standard renewal completes, and
 
 A useful standard path also makes its stopping points visible. What should happen when the customer wants different terms, an amendment needs verification, or a strategic account requires negotiation?
 
-Part 2 will follow those exceptions: the recommendation a specialist receives, the decision they own, and the conditions for returning work to automation.
+[Part 2 follows those exceptions](https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.html): the recommendation a specialist receives, the decision they own, and the conditions for returning work to automation.
 
 The [series reading order](https://hk-775.github.io/hk-775/blog/renewal-studio.html) maps the later installments across commitment renewals, retention, post-sale operations, finance, agents, forecasting and production architecture.
 
 ---
 Source: [blog/2026-11-12-renewal-studio-standard-renewal.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-standard-renewal.md)
 
-Source SHA-256: `a9a64d7cc957a7462e0599de224e7aed892c1122d7fae71e9ee658047206fbe8`
+Source SHA-256: `c5ef238bbc9b7b940586bc36457cd485b18bce38a12e5123c9485d634ec598ff`
+
+===== FILE: blog/2026-11-12-renewal-studio-exceptions.md =====
+Published Markdown: https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.md
+
+A renewal is ready to go. The customer asks for a shorter term, quarterly invoices and a replacement clause. The system can produce a polished answer in seconds. None of those changes is authorized by the old offer.
+
+That is where a renewal system earns its keep. [Part 1](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.html) followed the standard path. This installment follows the work that leaves it: commercial exceptions, custom agreements, legal review and strategic procurement.
+
+The useful output is a specific decision waiting for the right owner, with enough evidence to make that decision.
+
+## An exception needs more than a queue
+
+Consider three fictional accounts. One wants a discount. One has a billing identity that disagrees with its contract record. One wants a clause changed. Calling all three “human review” hides the actual work.
+
+The discount needs commercial judgment. The identity conflict needs source reconciliation. The clause needs legal authority. Each case should carry the failed checks, proposed terms, source versions, accountable owner and next action. An explanation of the failure is more useful than an unexplained risk score.
+
+![Route a commercial change, an untrusted record or a clause change to the appropriate decision owner.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-exception.svg)
+
+In Renewal Studio, an unverified standard contract enters a data hold. An open negotiation leaves the standard path for commercial review. The custom-contract workspace supports reviewed proposals, while legal review records a decision about the proposal's actual text.
+
+Those distinctions prevent a subtle failure: using approval as a substitute for evidence. A person saying “looks fine” cannot make the wrong billing identity correct. The record must be reconciled before a new proposal can depend on it.
+
+An agent can assemble the packet and recommend a next action. It does not acquire the authority of every specialist whose work it summarizes.
+
+## A quote is a versioned object
+
+Custom contracts widen the set of supported decisions. They also widen the evidence that has to remain connected.
+
+The synthetic catalog has independent USD, EUR, GBP and CAD prices. Quantities and volume tiers determine unit pricing; a reviewed proposal discount is then applied. Supported renewal terms include 1, 3, 6, 12, 18, 24 and 36 calendar months. Billing can be upfront, monthly, quarterly or annual, with configured payment terms.
+
+These are implemented demo choices, not universal commercial conventions. The important design is that the service calculates from a controlled catalog and preserves the complete proposal.
+
+| Field in the proposal | Why a reviewer needs it |
+| --- | --- |
+| Source agreements and versions | Identifies what is being renewed or replaced |
+| Products, quantities and currency | Prevents an ambiguous change in scope |
+| Term, effective dates and billing frequency | Separates service duration from payment timing |
+| Price, discount, service credits and fictional tax | Explains the amount the buyer will see |
+| Legal text and review state | Connects approval to the clause actually offered |
+| Procurement dependencies | Shows decisions that still block publication |
+
+For a simple worked example, assume a fictional annual service price of $12,000, an 18-month renewal and no tax or credit. The service charge is $18,000. Quarterly billing creates six $3,000 installments. Annual value, service charge and the next invoice are three different amounts, even in this easy case.
+
+An amendment is harder. The application uses ACT/365 with inclusive service days for amendment and coterm adjustments, rounding each charge and source credit to cents. It preserves the charge and unused-service credit separately. That makes it possible to explain the invoice instead of presenting one unexplained net number.
+
+## Approval expires when its subject changes
+
+Suppose Deal Desk approves proposal version 3. Legal then replaces a clause. The application changes the quote version and invalidates the earlier commercial approval.
+
+This can feel repetitive until the alternative becomes concrete: version 3 was reviewed, version 4 was published, and nobody approved the combination of commercial terms and legal text that the buyer accepted.
+
+![Explore why an unchanged proposal can proceed while edits require fresh approval and accepted snapshots remain fixed.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-terms.svg)
+
+Every custom proposal needs Deal Desk approval in the demo. Required legal review covers the current text. Publication and acceptance check that the relevant approvals and evidence are still current.
+
+The buyer then accepts a specific proposal. The application records an immutable terms receipt with a digest. This is in-product consent evidence; the demo does not connect to an external signature service or establish real-world signer authority.
+
+A later catalog edit cannot rewrite that receipt. Before acceptance, changed evidence can require rebuilding the quote. After acceptance, a new commercial change needs its own agreement. The system needs to know which side of that boundary it is on.
+
+## Strategic accounts have dependency graphs
+
+A large renewal may have procurement steps that must happen in order. Completing a final checklist item does not help if an earlier review reopens.
+
+The strategic workspace records stakeholders, negotiation plans, owners, blockers and an executive brief. Its procurement dependencies affect whether a quote can be published or accepted. Reopening an upstream dependency reopens downstream work.
+
+![Follow strategic procurement dependencies and see why reopening an upstream review blocks later decisions.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-procurement.svg)
+
+For example, a security review may have supported procurement approval for a particular deployment scope. If that scope changes, procurement's earlier completion is no longer sufficient. The interface should expose the reopened dependency and who owns it.
+
+An executive conversation still matters. It can clarify priorities, resolve a blocker or change the proposed arrangement. The resulting decision should enter the same controlled workflow. Otherwise, the most consequential accounts become the least inspectable part of the operation.
+
+## What to hand back to automation
+
+Human review should return a usable decision: approved current terms, a rejected proposal with a reason, or a request for specific missing evidence.
+
+Once a current proposal has the necessary approvals, the system can publish it and collect buyer consent. At the effective date, billing and access still need independent verification. A difficult negotiation does not eliminate the recovery requirements from Part 1.
+
+The handoff back to automation should therefore include the proposal version, effective date, required target states and remaining blockers. “The deal is done” is too vague to drive provisioning.
+
+This also creates a practical way to improve the system. Examine which exception reasons recur, how often packets arrive incomplete, how many proposals need rework and which decisions are waiting for an owner. Those observations can guide better data validation or policy design. They do not, by themselves, justify removing review.
+
+## Try the decision, then change its evidence
+
+Open [Custom contracts](https://d11wfkflwovvog.cloudfront.net/commercial), prepare a proposal and inspect its financial breakdown. Use [Catalog & legal](https://d11wfkflwovvog.cloudfront.net/governance) to change a clause. Observe that the earlier approval cannot authorize the changed quote. Then explore the dependency controls in [Strategic accounts](https://d11wfkflwovvog.cloudfront.net/strategic).
+
+The blog figures are local teaching examples. The linked application performs state transitions in an isolated synthetic workspace. Its prices, tax codes, legal text and authority are fictional; the article describes implementation reviewed on 12 November 2026. The [series replay record](https://hk-775.github.io/hk-775/blog/evidence/renewal-series.json) identifies the public checks actually executed.
+
+The next question is what terms to propose when consumption changes. [Part 3 follows the ledger, the risk case and the next commitment](https://hk-775.github.io/hk-775/blog/renewal-studio-consumption.html).
+
+---
+Source: [blog/2026-11-12-renewal-studio-exceptions.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-exceptions.md)
+
+Source SHA-256: `08c98dde53285021db91c67d1d9cb90ca10a9017978f1163d92c3753ed43ec98`
+
+===== FILE: blog/2026-11-12-renewal-studio-consumption.md =====
+Published Markdown: https://hk-775.github.io/hk-775/blog/renewal-studio-consumption.md
+
+A customer committed $120,000 for the year. With 180 days remaining, the ledger shows $45,000 consumed and a recent burn rate of $250 per day.
+
+At that rate, projected consumption is $90,000. The apparent shortfall is $30,000.
+
+The multiplication is easy. The engineering question is whether the $45,000 is reconciled, whether the recent days are complete, and who should act on the result. A precise projection can still rest on bad evidence.
+
+This part connects consumption monitoring to recovery work and a reviewed commitment offer. It builds on the approval boundaries in [Part 2](https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.html).
+
+## Start with a ledger that can explain its balance
+
+Renewal Studio reconstructs consumed value from a verified opening balance, usage events and credits. Usage is append-only. A repeated event with identical content deduplicates; conflicting content under the same event ID is rejected. An expected source version protects against applying a change to a superseded record.
+
+That gives the system a concrete question to answer: which observations support this balance?
+
+A day with an explicit zero is evidence. A day with no observation is a gap. Treating both as zero would lower the apparent burn rate and might create a false shortfall.
+
+![Explore a reconciled consumption projection, a missing observation and an arriving credit.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-burndown.svg)
+
+The demo uses the last 30 complete days for the recent net burn rate. It projects from the coverage boundary of the observations, rather than pretending that unobserved days were measured. Amounts use integer cents and rational intermediate calculations, with half-up rounding at the final cent.
+
+For the opening example, assume that the evidence really supports the stated balance, rate and remaining window:
+
+```text
+Projected consumption = 45,000 + (250 × 180) = 90,000 USD
+Projected utilization = 90,000 / 120,000 = 75%
+Projected unused commitment = 120,000 − 90,000 = 30,000 USD
+```
+
+This is an illustrative calculation. It is not a forecast of a real customer's demand.
+
+## Make “unknown” a useful state
+
+The fixture flags projected utilization below 95% as shortfall risk. It also detects projected depletion more than 14 days before term end. Those thresholds are configured demonstration policies.
+
+The data-quality checks come first. Stale telemetry, incomplete coverage, duplicate or conflicting observations, an unverified balance and an invalid recent net rate can withhold the projection.
+
+| Observation | Appropriate system response |
+| --- | --- |
+| Complete evidence, low projected utilization | Open an owned shortfall case |
+| Complete evidence, early depletion | Open a capacity investigation |
+| Explicit zero-consumption day | Include the zero in the observed window |
+| Missing or stale observations | Withhold the estimate and request reconciliation |
+| Credit or corrected source version | Reconcile, refresh the evidence and rescan |
+
+An “unknown” case should identify what is missing and who can supply it. Otherwise, withholding a number merely moves the ambiguity into a queue.
+
+The same boundary matters for generated explanations. A model may summarize reconciled evidence. It must not turn an unavailable projection into a confident narrative about the customer's plans.
+
+## A risk case should survive the intervention
+
+A useful risk case preserves its original baseline, source fingerprint, owner and chosen playbook. If the plan changes, prior work should remain understandable instead of disappearing from history.
+
+Imagine that the customer reports an integration blocker. The owner chooses an adoption recovery plan, assigns the integration work and records the intended customer outcome. Completing those actions establishes that the team did the work. It does not establish that consumption recovered.
+
+![Choose between completed work, new supporting observations and stale evidence in a commitment recovery case.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-intervention.svg)
+
+In the demo, closing a commitment recovery case requires an active plan, all required actions, a new data version, at least seven days, a fresh on-track scan and a review note. Changes to the evidence or business date require a current scan.
+
+That design makes the outcome review harder to fake accidentally. An old scan cannot close a case after its underlying data changes. A completed checklist cannot replace the observation window.
+
+The synthetic scenario can increase usage after a plan starts. That is useful for exercising closure and history. It does not prove that the intervention caused the increase. The simulator chose both the intervention context and the later observations.
+
+In a real pilot, the team would need to separate work performed, observed behavior and causal claims. The case history gives them material to inspect; it does not answer the causal question automatically.
+
+## The next commitment is a commercial decision
+
+A low projection does not determine the correct next commitment. The customer may be consolidating workloads, delayed on an integration or planning a launch outside the observed window. An early-depletion signal may reflect sustained growth or a temporary batch.
+
+Renewal Studio offers three synthetic choices: keep the current commitment, rightsize to 80%, or expand to 125%. An unchanged eligible amount within the configured standard limit can take the standard path. Resizing, expansion and larger amounts require Deal Desk review.
+
+![Compare unchanged, rightsized and expanded commitments while keeping review and consent in the flow.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-rightsize.svg)
+
+Using the fictional $120,000 agreement, those choices are $120,000, $96,000 and $150,000. The 75% utilization projection is evidence for the recommendation; it is not authority to choose any of them for the buyer.
+
+The quote binds the proposed amount, contract, policy, buyer, billing identity, evidence and relevant dates. If those inputs change before acceptance, the system needs a current proposal and any required approvals.
+
+This protects both sides of the decision. The seller cannot unknowingly publish a recommendation based on old consumption. The buyer cannot accidentally accept a different commitment through a stale page.
+
+## Activation starts a new accounting period
+
+After acceptance, the renewal waits for its effective date. Activation archives the prior consumption ledger and starts the new commitment pool with zero consumed.
+
+The demo does not silently carry unused value into the next term. Carryforward would be a commercial rule requiring explicit implementation and agreement, not a consequence of having an unused balance.
+
+Billing and access still need verified target states. The expansion fixture can fail its first access update after billing succeeds. Reconciliation preserves the completed billing write and retries the missing access step.
+
+That connects the entire chain: trusted observations support a recommendation; review authorizes the proposal; consent creates the agreement; activation starts the new pool; provider verification establishes completion.
+
+## Try a gap before trying a recovery
+
+Open [Consumption risk](https://d11wfkflwovvog.cloudfront.net/consumption) and inspect the coverage evidence before the projection. Explore a data-quality hold, then a shortfall case with an active recovery plan. Use [Commitment deals](https://d11wfkflwovvog.cloudfront.net/deals) to compare unchanged and resized proposals.
+
+The figures run locally in the blog. Application data, usage changes and provider effects are synthetic. Implementation was reviewed on 12 November 2026; the [series replay record](https://hk-775.github.io/hk-775/blog/evidence/renewal-series.json) separates executed public checks from these explanatory scenarios. No observed demonstration establishes retention lift or intervention effectiveness.
+
+Some customers have no commitment to renew. [Part 4 follows PAYG value, cancellation and a customer's return](https://hk-775.github.io/hk-775/blog/renewal-studio-retention.html).
+
+---
+Source: [blog/2026-11-12-renewal-studio-consumption.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-consumption.md)
+
+Source SHA-256: `4c2a0bf531e13a8de01601b11aa1e56af195243c0eac7c89ff9ae173526e05f2`
+
+===== FILE: blog/2026-11-12-renewal-studio-retention.md =====
+Published Markdown: https://hk-775.github.io/hk-775/blog/renewal-studio-retention.md
+
+A customer's bill falls by 25%. Their successful jobs stay almost unchanged.
+
+Is that a retention problem? Perhaps the customer optimized its workload and now gets the same value for less money. A system that treats every spending decline as a failure can recommend exactly the wrong intervention.
+
+PAYG accounts make this especially visible. They may have ongoing consumption without an annual commitment or a renewal date. Their retention workflow must follow useful activity and customer decisions rather than an invented contract anniversary.
+
+## Compare outcomes before reacting to spend
+
+Renewal Studio's synthetic PAYG analysis keeps a fixed reference from the first four observed weeks. It compares that reference with the latest two complete, contiguous weeks.
+
+The fixture distinguishes several patterns. Successful jobs below 70% of reference trigger a decline investigation. At least 90% of reference jobs with spend below 80% is treated as efficiency. A separate decline in other units can prompt workload review.
+
+Those percentages are teaching policies, not validated predictors of churn.
+
+![Compare a decline in successful jobs with improved efficiency, a workload shift and insufficient data.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-payg.svg)
+
+Consider a fictional reference of 1,000 successful jobs and $1,000 spend per week. A current window averaging 950 jobs and $750 is consistent with the fixture's efficiency condition. Averaging 600 jobs points toward a different investigation.
+
+The owner should ask what changed in the customer's work. A useful response might involve resolving errors, validating a migration or confirming that an optimization was intentional. Increasing spend is not automatically the desired outcome.
+
+Keeping the reference fixed also prevents a declining baseline from drifting downward until weak activity appears normal. The reference and recent window should be visible alongside the result.
+
+## Unknown health is different from poor health
+
+Incomplete periods, duplicated observations, future-dated weeks, stale coverage and a nonpositive reference prevent a trustworthy comparison. The application withholds a health judgment and exposes a data hold.
+
+That state needs an owner and a next action. It should not disappear from the portfolio simply because it lacks a score.
+
+The recovery workflow then separates intervention from observation. A PAYG recovery needs an owner, approved actions, two new observed weeks after activation, at least 14 days, a healthy or efficient result and a review note.
+
+The synthetic “outcomes recover, spend stays lower” scenario exercises an important result: a case can recover without returning to the old spend level. The system preserves evidence of customer value instead of using the invoice as its only measure.
+
+This remains a simulation. It does not establish that the intervention caused recovery or quantify real retained revenue.
+
+## Cancellation is an explicit customer workflow
+
+A cancellation request is a stronger signal than a consumption pattern. It represents a customer decision that changes what the system is allowed to do next.
+
+The buyer records the request and reason. Renewal outreach and new cycles are suppressed. The account owner can propose a noncommercial save plan on existing terms or confirm termination at the current term's end.
+
+![Follow an explicit save decision, an end-of-term exit or a cancellation blocked by an accepted future agreement.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-cancellation.svg)
+
+The buyer must explicitly accept the save plan or withdraw the cancellation. A specialist marking a task complete cannot manufacture that decision.
+
+There is also a difficult ordering case: the customer may already have accepted a future renewal. The cancellation workflow cannot silently undo that agreement. Its obligations must be resolved separately before the exit proceeds.
+
+The application therefore distinguishes several events that a dashboard might otherwise compress into one “lost” state:
+
+| Event | What it establishes |
+| --- | --- |
+| Customer requests cancellation | Intent to leave and a reason to respond |
+| Owner proposes a save plan | A recommendation, awaiting customer choice |
+| Buyer accepts the save | An explicit decision on the existing terms |
+| Termination is confirmed | A scheduled exit |
+| Effective termination is reconciled | Billing and access are inactive; a churn outcome exists |
+| Quote expires or customer stays silent | No new agreement; not proof of effective churn |
+
+That final distinction matters for forecasting and performance. A missing response cannot safely become a confirmed churn label just because a report needs a complete row.
+
+## Suppression must survive a queued message
+
+Suppose a renewal reminder was approved yesterday and the buyer requests cancellation today. The queued reminder should not be delivered simply because an approval exists.
+
+The communication boundary checks current approval and suppression state at delivery. This connects retention to the operation that actually contacts the customer.
+
+The same principle applies to new renewal work. Once cancellation is active, a scheduled worker should not create a contradictory offer merely because it reached the usual date.
+
+An automated system needs to carry customer decisions across its workflows. A cancellation that only changes one screen leaves other parts of the operation acting on obsolete assumptions.
+
+## A return has its own consent and fulfillment
+
+After effective termination, the account owner can propose a return on the existing products and annual price. Deal Desk reviews the terms; the buyer accepts the displayed products and dates.
+
+Only then does the system reconcile billing and access, record the return and open a fresh post-sale plan.
+
+![Explore a contract return, a PAYG return and incomplete reactivation.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-winback.svg)
+
+A PAYG return resumes ongoing consumption. It does not acquire a fictional annual commitment or contract expiry just to fit the subscription model.
+
+For either arrangement, a positive customer conversation is not verified reactivation. If one target is still inactive, the return remains operationally incomplete. The accepted decision should remain intact while the missing effect is reconciled.
+
+The new post-sale plan is also purposeful. A returning customer may need help resolving the same friction that contributed to departure. The system should carry that context into owned work while keeping proposed goals distinct from contractual promises.
+
+## Try a different definition of success
+
+In [PAYG retention](https://d11wfkflwovvog.cloudfront.net/retention), compare the decline and efficiency scenarios. Inspect which observations support the case and what evidence closure needs. In [Cancellation & winback](https://d11wfkflwovvog.cloudfront.net/cancellations), follow the buyer's request through a save decision or effective exit and return.
+
+All examples use fictional observations and simulated providers. The blog diagrams are local explanations; the linked application changes an isolated synthetic workspace. Implementation was reviewed on 12 November 2026. The [series replay record](https://hk-775.github.io/hk-775/blog/evidence/renewal-series.json) lists the narrower public checks executed for publication.
+
+The next installment follows the work created by an agreement or return: [handoffs, partner evidence and customer follow-up](https://hk-775.github.io/hk-775/blog/renewal-studio-post-sale.html).
+
+---
+Source: [blog/2026-11-12-renewal-studio-retention.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-retention.md)
+
+Source SHA-256: `073ce9fcdab194251b6b47ad825866ccf783c7ff206ee699c21fe2cd0cb81442`
+
+===== FILE: blog/2026-11-12-renewal-studio-post-sale.md =====
+Published Markdown: https://hk-775.github.io/hk-775/blog/renewal-studio-post-sale.md
+
+The buyer has accepted. Billing and access are correct. Two weeks later, the customer still has not completed its integration.
+
+The renewal transaction finished, but the customer outcome did not. If the system stops at “closed won,” it loses the work that may determine the next renewal.
+
+Renewal Studio connects an accepted agreement to a post-sale plan, an operational queue and customer communication. The purpose is to make the next unresolved outcome visible, with a person or permitted agent responsible for moving it forward.
+
+## Start with a confirmed handoff
+
+Activation creates a post-sale plan tied to the accepted agreement. The earlier plan can be archived when a new cycle begins. This preserves which commercial context each plan belonged to.
+
+A proposed handoff is not automatically a confirmed handoff. The receiving owner must acknowledge responsibility.
+
+![Explore a confirmed handoff, an integration blocker and an outcome claimed before its prerequisites.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-handoff.svg)
+
+The milestones form a dependency chain: goals and kickoff, integration, then a first useful outcome. Each transition needs its prerequisites and supporting evidence. Open blockers prevent a milestone from completing.
+
+For a fictional API customer, a goal might be to run a defined production-like job successfully. Kickoff clarifies who will build the integration and what success means. Integration evidence demonstrates that the connection works. The outcome checkpoint records whether the useful job actually ran.
+
+Those proposed goals do not create new contract promises. Keeping the accepted scope available alongside the plan helps an owner distinguish an agreed entitlement from an adoption objective.
+
+## A queue should point to the source of truth
+
+The operations queue is derived from source workflows: risk cases, commercial reviews, communication follow-ups, activation recovery and post-sale milestones.
+
+That avoids a common split. A task tracker says “done” while the underlying renewal remains blocked, or a case is resolved while a disconnected queue keeps asking someone to fix it.
+
+Assignment updates the source owner. A stale queue version cannot quietly overwrite a newer assignment. Completing the underlying business work still requires its own evidence and authority.
+
+| Queue item | Evidence that moves the source workflow |
+| --- | --- |
+| Integration blocker | Observed correction and required milestone prerequisites |
+| Consumption reconciliation | A trusted source update and a fresh scan |
+| Commercial review | An authorized decision on the current proposal |
+| Activation recovery | Matching billing and access state |
+| Customer question | A recorded resolution connected to the reply |
+
+The queue also exposes overdue work. Escalation assigns the configured internal backup and records the event. It should not repeatedly bounce the same task among owners with every scheduler tick.
+
+This is why fewer visible tasks is an unreliable success measure. Work can disappear from a queue because it was filtered, reassigned or incorrectly closed. A better review connects task transitions to the source outcome.
+
+## Partners can supply evidence without owning every decision
+
+Some work fits an outsourced partner: usage reconciliation, adoption investigation or integration verification. Other decisions require internal or customer authority, including commercial approval, buyer consent and internal outcome signoff.
+
+The demo's invited-session mode can assign an eligible task to a partner scoped to one account. The partner sees work assigned to that identity, submits the requested evidence and waits for internal review.
+
+![Compare an eligible integration assignment with a commercial approval request and an out-of-scope account.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-partner.svg)
+
+The reviewer can assess the submission, but that review does not bypass the source workflow's prerequisites. Integration evidence cannot close a milestone while a required earlier step remains incomplete.
+
+This distinction makes the blended operating model concrete. Software coordinates and checks. A partner supplies bounded work. An internal specialist makes the decision that requires the relevant authority.
+
+Revocation and account scope matter as much as the assignment form. A partner must not gain access to another account by changing an object ID. Revoking the identity must disable its existing sessions and recovery capabilities.
+
+The demonstration authority is synthetic. A real deployment would connect these permissions to an organization's verified identities and operating agreements.
+
+## Communication has a lifecycle, too
+
+An agent drafting an email has completed only the first step of customer communication.
+
+The system needs current source evidence, an approved content version, a recipient, delivery status and a way to handle replies. A failed delivery should remain distinguishable from a delivered message that has not received a response.
+
+![Follow a draft through approval and delivery, or stop it when evidence or customer preferences change.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-conversation.svg)
+
+Renewal Studio supports drafting, approval, delivery receipts, retries and a synthetic inbox. A customer reply creates an owned follow-up task. Repeated inbound events deduplicate rather than creating several copies of the same question.
+
+Consider a buyer who asks whether a proposed renewal changes an integration limit. The reply should become work for an owner who can answer it from the current terms. The resolution should remain connected to the question.
+
+The message itself cannot accept the contract. That remains an explicit buyer action on the current offer.
+
+Delivery also checks current suppression and cancellation state. Approval from yesterday cannot override a cancellation recorded today. The communication workflow must read the customer's latest decision before it acts.
+
+## Measure work without inventing time savings
+
+The application can record observed human minutes and instrumented automated commands. Those are different measurements.
+
+A recorded 15-minute review is an observation about that review. Three agent steps describe instrumented activity. Neither establishes how many hours would have been spent without the system.
+
+A useful operating review would examine overdue source tasks, incomplete handoffs, reopened milestones, unresolved customer questions and work returned for missing evidence. It would distinguish actions attempted from outcomes verified.
+
+It would also preserve uncertainty. A recorded first outcome may be meaningful evidence of adoption; it is not automatically proof of long-term retention.
+
+The design goal is a small human layer with clear responsibilities. Whether that model improves staffing needs or customer outcomes is a question for measured real operation, not a conclusion supplied by the demo.
+
+## Try completing the task before its prerequisite
+
+Open [Post-sale plans](https://d11wfkflwovvog.cloudfront.net/post-sale) and inspect a milestone's dependencies. Try the [Operations queue](https://d11wfkflwovvog.cloudfront.net/operations) to see which source owns the next decision. In [Conversations](https://d11wfkflwovvog.cloudfront.net/conversations), follow a draft through delivery and a customer question into a task.
+
+The partner workflow is available through [Access & roles](https://d11wfkflwovvog.cloudfront.net/access). Use separate synthetic sessions when exploring different authorities.
+
+The figures are local teaching examples. The application uses fictional identities, messages and customer records; no real email is sent. Implementation was reviewed on 12 November 2026, and the [series replay record](https://hk-775.github.io/hk-775/blog/evidence/renewal-series.json) lists the public checks executed.
+
+The next part follows a different kind of unresolved work: [an invoice, a payment and the evidence that money actually moved](https://hk-775.github.io/hk-775/blog/renewal-studio-finance.html).
+
+---
+Source: [blog/2026-11-12-renewal-studio-post-sale.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-post-sale.md)
+
+Source SHA-256: `8f39a17a0fcccfe6bbf2f4db3b6e4bcc0ba57d1f3e278b7078915583c4e43353`
+
+===== FILE: blog/2026-11-12-renewal-studio-finance.md =====
+Published Markdown: https://hk-775.github.io/hk-775/blog/renewal-studio-finance.md
+
+The customer accepts a $12,000 agreement. The dashboard now has at least four questions to answer: what was agreed, what has been invoiced, what has been collected, and what service the amount covers.
+
+Using one “revenue” number for all four hides the operational work.
+
+This installment follows invoices, payment reservations, disputes, refunds and service allocations. Renewal Studio implements these as a synthetic operational ledger. It does not process real payments or provide statutory accounting.
+
+## An invoice needs an identifiable source
+
+A subscription or commitment invoice comes from an accepted agreement. A PAYG invoice comes from observed usage. PAYG does not need a fabricated annual renewal to enter the collection workflow.
+
+Capturing invoices is repeatable. Repeated capture preserves the original document rather than generating a new invoice each time a worker runs. Archived accepted terms remain discoverable after another renewal cycle opens.
+
+![Explore payment reconciliation, a future installment and a dispute against a collected amount.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-invoices.svg)
+
+A future agreement can produce scheduled invoices, but payment is blocked until the issue date. The schedule, invoice and collection are separate states.
+
+For custom contracts, the signed amount is divided into the agreed installments. Remainder cents go to earlier installments. A fictional 10,001-cent amount across three installments becomes 3,334, 3,334 and 3,333 cents.
+
+Dates derive from the original day of month, clamped when necessary. This preserves a schedule such as January 31, February 29 and March 31 in a leap year, rather than letting February permanently shift later dates.
+
+These are explicit demo conventions. A production integration would need the billing provider's actual rules and the organization's approved commercial policy.
+
+## Reserve before making a payment attempt
+
+Assume an invoice has 10,000 cents outstanding. A payment attempt for 6,000 cents begins, but its final result is not yet known.
+
+If a second request can collect the full 10,000 cents, the system can overcollect. The first amount therefore remains reserved while the attempt is unresolved.
+
+The synthetic provider can record a payment and lose its acknowledgement. The application then has uncertainty about a result, not evidence that nothing happened.
+
+On retry, reconciliation reads the independently recorded receipt and confirms the existing payment. It does not issue another charge just because the original response was missing.
+
+The model also exercises declines and outages. After bounded outage attempts, a payment enters a dead letter. Explicit recovery resolves the outage and replays the stable action.
+
+| State | What remains to establish |
+| --- | --- |
+| Invoice captured | Whether and when collection is due |
+| Payment reserved | Whether the provider recorded the attempt |
+| Receipt reconciled | The collected amount and remaining balance |
+| Payment declined | A new collection decision, with the failure visible |
+| Dead letter | An owned recovery decision after exhausted attempts |
+
+An idempotency key is useful only if its scope and effect are understood. The demonstration exercises its simulated receipts and reservations. It does not prove the semantics of a real payment provider.
+
+## Disputes change the collection workflow
+
+After a payment is reconciled, a dispute can cover part of it. While that dispute is open, new collections and reminders for the invoice pause.
+
+Upholding the dispute reverses the reviewed amount and reopens the balance. Dismissing it preserves the payment. Both decisions need an explicit review.
+
+Continuing the example, a 6,000-cent reconciled payment against a 10,000-cent invoice leaves 4,000 cents outstanding. Upholding a 1,000-cent dispute brings net collected value to 5,000 cents and outstanding value to 5,000 cents.
+
+The operational totals reconcile per currency. Negative adjustments remain separate credit documents; this version does not automatically net them across unrelated invoices.
+
+Reminders are also stateful. The fixture records overdue stages, including later 14-day and 30-day stages, without delivering the same stage repeatedly. Cancellation and unresolved disputes affect whether a new reminder is appropriate.
+
+## A goodwill refund has a different authority
+
+A goodwill refund is not the same operation as a dispute reversal or an unused-service credit.
+
+Renewal Studio gives refund requests an amount, reason and event ID. Pending and approved requests reserve a finite allowance. Finance reviews the current request with a rationale. Rejected or cancelled requests release their reservations.
+
+![Follow a refund reservation to a reconciled credit, or release it after rejection.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-refund.svg)
+
+The credit fixture deliberately loses its acknowledgement after recording the credit. Reconciliation confirms the same receipt without issuing a second credit.
+
+A later policy change can block new submissions while still allowing reconciliation of an already written credit. That is an important distinction: the system must be able to learn what happened even when it is no longer allowed to initiate that action again.
+
+Identical request events are harmless replays. Reusing an event ID for conflicting content is rejected. Otherwise, deduplication itself could conceal a changed financial instruction.
+
+Refund caps and fictional tax rates are demonstration policy. They are not representations of legal entitlements or jurisdiction-specific tax treatment.
+
+## Allocate service without losing cents
+
+The service allocator takes accepted subscription or custom service charges and spreads them across inclusive service days. It calculates cumulative monthly amounts, rounds those cumulative totals and uses the differences as monthly allocations.
+
+That keeps the monthly sum equal to the signed source amount.
+
+![Explore cumulative service allocation, a separate unused-service credit and excluded financial sources.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-allocation.svg)
+
+Unused-service credits produce separate negative schedules. Taxes, goodwill refunds, PAYG usage and consumption commitments are excluded from this allocator.
+
+The limited scope is deliberate. A monthly allocation table can look like revenue recognition while omitting the policies and judgments that an accounting system requires. This feature is operational service allocation; it is not a GAAP or IFRS revenue-recognition engine or a general accounting subledger.
+
+Keeping accepted terms, invoice sources, payment receipts and allocation schedules connected still has practical value. An operator can explain which agreement produced an amount and where a discrepancy entered the workflow.
+
+## Try losing the acknowledgement
+
+In [Invoices & collections](https://d11wfkflwovvog.cloudfront.net/collections), capture observed PAYG invoices and submit a partial payment using the lost-acknowledgement scenario. Inspect the reserved amount, then reconcile the receipt. The balance should reflect one payment.
+
+In [Finance controls](https://d11wfkflwovvog.cloudfront.net/finance), follow a reviewed refund through the same uncertainty pattern and inspect the accepted service schedules.
+
+The figures are local explanations. Application payments, credits, taxes and receipts are synthetic; no money moves. Implementation was reviewed on 12 November 2026. The [series replay record](https://hk-775.github.io/hk-775/blog/evidence/renewal-series.json) identifies the executed public checks and their limits.
+
+These financial boundaries make the next design question concrete: [which actions should an agent be allowed to run?](https://hk-775.github.io/hk-775/blog/renewal-studio-agents.html)
+
+---
+Source: [blog/2026-11-12-renewal-studio-finance.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-finance.md)
+
+Source SHA-256: `c9b26e5a83d392f72119da349bc987438c0311e4d8a3e420d226442ffa7f1337`
+
+===== FILE: blog/2026-11-12-renewal-studio-agents.md =====
+Published Markdown: https://hk-775.github.io/hk-775/blog/renewal-studio-agents.md
+
+An agent proposes three steps: inspect usage, prepare an offer and accept it for the customer.
+
+The first two may be useful. The third crosses an authority boundary. A system that validates only whether the output is well-formed JSON will miss the most important defect.
+
+Renewal Studio separates the provider that proposes a plan from the executor that decides whether each action is allowed. The same distinction applies whether the proposal comes from OpenAI, Anthropic, a compatible API or a CLI adapter.
+
+## Give the planner a bounded job
+
+The agent workspace starts with a scoped evidence packet for known accounts. The plan binds that evidence through a fingerprint.
+
+The executor accepts four tools:
+
+| Tool | Permitted work |
+| --- | --- |
+| `scan_risk` | Refresh risk analysis from current evidence |
+| `prepare_standard` | Attempt standard preparation through existing eligibility rules |
+| `draft_check_in` | Draft a customer check-in for its approval workflow |
+| `open_handoff` | Open post-sale work with the existing domain controls |
+
+Plans contain at most six unique steps across one to five known customers. The boundary excludes buyer acceptance, commercial approval, message approval, termination and arbitrary code execution.
+
+![Explore a permitted plan, a forbidden buyer action and a plan whose evidence changes before execution.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-agent.svg)
+
+The planner can explain a recommendation. The executor still checks tool identity, structure, scope, uniqueness, budgets and current source evidence. Domain functions enforce their own policy and authority checks.
+
+For example, `prepare_standard` means “attempt the standard preparation workflow.” It does not mean “produce an offer regardless of eligibility.” An unverified record can still enter a data hold.
+
+This makes an adapter replaceable without making its output authoritative.
+
+## Recheck evidence after the model responds
+
+Planning takes time. While a provider is generating a proposal, usage may arrive, a buyer may request cancellation or someone may change the contract record.
+
+The application performs provider I/O outside the store lock. Before saving the proposed plan, it rechecks the evidence and model budget. Execution checks the plan against current evidence again.
+
+Without those checks, a valid plan could become unsafe simply by waiting.
+
+Each permitted step records a result or failure reason. A failed step rolls back its local state changes independently. That does not imply that a real external API call could be rolled back by restoring local memory; remote effects need the receipt and reconciliation design from earlier parts.
+
+The public deployment uses the deterministic fixture provider. It makes no paid model calls. Optional adapters exist for OpenAI Responses, Anthropic Messages, compatible APIs, Codex CLI and Claude Code. Their availability is not evidence that their live output quality or operational reliability has been measured.
+
+The scheduled agent always uses fixture mode in this demonstration, independently of an interactive provider configuration.
+
+## Scheduling is a state problem
+
+An agent that works only when someone presses a button is an assistant. A renewal operation also needs work to happen when nobody has the page open.
+
+The runner refreshes synthetic feeds, scans risk, prepares eligible offers, drafts reminders, captures weekly forecasts and escalates overdue source tasks. Background execution is an explicit opt-in; automatic template approval and bounded fixture-agent execution are separate opt-ins.
+
+![Explore competing workers, a retryable failure and a job whose attempts are exhausted.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-scheduler.svg)
+
+The persisted due time is the critical input. Two workers can both observe that work appears due. The conditional workspace edit rechecks the due time and expiry before committing. A competing worker cannot repeat an already committed tick using its earlier observation.
+
+Jobs retain results and a bounded attempt count. Completed work is idempotent within its business date. Failed work can retry, then enter a dead letter when the demonstration's attempts are exhausted. An operator resolves the cause before manual replay.
+
+There are two clocks to keep distinct: the real interval that determines when a worker wakes up, and the synthetic business date that determines which renewal work is due. Advancing one is not proof that the other was observed in production.
+
+## Durable delivery is part of agent execution
+
+A plan that drafts a reminder has not delivered it. A worker that initiates an action has not necessarily verified its effect.
+
+The downstream communication and connector workflows retain approvals, stable action identities, independent simulated provider records and receipts. Delivery can fail, reconcile or enter a dead letter.
+
+Current cancellation and suppression checks apply at delivery. A correct draft can become inappropriate while waiting in a queue.
+
+This is where the earlier parts connect. The agent does not get a shortcut around quote approval, source reconciliation, financial reservations or buyer consent. It calls into the same workflows a human operator uses, with a smaller action surface.
+
+## Evaluate effects as well as proposed text
+
+The offline evaluation workspace exercises actual validation and disposable execution. Cases include valid tools, forbidden authority, scope violations, malformed or refused output, duplicate steps, budgets, stale evidence, injected names, customer roles and retries.
+
+The deliberately broken fixture corrupts valid tool names. It should fail the evaluation while the application controls remain unchanged.
+
+![Compare a baseline fixture, a deliberate regression and the questions that require live-model evaluation.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-evals.svg)
+
+The useful assertion is specific: permitted work occurred, or forbidden work did not occur, with the expected reason and resulting state.
+
+The displayed release gate is review evidence. It is not connected to an automatic deployment block. A production pipeline would need to consume the evaluation result and enforce its own release policy.
+
+Offline fixture results also leave important questions open. Representative live-model evaluation would need to measure wording quality, evidence faithfulness, refusals, malformed responses, token usage, latency and paid cost. Repeating a deterministic fixture cannot answer those questions.
+
+## Expand authority only after observing the boundary
+
+A sensible expansion starts with a narrowly defined action and a failure model. Identify its required authority, inputs, source versions, allowed effects, duplicate behavior and recovery path. Add representative checks before adding the tool to an executor.
+
+For a first live pilot, I would keep plan generation and draft preparation separate from commercial approval and customer consent. The team could inspect accepted and rejected plans, stale-evidence failures, intervention frequency and unresolved effects before considering broader autonomy.
+
+That is a proposed pilot approach, not a claim that Renewal Studio has already operated one.
+
+Try [Agent workspace](https://d11wfkflwovvog.cloudfront.net/agents), [Automation](https://d11wfkflwovvog.cloudfront.net/automation) and [AI evaluations](https://d11wfkflwovvog.cloudfront.net/evaluations). The blog figures execute locally; the application uses isolated synthetic state. Implementation was reviewed on 12 November 2026, with executed public checks in the [series replay record](https://hk-775.github.io/hk-775/blog/evidence/renewal-series.json).
+
+Once the work runs, the business needs to understand what is likely to happen next. [Part 8 connects forecasts to saved evidence and effective outcomes](https://hk-775.github.io/hk-775/blog/renewal-studio-forecasting.html).
+
+---
+Source: [blog/2026-11-12-renewal-studio-agents.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-agents.md)
+
+Source SHA-256: `d1a715ae4809ee66a6261d2713eb64d373a6d3a637aa01ee9613bebbf3a98610`
+
+===== FILE: blog/2026-11-12-renewal-studio-forecasting.md =====
+Published Markdown: https://hk-775.github.io/hk-775/blog/renewal-studio-forecasting.md
+
+Last week's forecast looked strong. This week's dashboard looks weaker. Did customer behavior change, did a contract move out of the horizon, or did someone finally correct the source record?
+
+A current dashboard alone cannot answer. It shows what the system knows now, not what the business believed then.
+
+Renewal Studio preserves weekly forecasts and connects them to later effective outcomes. It also provides a synthetic prediction model and multi-cycle portfolio experiments. Those are three different tools, with different evidence.
+
+## Keep the operational forecast inspectable
+
+The basic forecast starts with contract dates, agreement amounts, current offers, risk states and trusted usage evidence. It distinguishes agreed and offered work, risk and uncertainty.
+
+Its scenario totals are not probability-weighted model predictions. Consumption utilization and PAYG weekly spend remain different measures from annual agreement value.
+
+![Follow saved forecast rows to effective outcomes, or preserve uncertainty when records and decisions remain unresolved.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-forecast.svg)
+
+The weekly snapshot records its business date, horizon and source rows. Repeating a capture for the same week and horizon preserves the snapshot rather than rewriting the past.
+
+That makes a review concrete. The team can ask which rows moved, which source facts changed and which outcomes have become effective since the earlier forecast.
+
+An overdue row without a confirmed outcome stays unresolved. It does not become churn just to complete a chart. Similarly, an unverified contract should remain visible as uncertainty or an exclusion instead of quietly disappearing from the denominator.
+
+For a fictional review, suppose a $24,000 renewal was offered in the saved snapshot. The buyer later accepts, but the next term has not begun. The offer, agreement and effective outcome are distinct events. A report must state which one it counts.
+
+## A model forecast needs a different evidence trail
+
+The prediction workspace generates 360 distinct synthetic cases with a fixed seed. The oldest 240 fit a regularized logistic model. The next 60 fit a calibration intercept. The final 60 remain held out for scoring.
+
+The dates precede the workspace date. Features describe usage, engagement and friction. The generator is deliberately learnable.
+
+![Inspect the separation between fitting, calibration, held-out scoring and withheld predictions.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-model.svg)
+
+The Brier score measures the mean squared difference between a probability and the observed binary outcome:
+
+```text
+Brier score = mean((predicted probability − observed outcome)²)
+```
+
+For three fictional predictions of 0.9, 0.6 and 0.2 with outcomes 1, 0 and 0, the score is `(0.01 + 0.36 + 0.04) / 3`, or about 0.137. That calculation describes those three observations, not general model quality.
+
+The application also displays reliability bins with counts. A bin supported by very few examples should not look as convincing as one supported by many.
+
+Held-out synthetic performance checks that the training and scoring machinery behaves coherently on its generated problem. It does not establish accuracy for real customers, where selection, product changes, missing data and behavior can differ.
+
+## Missing evidence should reach the model boundary
+
+Commitment predictions use reconciled utilization and explicit synthetic assumptions. Standard accounts use illustrative activity history; custom accounts use illustrative constants. These are disclosed feature constructions.
+
+Unverified contracts and incomplete required usage withhold predictions. Accepted or declined decisions use their observed states. Currency totals remain separate.
+
+A saved sensitivity forecast preserves the model ID, feature values and amounts. Adjusting usage in that scenario asks how the fixed model responds to the changed input.
+
+It does not establish that causing the same usage change would cause a renewal. Prediction sensitivity and intervention effectiveness require different evidence.
+
+That distinction matters when an agent recommends work. “The score rises when this feature rises” is not sufficient justification for a customer intervention.
+
+## Measure retention from a fixed opening cohort
+
+The performance workspace uses a fixed opening account cohort and effective annual agreement values, separately by currency. PAYG spend and service-allocation schedules are excluded from these retention measures.
+
+Consider two fictional opening agreements: $100 and $100. One later expands to $120; the other contracts to $80.
+
+Net revenue retention is `(120 + 80) / 200 = 100%`. Gross revenue retention caps each retained account at its opening value, so it is `(100 + 80) / 200 = 90%`.
+
+| Measure | What it helps explain |
+| --- | --- |
+| NRR | Expansion, contraction and churn within the opening cohort |
+| GRR | Retained opening value without expansion covering a loss |
+| Forecast calibration | Saved expectations compared with matched effective outcomes |
+| Recorded human minutes | Observed work entries, not estimated savings |
+| Instrumented automation share | Covered commands and worker/agent steps, not every historic action |
+
+Before live workspace outcomes exist, the screen can show a clearly labeled independent historical sample. Mixing that sample into the live cohort would manufacture apparent performance.
+
+## Use portfolio experiments to expose unfinished work
+
+The portfolio simulator creates disposable fictional standard USD customers and runs the application's actual preparation, acceptance, fulfillment, cycle promotion, connector, invoice and payment functions.
+
+Inputs include a seed, account count, cycle count, usage drift, outage percentage, outage duration and whether recovery succeeds. The interface supports up to 5,000 accounts and five annual cycles.
+
+![Explore recovered outages, unresolved backlog and repeatable evidence in a disposable portfolio experiment.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-portfolio.svg)
+
+Customer decisions and providers are simulated. Declined customers leave later cohorts. Unresolved outages remain backlog. Duplicate calls exercise idempotency. The prediction model comes from separate fictional history and remains frozen while behavior changes across cycles.
+
+The report checks balances, duplicate writes and recovery alongside predicted and observed decisions. Identical inputs and business dates produce the same evidence digest; elapsed time is excluded. The application retains bounded reports and sampled account histories while preserving the interactive accounts and clock.
+
+This is sequential local domain execution. It is not a concurrent HTTP load test, an AWS capacity benchmark or evidence that 5,000 real customers could renew safely at once.
+
+Leaving outages unresolved is particularly instructive. The successful portion of a portfolio should not hide actions that remain in dead letters. A useful report preserves both.
+
+## Ask what changed, then ask what the evidence supports
+
+Open [Weekly forecasts](https://d11wfkflwovvog.cloudfront.net/forecasts) and compare a saved snapshot with current work. Explore [Predictive models](https://d11wfkflwovvog.cloudfront.net/predictions) for the separate fit, calibration and scoring stages. Use [Performance](https://d11wfkflwovvog.cloudfront.net/performance) and [Portfolio simulations](https://d11wfkflwovvog.cloudfront.net/simulations) to distinguish effective outcomes from simulated experiments.
+
+Implementation was reviewed on 12 November 2026. Figures are local teaching examples; application histories and outcomes are synthetic. The [series replay record](https://hk-775.github.io/hk-775/blog/evidence/renewal-series.json) states which public checks were executed. None establishes real prediction accuracy, staffing savings or retention lift.
+
+The final installment connects the workflows to [the AWS architecture and the evidence a real operational pilot would need](https://hk-775.github.io/hk-775/blog/renewal-studio-operations.html).
+
+---
+Source: [blog/2026-11-12-renewal-studio-forecasting.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-forecasting.md)
+
+Source SHA-256: `64320de459f665ce3df788a6c9af05a8f0c457397caf69eb082ef7e501c3f209`
+
+===== FILE: blog/2026-11-12-renewal-studio-operations.md =====
+Published Markdown: https://hk-775.github.io/hk-775/blog/renewal-studio-operations.md
+
+The standard renewal can complete. Exceptions have owners. Consumption cases, cancellations, post-sale work, financial controls, agents and forecasts all have a place to run.
+
+The final question is operational: what happens when these workflows meet real identities, real source systems and providers whose effects live outside the application's database?
+
+Renewal Studio is a working synthetic demonstration hosted on AWS. Its workflows make that question inspectable. They do not make the remaining integration work disappear.
+
+## The hosted application has two execution paths
+
+The browser reaches CloudFront with AWS WAF attached. Static assets come from a private S3 origin. Uncached API requests reach a Lambda function URL protected with AWS IAM authentication and CloudFront origin access control.
+
+The API persists an isolated workspace in DynamoDB. A separate worker Lambda receives a one-minute EventBridge Scheduler trigger and queries an index of due workspaces.
+
+![Explore static delivery, protected API requests, scheduled work, failed scheduler delivery and function signals in the AWS topology.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-architecture.svg)
+
+The diagram is an original reconstruction of the application's infrastructure definition reviewed on 12 November 2026. It shows the main configured runtime paths. It is not a fresh audit of every deployed resource. Static SVG, PNG and editable draw.io downloads are available beneath it.
+
+The two execution paths serve different needs. An interactive request should finish bounded work and return. A background worker must find due work, recheck its persisted schedule and retain the result without requiring an open browser.
+
+The worker processes a bounded number of workspaces per invocation. Conditional writes preserve workspace versions and prevent a competing worker from repeating a committed tick.
+
+A separate SQS dead-letter queue receives failed scheduler delivery after configured retries. Application job failures remain in workspace records. Those are different failure layers and need different recovery decisions.
+
+## Protecting the origin is only one boundary
+
+CloudFront origin access control signs requests to the Lambda origin. AWS documents the [Lambda function URL origin pattern](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-lambda.html) and the corresponding [function URL authentication requirements](https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html).
+
+That prevents an unsigned public request from using the protected origin directly. It does not establish that a browser user is the authorized buyer for an account.
+
+The application separately uses workspace cookies, origin and CSRF checks, role checks and account-scoped domain authority. The hosted configuration uses secure cookies. API responses are not cached as shared static assets.
+
+The infrastructure also defines function logs and alarms in CloudWatch, selected CloudFront access logs and protected WAF logs in S3, plus CloudTrail management-write records. These signals help investigate requests and infrastructure changes. They are not substitutes for the business record of who approved which terms.
+
+The API and worker have scoped DynamoDB permissions. They do not receive real billing credentials or paid model access in the public fixture deployment.
+
+## Expiry and restoration need application semantics
+
+Hosted synthetic workspaces expire after seven days. The application checks expiry itself. DynamoDB TTL is storage cleanup, not an exact authorization deadline; AWS documents [handling expired items that are pending deletion](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ttl-expired-items.html).
+
+Workspace payloads are bounded and versioned, with compressed archives and an encoded size limit. This makes the demo manageable. It is not an unlimited event store for a global renewal business.
+
+Invited-session mode adds synthetic administrators, internal specialists, customers and partners. Internal staff can be scoped to a workspace or one account; customer and partner roles require an account. Object-level checks prevent a scoped user from reaching another account by supplying its ID.
+
+Invitations are single-use and short-lived. Session recovery is also a one-time capability, and revocation disables the identity's sessions and recovery. These controls demonstrate authority transitions. Possession of a synthetic invitation does not verify a real person's employment or buying authority.
+
+A production identity integration would need to map verified identities to those same domain permissions and test offboarding, role changes, account reassignment and recovery.
+
+## Importing a record is a controlled transition
+
+The connector sandbox stages an envelope with an event ID, mapping, source version and payload digest. Applying it checks the account, billing identity, current source evidence and accepted terms.
+
+![Explore an accepted source update, a quarantined identity conflict and an attempted overwrite of accepted terms.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-sources.svg)
+
+Changed mappings, stale evidence, identity conflicts and accepted agreements can quarantine a batch without changing the source record. Replaying an identical event preserves its earlier result.
+
+This is a useful contract for a real connector: incoming data proposes a transition that the application validates. It is not automatically entitled to overwrite every field.
+
+The same sandbox models target delivery with stable action IDs, independent simulated provider records, signed receipts, retries and dead letters. Its targets support subscription, commitment, custom and PAYG workflows.
+
+Those provider records still live inside the synthetic workspace. They do not reproduce network partitions, a provider's retention window for idempotency keys or an external administrator changing the target independently.
+
+A real integration needs tests for those conditions, with authoritative reads and a clear decision when the provider's state conflicts with the requested state.
+
+## A checkpoint cannot undo an external payment
+
+The resilience workspace provides incidents, acknowledgements, a local action chain, checksummed checkpoints and controlled restoration.
+
+Restoration checks the selected checkpoint, requires confirmation against the current revision and stops the background worker. It restores synthetic business records while preserving identities, revocations, the action chain and restore history.
+
+![Follow a validated synthetic restore while preserving revoked access, then examine the separate need to reconcile external effects.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-restore.svg)
+
+Preserving revocations prevents a database recovery from quietly reviving someone whose access was removed.
+
+The action chain covers a bounded recent mutation history with a predecessor anchor. It can reveal accidental changes. An unrestricted database writer could replace the chain, so it is not independently tamper-proof evidence. External anchoring and durable retention remain production work.
+
+Likewise, restoring the application cannot reverse a payment, an email or an entitlement change at a real provider. Recovery must inspect those external effects and explicitly reconcile or compensate them. A successful database restore is only one part of that process.
+
+## A realistic pilot should prove one complete path
+
+I would begin a real pilot with one clearly defined standard contract type, one authoritative source path, one billing target and one access target. Use a bounded account cohort, named operational owners and an explicit stop condition.
+
+This is a proposed next step, not an already completed deployment.
+
+| Pilot area | Evidence required before widening scope |
+| --- | --- |
+| Identity and consent | Verified buyer authority, account isolation, revocation and exact-version consent |
+| Source reconciliation | Freshness, conflicting updates, replay and amendment handling against authoritative records |
+| Commercial policy | Approved thresholds, supported terms and owned exception paths |
+| Provider effects | Lost acknowledgements, duplicates, outages and independently changed target state |
+| Operations | Alert routing, intervention records, recovery runbooks and a tested stop control |
+| Records and finance | Agreed retention, audit integrity, privacy handling and accounting integration |
+| Agent behavior | Representative live-model evaluation, costs and prohibited-action checks |
+| Business outcomes | A defined cohort, observed manual effort and outcome measurement over real cycles |
+
+A shadow phase could compare recommendations with the existing process. A reviewed execution phase could then perform narrowly authorized actions. Expansion should depend on observed error modes and successful recovery, not the number of workflows demonstrated.
+
+The existing system already provides useful places to attach that evidence: source versions, proposal approvals, consent snapshots, action receipts, owned tasks and saved forecasts.
+
+## Follow one decision all the way through
+
+The series began with a customer accepting a renewal and one provider failing. Across nine parts, the same requirement kept returning: preserve the decision, its authority, the evidence it depended on and the effects that still need verification.
+
+Explore [the full demo catalog](https://d11wfkflwovvog.cloudfront.net/demos), then use [Connectors](https://d11wfkflwovvog.cloudfront.net/connectors), [Access & roles](https://d11wfkflwovvog.cloudfront.net/access) and [Resilience](https://d11wfkflwovvog.cloudfront.net/resilience) to inspect the operational boundaries.
+
+The [public replay record](https://hk-775.github.io/hk-775/blog/evidence/renewal-series.json) lists the synthetic checks executed for this publication. Backend revision is not exposed by that API; recorded frontend hashes identify observed assets, not the backend build. The [series index](https://hk-775.github.io/hk-775/blog/renewal-studio.html) links all nine installments and their downloadable diagrams.
+
+The next milestone is evidence from a narrowly scoped real integration. Until then, the demonstration offers something concrete to review: an executable model of the decisions a renewal operation must make.
+
+---
+Source: [blog/2026-11-12-renewal-studio-operations.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-operations.md)
+
+Source SHA-256: `dd4f78c759612fdc218ae2e1d13daa47e8a86c76842994b480027ac64e11b3da`
 
 ===== FILE: blog/2026-10-30-improving-agents-starts-with-verifying-the-work.md =====
 Published Markdown: https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.md

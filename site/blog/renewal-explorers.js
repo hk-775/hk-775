@@ -1,4 +1,4 @@
-import { explorers } from "./renewal-explorer-data.js";
+import { explorers } from "./renewal-explorer-data.js?v=2";
 
 const ns = "http://www.w3.org/2000/svg";
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");

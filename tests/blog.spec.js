@@ -1,8 +1,9 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { comparePosts } from "../scripts/build-blog.mjs";
 
 const posts = JSON.parse(readFileSync(new URL("../blog/posts.json", import.meta.url), "utf8"))
-  .sort((left, right) => right.date.localeCompare(left.date) || left.slug.localeCompare(right.slug));
+  .sort(comparePosts);
 const latest = posts[0];
 const article = `/hk-775/blog/${latest.slug}.html`;
 const publicBase = "https://hk-775.github.io/hk-775/";

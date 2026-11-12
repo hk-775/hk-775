@@ -49,8 +49,11 @@ async function markdownLinks(text, source) {
         const [path, fragment] = target.split("#", 2);
         const file = posix.normalize(posix.join(posix.dirname(source), decodeURIComponent(path)));
         if (file.startsWith("../") || file.startsWith("/")) throw new Error(`Unsafe link in ${source}: ${target}`);
-        await access(resolve(root, file));
-        href = sources.has(file) ? base + sources.get(file)
+        const generatedArticle = posts.some(post => file === `blog/${post.slug}.html`) || file === `blog/${series.slug}.html`;
+        const evidence = /^blog\/evidence\/renewal-(?:standard|series)\.json$/.test(file);
+        if (!generatedArticle) await access(resolve(root, evidence ? `site/${file}` : file));
+        href = generatedArticle || evidence ? base + file
+          : sources.has(file) ? base + sources.get(file)
           : file.startsWith("site/") ? base + file.slice(5)
           : `${repo}/blob/main/${file}`;
         if (fragment) href += "#" + fragment;
@@ -93,7 +96,7 @@ The featured customer-summary workflow connects AxonLLM, Ostiari, and Escape Lab
 - [Engineering decisions](${base}decisions.md): Product boundaries, governance choices, and evidence practices.
 - [Run the integration](${base}run-example.md): Locked installation and reproduction commands.
 - [Engineering blog](${blogBase}): Articles on AI workloads, design decisions, and evaluation evidence.
-- [Renewal Studio series](${blogBase}${series.slug}.html): Reading order for software and API contract renewal workflows; Part 1 available, later installments planned.
+- [Renewal Studio series](${blogBase}${series.slug}.html): All nine parts, with 28 interactive workflows covering software and API contract renewals, retention, agents, finance and the operational pilot path.
 ${posts.map(post => `- [${post.title}](${post.url}): ${post.description}`).join("\n")}
 
 ## Evidence and context

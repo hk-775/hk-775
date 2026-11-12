@@ -16,10 +16,10 @@ test("series links only published parts and exposes article sharing resources", 
   await expect(page.locator(".series-list li")).toHaveCount(9);
   await expect(page.locator(".series-list li").first()).toContainText("Available now");
   const planned = page.locator(".series-list li").filter({ hasText: "Planned" });
-  await expect(planned).toHaveCount(8);
+  await expect(planned).toHaveCount(0);
   await expect(planned.locator("a")).toHaveCount(0);
   const structured = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent());
-  expect(structured.hasPart).toHaveLength(1);
+  expect(structured.hasPart).toHaveLength(9);
   expect(structured.hasPart[0].url).toContain("renewal-studio-standard-renewal.html");
   for (const href of await page.locator("a").evaluateAll(nodes => nodes.map(n => n.href).filter(Boolean))) {
     if (href.startsWith(baseURL)) expect((await page.request.get(href)).status()).toBe(200);

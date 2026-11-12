@@ -1,0 +1,19 @@
+<mxfile host="app.diagrams.net"><diagram name="A return is a new agreement"><mxGraphModel page="1" pageWidth="720" pageHeight="520" background="#FAF8F3"><root><mxCell id="0"/><mxCell id="1" parent="0"/>
+<mxCell id="churn" value="Terminated account
+Verified effective exit" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="74" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="proposal" value="Return proposal
+Existing products and price" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="74" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="review" value="Deal Desk review
+Current return terms" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="232" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="buyer" value="Buyer accepts return
+Products + dates + consent" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="232" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="activate" value="Reconcile both targets
+Verify billing and access" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="28" y="390" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="handoff" value="New post-sale plan
+Record the return outcome" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#EDF5F7;strokeColor=#9AB2BF;fontColor=#0D1B2A;fontSize=16;" vertex="1" parent="1"><mxGeometry x="396" y="390" width="296" height="82" as="geometry"/></mxCell>
+<mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="churn" target="proposal"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="proposal" target="review"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="review" target="buyer"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="buyer" target="activate"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;dashed=1;strokeColor=#00B4D8;strokeWidth=2;" edge="1" parent="1" source="activate" target="handoff"><mxGeometry relative="1" as="geometry"/></mxCell>
+</root></mxGraphModel></diagram></mxfile>
