@@ -10,6 +10,11 @@ connects a concrete question to implementation, evidence, and limitations.
 
 ## Articles
 
+- **12 November 2026 — [Renewal Studio, Part 1: The Standard Renewal, End to End](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.html).**
+  Four interactive workflows follow eligibility, buyer acceptance, activation and
+  partial-failure recovery, with a recorded synthetic application check.
+  [Markdown source](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.md) ·
+  [Series reading order](https://hk-775.github.io/hk-775/blog/renewal-studio.html).
 - **30 October 2026 — [Improving Agents Starts with Verifying the Work](https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html).**
   A live AutoHelix experiment compares completion reports with verified outputs,
   tests scripted cheating controls, and examines whether editing the improver helps.
@@ -125,7 +130,58 @@ diagram explains a local experiment with model inference through Bedrock,
 not an AWS deployment topology. No AWS architecture or resource change is
 part of this publication.
 
+## Renewal Studio series
+
+`series.json` defines the reading order. Only a part with a slug resolving to an
+allowlisted article is published; the remaining eight parts are explicitly
+planned and have no placeholder article links. The series index is generated
+with the blog, along with its Markdown companion and sitemap entry.
+
+The four Part 1 workflow explorers use original native SVG in the existing
+navy/cyan/cream palette. Their scenario text lives in
+`site/blog/renewal-explorer-data.js`; the renderer is
+`scripts/renewal-artwork.mjs`. The article allows only four known explorer
+identifiers through its `interactiveDiagrams` manifest. Raw Markdown HTML is
+still escaped. The browser never calls the application or a model.
+
+With the locked Node dependencies and Chromium installed:
+
+```sh
+node scripts/build-renewal-artwork.mjs
+node scripts/build-renewal-artwork.mjs --check
+npm run discovery
+npm run discovery:check
+npm test
+```
+
+The artwork command produces four SVG, PNG and editable draw.io companions
+plus an article-specific 1200×630 social cover. Mobile uses a vertical SVG
+layout. Browser checks cover real connector and dot motion, keyboard controls,
+independent scenarios, recovery counters, pause, reduced motion, full screen,
+no-JavaScript reading, mobile layout and local-only browser requests.
+
+The published evidence is a small allowlist of observed synthetic outcomes,
+not a workspace export. To deliberately run a new check in a fresh public-demo
+session, without replacing the article's existing record:
+
+```sh
+node scripts/capture-renewal-demo.mjs --capture --output /tmp/renewal-check.json
+```
+
+The record includes the capture-script hash and observed public frontend asset
+hashes. The demo does not expose its backend revision, so these hashes do not
+identify the backend build. No session tokens, account names, customer data or
+private application source are published. The separate application repository
+remains private; the public demo is the application entry point.
+
+AWS architecture checkpoint: this article and its interactive illustrations
+are a static GitHub Pages publication, with no AWS resources or model calls.
+The linked Renewal Studio application is a separate deployment behind
+CloudFront. Its AWS deployment architecture belongs to that application's
+architecture materials and the later architecture installment; these four
+figures describe business transitions, not a cloud topology.
+
 ---
 Source: [blog/README.md](https://github.com/hk-775/hk-775/blob/main/blog/README.md)
 
-Source SHA-256: `0e6db6b85c57812905c0f055374bfac0d0186f627d241e5c337ca2037313aa49`
+Source SHA-256: `91cc593572fc56004d32743887cf8309151d0ae5e237a6cfe63f53d05a364074`

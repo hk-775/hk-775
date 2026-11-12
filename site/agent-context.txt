@@ -1,6 +1,6 @@
 Harleen Kaur — public engineering context
 
-Generated from 10 allowlisted public documents. Source fingerprints describe the documentation; reported experiments retain their own dates and source revisions. Follow the cited evidence when evaluating a claim.
+Generated from 11 allowlisted public documents. Source fingerprints describe the documentation; reported experiments retain their own dates and source revisions. Follow the cited evidence when evaluating a claim.
 
 ===== FILE: README.md =====
 Published Markdown: https://hk-775.github.io/hk-775/index.md
@@ -18,7 +18,8 @@ Together, they support a development loop: **route → govern → test containme
 **[Start here → one workflow, its evidence, and the code](https://hk-775.github.io/hk-775/)**
 
 **[Engineering blog](https://hk-775.github.io/hk-775/blog/)** ·
-[Latest: Improving Agents Starts with Verifying the Work](https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html) ·
+[Latest: Renewal Studio — The Standard Renewal, End to End](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.html) ·
+[Renewal Studio series](https://hk-775.github.io/hk-775/blog/renewal-studio.html) ·
 [RSS](https://hk-775.github.io/hk-775/blog/feed.xml)
 
 [Agent guide](https://hk-775.github.io/hk-775/llms.txt) ·
@@ -61,7 +62,7 @@ Practical Eval Lab's bundled candidates use local rules. Its teaching datasets c
 ---
 Source: [README.md](https://github.com/hk-775/hk-775/blob/main/README.md)
 
-Source SHA-256: `dfb71f9dcd60b3775dffe45f1a46e77446f8fa4d818ca3ed0de58a088967de61`
+Source SHA-256: `c772a2b2519682caf34d091a817b9b785eb5a3ae80d1d85812f392af31af72af`
 
 ===== FILE: CASE_STUDY.md =====
 Published Markdown: https://hk-775.github.io/hk-775/case-study.md
@@ -258,6 +259,11 @@ connects a concrete question to implementation, evidence, and limitations.
 
 ## Articles
 
+- **12 November 2026 — [Renewal Studio, Part 1: The Standard Renewal, End to End](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.html).**
+  Four interactive workflows follow eligibility, buyer acceptance, activation and
+  partial-failure recovery, with a recorded synthetic application check.
+  [Markdown source](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.md) ·
+  [Series reading order](https://hk-775.github.io/hk-775/blog/renewal-studio.html).
 - **30 October 2026 — [Improving Agents Starts with Verifying the Work](https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html).**
   A live AutoHelix experiment compares completion reports with verified outputs,
   tests scripted cheating controls, and examines whether editing the improver helps.
@@ -373,10 +379,165 @@ diagram explains a local experiment with model inference through Bedrock,
 not an AWS deployment topology. No AWS architecture or resource change is
 part of this publication.
 
+## Renewal Studio series
+
+`series.json` defines the reading order. Only a part with a slug resolving to an
+allowlisted article is published; the remaining eight parts are explicitly
+planned and have no placeholder article links. The series index is generated
+with the blog, along with its Markdown companion and sitemap entry.
+
+The four Part 1 workflow explorers use original native SVG in the existing
+navy/cyan/cream palette. Their scenario text lives in
+`site/blog/renewal-explorer-data.js`; the renderer is
+`scripts/renewal-artwork.mjs`. The article allows only four known explorer
+identifiers through its `interactiveDiagrams` manifest. Raw Markdown HTML is
+still escaped. The browser never calls the application or a model.
+
+With the locked Node dependencies and Chromium installed:
+
+```sh
+node scripts/build-renewal-artwork.mjs
+node scripts/build-renewal-artwork.mjs --check
+npm run discovery
+npm run discovery:check
+npm test
+```
+
+The artwork command produces four SVG, PNG and editable draw.io companions
+plus an article-specific 1200×630 social cover. Mobile uses a vertical SVG
+layout. Browser checks cover real connector and dot motion, keyboard controls,
+independent scenarios, recovery counters, pause, reduced motion, full screen,
+no-JavaScript reading, mobile layout and local-only browser requests.
+
+The published evidence is a small allowlist of observed synthetic outcomes,
+not a workspace export. To deliberately run a new check in a fresh public-demo
+session, without replacing the article's existing record:
+
+```sh
+node scripts/capture-renewal-demo.mjs --capture --output /tmp/renewal-check.json
+```
+
+The record includes the capture-script hash and observed public frontend asset
+hashes. The demo does not expose its backend revision, so these hashes do not
+identify the backend build. No session tokens, account names, customer data or
+private application source are published. The separate application repository
+remains private; the public demo is the application entry point.
+
+AWS architecture checkpoint: this article and its interactive illustrations
+are a static GitHub Pages publication, with no AWS resources or model calls.
+The linked Renewal Studio application is a separate deployment behind
+CloudFront. Its AWS deployment architecture belongs to that application's
+architecture materials and the later architecture installment; these four
+figures describe business transitions, not a cloud topology.
+
 ---
 Source: [blog/README.md](https://github.com/hk-775/hk-775/blob/main/blog/README.md)
 
-Source SHA-256: `0e6db6b85c57812905c0f055374bfac0d0186f627d241e5c337ca2037313aa49`
+Source SHA-256: `91cc593572fc56004d32743887cf8309151d0ae5e237a6cfe63f53d05a364074`
+
+===== FILE: blog/2026-11-12-renewal-studio-standard-renewal.md =====
+Published Markdown: https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.md
+
+The customer clicks **Accept**. Billing updates successfully. Product access fails.
+
+Has the renewal finished?
+
+That small question shaped Renewal Studio. An accepted offer is a commercial milestone. A completed renewal also needs the systems delivering that agreement to match it. If they disagree, someone—or something—still owns the work.
+
+This is the first part of **Renewal Studio: Building a System for Software and API Contract Renewals**. I am starting with the standard renewal because it makes the larger idea concrete: automate a repeatable path, make its boundaries explicit, and route unresolved decisions to a person with enough context to act.
+
+The examples use synthetic contracts and simulated billing and access providers. The interactive figures run locally in this page. The separate [Renewal Studio demo](https://d11wfkflwovvog.cloudfront.net/demos) runs the application with synthetic data. Neither demonstrates production retention results or live customer transactions.
+
+## What is being renewed?
+
+Renewal Studio explores renewals for software subscriptions and API contracts. That can mean extending a seat-based subscription, renewing an annual API spending commitment, or responding to retention risk in a consumption relationship.
+
+Those arrangements need different decisions. This installment follows the narrowest useful case: an existing software subscription moving to its next annual term on supported, standard terms.
+
+Consider a fictional account with 40 seats at $600 per seat per year. Its proposed next annual amount is $24,000. Those numbers come from the contract, not a model's estimate. The question is whether this account can renew on those terms without a specialist assembling and processing the transaction by hand.
+
+## A renewal is a sequence of decisions
+
+The visible experience can be simple: an offer appears before term end, the buyer reviews it, and the next term activates when due. Behind that experience, each transition has a condition and an observable result.
+
+![The standard renewal moves through a verified contract, eligibility, a versioned offer, buyer acceptance, activation and verified completion.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-journey.svg)
+
+I think of this as a chain of six checkpoints. A verified contract allows eligibility checks. Passing those checks allows an offer. A valid offer can receive authorized acceptance. Acceptance schedules the next term. The effective date allows activation. Matching billing and access state allows completion.
+
+That sequence prevents an attractive but incomplete outcome: an agent reports success because it sent the offer, while the work needed to deliver the renewal remains open.
+
+## Decide what qualifies for the standard path
+
+“Standard” is a policy decision. In the demo, seven checks consider the contract record, supported arrangement, commercial values, open issues, buyer authorization, billing identity and timing.
+
+The commercial check includes a configured value limit and agreement between quantity, unit price and annual amount. Open negotiations, disputes and cancellation flags matter too. A mathematically correct quote can still be the wrong action.
+
+![Eligibility routes a qualifying contract to a standard offer, a negotiation to commercial review, and an unverified amendment to a data hold.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-eligibility.svg)
+
+Try the unverified-amendment scenario. The next action is to repair or verify the record. Writing a more confident offer does not fix the missing evidence.
+
+The two exception paths have different owners. An unverified contract or mismatched billing identity creates a data hold for Revenue Operations. A commercial exception goes to Deal Desk with the failed checks and a recommended next action. Routing is part of the workflow: a reason without an owner leaves the renewal stuck.
+
+This is also where the larger automation strategy begins. Define a bounded path that can complete reliably, then study the exceptions to decide what to automate next.
+
+## Make acceptance specific
+
+The offer needs more than a price and an Accept button. It carries a version, an annual amount, the next term dates and an expiry. Acceptance must refer to that exact proposal.
+
+In the application, the service checks the actor and account scope, confirmed terms, the current offer version, expiry, contract and policy versions, and eligibility again. A browser showing an offer does not establish authority to accept it.
+
+![Acceptance checks reject a view-only visitor or a stale offer, record an authorized buyer's agreement, and schedule activation for the effective date.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-consent.svg)
+
+Choose “Offer changed.” Consent to an older proposal cannot silently transfer to new commercial terms. Choose “Buyer confirms,” and the agreement becomes accepted but remains scheduled if the next term has not begun.
+
+Separating acceptance from activation matters whenever the customer renews early. The customer can commit to the next term today while the current term remains in force. If the customer declines or requests changes, the standard path stops and the account owner gets the next action.
+
+## Recover the missing effect
+
+Now return to the opening problem. The effective date arrives. Billing succeeds. Access fails.
+
+Restarting the entire renewal would ignore useful information: the agreement exists, and billing already reflects it. The recovery path should preserve both.
+
+![After billing succeeds and access fails, reconciliation checks existing state and retries the missing access update before verifying completion.](https://hk-775.github.io/hk-775/blog/diagrams/renewal-recovery.svg)
+
+Select **Run activation**, then **Retry access**. Watch the counters: one billing update, two access attempts, one successful access update. The second access attempt completes the missing effect. Billing is not repeated.
+
+The application implements this with stable action identities and reconciliation of expected provider state before an update or retry. The failure fixture interrupts the first access attempt after billing succeeds. The renewal enters `recovery_required`, with an owned recovery task, while retaining the accepted agreement.
+
+This demonstrates a recovery pattern with simulated providers. A real billing or entitlement integration would also need provider-specific idempotency behavior, response validation and handling for ambiguous outcomes. A timeout after a remote write is a different failure from a write that definitely never happened.
+
+## Where AI belongs
+
+The original ambition was a renewal function in which agents do much of the repeatable work and people handle judgment, negotiation and relationships. The standard flow gives that ambition a concrete boundary.
+
+An AI adapter can help draft customer-facing language or explain a recommended action. Validated contract data and deterministic policy supply the commercial values and transition rules. The service checks authority, records consent, and verifies fulfillment.
+
+The design is provider-neutral. The hosted demonstration uses fixtures; reading this article or running its interactive examples makes no model calls. A live model's drafting quality, cost and error rate would require a separate evaluation.
+
+This division keeps the question practical: which work can the system finish, and what evidence shows that it finished?
+
+## Try the application and inspect the evidence
+
+Open the [demo catalog](https://d11wfkflwovvog.cloudfront.net/demos) and choose the standard-renewal flow. Prepare an eligible offer, switch to the authorized buyer, confirm the terms, then return to the operator and advance the synthetic clock to the next term. Inspect the billing and access outcomes.
+
+For the recovery flow, use the scenario with a first-attempt access failure. Advance to activation, inspect the recovery state, and retry the missing work. The [workflow page](https://d11wfkflwovvog.cloudfront.net/workflow) provides another view of the application flow.
+
+The [recorded HTTP check](https://hk-775.github.io/hk-775/blog/evidence/renewal-standard.json) documents a synthetic run against the hosted demo. It records the tested transitions, successful update counts and fingerprints of the public application assets observed during that run. The [capture script](https://github.com/hk-775/hk-775/blob/main/scripts/capture-renewal-demo.mjs) shows the assertions. No session tokens or account exports are included in the published record.
+
+The evidence supports the two tested examples: a standard renewal completes, and an interrupted access update recovers without another billing update. It does not measure retention lift, staffing savings, real-provider reliability or readiness for unattended production renewals.
+
+## Next: when the standard path ends
+
+A useful standard path also makes its stopping points visible. What should happen when the customer wants different terms, an amendment needs verification, or a strategic account requires negotiation?
+
+Part 2 will follow those exceptions: the recommendation a specialist receives, the decision they own, and the conditions for returning work to automation.
+
+The [series reading order](https://hk-775.github.io/hk-775/blog/renewal-studio.html) maps the later installments across commitment renewals, retention, post-sale operations, finance, agents, forecasting and production architecture.
+
+---
+Source: [blog/2026-11-12-renewal-studio-standard-renewal.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-standard-renewal.md)
+
+Source SHA-256: `a9a64d7cc957a7462e0599de224e7aed892c1122d7fae71e9ee658047206fbe8`
 
 ===== FILE: blog/2026-10-30-improving-agents-starts-with-verifying-the-work.md =====
 Published Markdown: https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.md

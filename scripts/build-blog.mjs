@@ -1,6 +1,8 @@
 import { access, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { Marked, Renderer } from "marked";
+import { explorers } from "../site/blog/renewal-explorer-data.js";
+import { explorerHTML, diagramSVG } from "./renewal-artwork.mjs";
 
 export const blogBase = "https://hk-775.github.io/hk-775/blog/";
 const portfolio = "https://hk-775.github.io/hk-775/";
@@ -35,6 +37,20 @@ export async function loadPosts(root) {
       /^blog\/diagrams\/[a-z0-9-]+\.(?:svg|png|drawio)$/.test(asset)))
       throw new Error("Article assets must be explicitly listed local diagram files");
     for (const asset of post.assets) await access(resolve(root, "site", asset));
+    if (post.cover && (!post.assets.includes(post.cover) || !post.cover.endsWith(".png") || !post.coverAlt?.trim()))
+      throw new Error("An article cover requires an allowlisted PNG and descriptive alt text");
+    post.interactiveDiagrams ??= {};
+    if (typeof post.interactiveDiagrams !== "object" || Array.isArray(post.interactiveDiagrams))
+      throw new Error("Interactive diagrams must map reviewed assets to known explorers");
+    const explorerKeys = new Set();
+    for (const [asset, key] of Object.entries(post.interactiveDiagrams)) {
+      if (!Object.hasOwn(explorers, key) || explorerKeys.has(key)
+        || asset !== `blog/diagrams/renewal-${key}.svg` || !post.assets.includes(asset))
+        throw new Error(`Invalid interactive diagram: ${asset}`);
+      explorerKeys.add(key);
+      if (await readFile(resolve(root, "site", asset), "utf8") !== diagramSVG(key) + "\n")
+        throw new Error(`Stale interactive artwork: ${asset}`);
+    }
     post.animatedDiagrams ??= {};
     post.diagramMotionStyle ??= "dashes";
     if (!["dashes", "dots"].includes(post.diagramMotionStyle))
@@ -75,6 +91,24 @@ export async function loadPosts(root) {
   return posts.sort((left, right) => right.date.localeCompare(left.date) || left.slug.localeCompare(right.slug));
 }
 
+export async function loadSeries(root, posts) {
+  const series = JSON.parse(await readFile(resolve(root, "blog/series.json"), "utf8"));
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(series.slug) || posts.some(p => p.slug === series.slug)
+    || !series.title?.trim() || !series.description?.trim() || !Array.isArray(series.parts) || !series.parts.length)
+    throw new Error("Invalid series manifest");
+  const listed = new Set();
+  for (const [i, part] of series.parts.entries()) {
+    if (part.number !== i + 1 || !part.title?.trim() || !part.description?.trim()) throw new Error("Invalid series part");
+    if (part.slug) {
+      const post = posts.find(p => p.slug === part.slug);
+      if (!post || post.series !== series.slug || listed.has(part.slug)) throw new Error("Series links must resolve to a unique published article");
+      listed.add(part.slug);
+    }
+  }
+  if (posts.some(p => p.series && (p.series !== series.slug || !listed.has(p.slug)))) throw new Error("Unlisted series article");
+  return series;
+}
+
 function header() {
   return `<a class="skip" href="#main">Skip to content</a>
   <header class="shell header">
@@ -89,7 +123,8 @@ function footer() {
   <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>`;
 }
 
-function page({ title, description, url, type = "website", metadata, body, markdown, diagramMotion = false }) {
+function page({ title, description, url, type = "website", metadata, body, markdown, diagramMotion = false, renewal = false,
+  cover = "share.png", coverAlt = "Harleen Kaur — Engineering notes. Decisions, experiments, and evidence for AI workloads." }) {
   return `<!doctype html>
 <html lang="en"><head>
   <meta charset="utf-8">
@@ -103,12 +138,13 @@ function page({ title, description, url, type = "website", metadata, body, markd
   <link rel="stylesheet" href="../styles.css?v=blog-1">
   <link rel="stylesheet" href="blog.css?v=3">
 ${diagramMotion ? '  <script src="diagram-motion.js?v=2" defer></script>' : ""}
+${renewal ? '  <link rel="stylesheet" href="renewal-explorers.css?v=1">\n  <script type="module" src="renewal-explorers.js?v=1"></script>' : ""}
   <meta property="og:title" content="${escape(title)}">
   <meta property="og:description" content="${escape(description)}">
   <meta property="og:type" content="${type}">
   <meta property="og:url" content="${escape(url)}">
-  <meta property="og:image" content="${blogBase}share.png">
-  <meta property="og:image:alt" content="Harleen Kaur — Engineering notes. Decisions, experiments, and evidence for AI workloads.">
+  <meta property="og:image" content="${blogBase}${escape(cover)}">
+  <meta property="og:image:alt" content="${escape(coverAlt)}">
   <meta name="twitter:card" content="summary_large_image">
 ${type === "article" ? `  <meta property="article:published_time" content="${metadata.datePublished}">\n  <meta property="article:author" content="${portfolio}">` : ""}
   <script type="application/ld+json">${json(metadata)}</script>
@@ -122,7 +158,7 @@ ${footer()}
 
 const metaLine = post => `<p class="post-meta"><time datetime="${post.date}">${dateLabel(post.date)}</time><span>${post.minutes} min read</span><span>${escape(post.evidence)}</span></p>`;
 
-function renderArticle(post) {
+function renderArticle(post, series) {
   const headings = [];
   const used = new Map();
   const renderer = new Renderer();
@@ -148,6 +184,8 @@ function renderArticle(post) {
     if (!local || !/\.(svg|png)$/.test(local))
       throw new Error("Only allowlisted local diagram images can be embedded");
     if (!text.trim()) throw new Error("Article diagrams require descriptive alt text");
+    const interactive = post.interactiveDiagrams[href.slice("../site/".length)];
+    if (interactive) return explorerHTML(interactive);
     const diagram = post.inlineDiagrams.get(href.slice("../site/".length));
     if (diagram) {
       const svg = diagram.replace("<svg ", `<svg role="img" aria-label="${escape(text)}" `);
@@ -180,12 +218,14 @@ function renderArticle(post) {
     title: post.title, description: post.description, url: post.url, type: "article",
     markdown: `${post.slug}.md`,
     diagramMotion: post.inlineDiagrams.size > 0,
+    renewal: Boolean(post.series) || Object.keys(post.interactiveDiagrams).length > 0,
+    ...(post.cover ? { cover: post.cover.slice("blog/".length), coverAlt: post.coverAlt } : {}),
     metadata: {
       "@context": "https://schema.org", "@type": "BlogPosting",
       headline: post.title, alternativeHeadline: post.subtitle, description: post.description,
       datePublished: post.date, dateModified: post.date, url: post.url, mainEntityOfPage: post.url,
       author: { "@type": "Person", name: "Harleen Kaur", url: portfolio },
-      image: `${blogBase}share.png`, keywords: post.topics,
+      image: `${blogBase}${post.cover?.slice("blog/".length) ?? "share.png"}`, keywords: post.topics,
       isPartOf: { "@type": "Blog", name: "Engineering notes", url: blogBase },
     },
     body: `<main id="main">
@@ -201,14 +241,14 @@ function renderArticle(post) {
     <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span>${toc}</nav>
       <div class="article-tools"><a href="${post.slug}.md">Read as Markdown</a><a href="${repository}/blob/main/${post.source}">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
     </aside>
-    <article class="prose" aria-label="${escape(post.title)}">${content}
+    <article class="prose" aria-label="${escape(post.title)}">${post.series ? `<div class="series-callout"><strong>Part ${series.parts.find(p => p.slug === post.slug).number} of the Renewal Studio series</strong><p>${escape(series.title)}</p><a href="${series.slug}.html">Explore the series and reading order →</a></div>` : ""}${content}
       <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
     </article>
   </div></main>`,
   });
 }
 
-export function buildBlog(posts) {
+export function buildBlog(posts, series) {
   const generated = new Map();
   const cards = posts.map((post, index) => `<article class="post-card">
     <p class="eyebrow">${index === 0 ? "Latest article" : "Engineering note"} / ${escape(post.topics[0])}</p>
@@ -225,6 +265,7 @@ export function buildBlog(posts) {
   generated.set("blog/index.html", page({
     title: "Engineering notes", description: "Engineering decisions, experiments, and evidence for AI workloads. Writing by Harleen Kaur.",
     url: blogBase, markdown: "index.md",
+    renewal: true,
     metadata: {
       "@context": "https://schema.org", "@type": "Blog",
       name: "Engineering notes", url: blogBase,
@@ -239,12 +280,36 @@ export function buildBlog(posts) {
     <div class="blog-intro-links"><a href="#articles">Read the latest article ↓</a><a href="feed.xml">Subscribe via RSS ↗</a></div>
   </section></div>
   <section id="articles" class="shell blog-articles" aria-label="Articles">${cards}
-    <aside class="editorial-note"><p class="eyebrow">How I approach the work</p><h2>Question.<br>Implementation.<br>Evidence.</h2><p>I connect design choices to executable examples and measured outcomes. Each experiment states its scope and limitations.</p><p>Synthetic evaluations are labeled explicitly. Production claims require separate, shareable evidence.</p><a href="../#watch">Start with the portfolio workflow →</a></aside>
+    <aside class="editorial-note"><p class="eyebrow">New series</p><h2>Renewal Studio</h2><p>Software and API contract renewals, one workflow at a time. Start with a standard renewal and four interactive figures.</p><a href="${series.slug}.html">See the series reading order →</a><p>Synthetic examples are labeled explicitly. Each article connects decisions to implementation and evidence.</p></aside>
   </section>
   <section class="shell blog-projects" aria-labelledby="projects-heading"><p class="eyebrow">One body of work</p><h2 id="projects-heading">Four questions. Connected engineering.</h2><div class="project-strip">${projects}</div><p class="portfolio-loop">Route → govern → test containment → evaluate behavior → refine.</p></section>
   </main>`,
   }));
-  for (const post of posts) generated.set(`blog/${post.slug}.html`, renderArticle(post));
+  for (const post of posts) generated.set(`blog/${post.slug}.html`, renderArticle(post, series));
+  generated.set(`blog/${series.slug}.html`, page({
+    title: series.title, description: series.description, url: `${blogBase}${series.slug}.html`,
+    markdown: `${series.slug}.md`, renewal: true,
+    cover: "diagrams/renewal-standard-cover.png",
+    coverAlt: "Renewal Studio: standard renewal workflow, from checking eligibility to verifying completion.",
+    metadata: {
+      "@context": "https://schema.org", "@type": "CollectionPage",
+      name: series.title, description: series.description, url: `${blogBase}${series.slug}.html`,
+      author: { "@type": "Person", name: "Harleen Kaur", url: portfolio },
+      hasPart: series.parts.filter(p => p.slug).map(p => ({ "@type": "BlogPosting", name: p.title, url: `${blogBase}${p.slug}.html` })),
+    },
+    body: `<main id="main"><div class="blog-banner"><section class="shell article-heading">
+      <a class="back-link" href="./">← All engineering notes</a><p class="eyebrow">Renewal Studio / An engineering series</p>
+      <h1>Build the renewal system.<br>Follow every decision.</h1><p class="article-subtitle">${escape(series.title)}</p>
+      <p class="post-meta">By Harleen Kaur · Part 1 available · ${series.parts.length - 1} further installments planned</p>
+    </section></div><section class="shell series-layout" aria-label="Series reading order">
+      <p class="series-lead">A customer accepts. Billing updates. Access fails. What should happen next? Start with a standard renewal, then follow the decisions that connect retention, finance, agents and operations.</p>
+      <div class="series-callout"><strong>Explore the diagrams. Then try the application.</strong><p>Part 1 has four interactive workflows, static downloads and a recorded synthetic application check. The browser figures are teaching examples; the linked application runs with synthetic data and simulated providers.</p><a href="${series.parts[0].slug}.html">Start with Part 1 →</a></div>
+      <ol class="series-list">${series.parts.map(p => `<li><p class="eyebrow">Part ${p.number} · ${p.slug ? "Available now" : "Planned"}</p><h2>${p.slug ? `<a href="${p.slug}.html">${escape(p.title)} ↗</a>` : escape(p.title)}</h2><p>${escape(p.description)}</p>${p.slug ? `<a href="${p.slug}.html">Read and explore →</a>` : ""}</li>`).join("")}</ol>
+      <p>Later parts are an editorial plan, not published articles. Examples will distinguish implemented behavior, synthetic results and the additional work a production deployment needs.</p>
+      <div class="series-links"><a href="https://d11wfkflwovvog.cloudfront.net/demos">Open the Renewal Studio demo ↗</a><a href="feed.xml">Follow new installments via RSS →</a><a href="${series.slug}.md">Read this index as Markdown</a></div>
+    </section></main>`,
+  }));
+  generated.set(`blog/${series.slug}.md`, `# ${series.title}\n\n${series.description}\n\nPart 1 is available. Later installments are planned.\n\n${series.parts.map(p => `## Part ${p.number}: ${p.title}\n\n${p.description}\n\n${p.slug ? `[Read the article](${blogBase}${p.slug}.html)` : "Status: planned; not yet published."}`).join("\n\n")}\n\n[Renewal Studio demo](https://d11wfkflwovvog.cloudfront.net/demos) · [RSS](${blogBase}feed.xml)\n\nSource: [series.json](${repository}/blob/main/blog/series.json)\n`);
   generated.set("blog/feed.xml", `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>
 <title>Harleen Kaur — Engineering notes</title><link>${blogBase}</link>

@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="../styles.css?v=blog-1">
   <link rel="stylesheet" href="blog.css?v=3">
 
+  <link rel="stylesheet" href="renewal-explorers.css?v=1">
+  <script type="module" src="renewal-explorers.js?v=1"></script>
   <meta property="og:title" content="Engineering notes">
   <meta property="og:description" content="Engineering decisions, experiments, and evidence for AI workloads. Writing by Harleen Kaur.">
   <meta property="og:type" content="website">
@@ -19,7 +21,7 @@
   <meta property="og:image:alt" content="Harleen Kaur — Engineering notes. Decisions, experiments, and evidence for AI workloads.">
   <meta name="twitter:card" content="summary_large_image">
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Engineering notes","url":"https://hk-775.github.io/hk-775/blog/","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"blogPost":[{"@type":"BlogPosting","headline":"Improving Agents Starts with Verifying the Work","url":"https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html","datePublished":"2026-10-30"},{"@type":"BlogPosting","headline":"Your AI remembers you. Can it remember a lie?","url":"https://hk-775.github.io/hk-775/blog/your-ai-remembers-you-can-it-remember-a-lie.html","datePublished":"2026-10-19"},{"@type":"BlogPosting","headline":"Testing subscription abuse at the action boundary","url":"https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html","datePublished":"2026-10-08"},{"@type":"BlogPosting","headline":"Designing an Evidence Trail for Agent Actions","url":"https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.html","datePublished":"2026-10-05"},{"@type":"BlogPosting","headline":"When rules beat decision models","url":"https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html","datePublished":"2026-10-02"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Engineering notes","url":"https://hk-775.github.io/hk-775/blog/","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"blogPost":[{"@type":"BlogPosting","headline":"Renewal Studio, Part 1: The Standard Renewal, End to End","url":"https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.html","datePublished":"2026-11-12"},{"@type":"BlogPosting","headline":"Improving Agents Starts with Verifying the Work","url":"https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html","datePublished":"2026-10-30"},{"@type":"BlogPosting","headline":"Your AI remembers you. Can it remember a lie?","url":"https://hk-775.github.io/hk-775/blog/your-ai-remembers-you-can-it-remember-a-lie.html","datePublished":"2026-10-19"},{"@type":"BlogPosting","headline":"Testing subscription abuse at the action boundary","url":"https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html","datePublished":"2026-10-08"},{"@type":"BlogPosting","headline":"Designing an Evidence Trail for Agent Actions","url":"https://hk-775.github.io/hk-775/blog/designing-an-evidence-trail-for-agent-actions.html","datePublished":"2026-10-05"},{"@type":"BlogPosting","headline":"When rules beat decision models","url":"https://hk-775.github.io/hk-775/blog/when-rules-beat-decision-models.html","datePublished":"2026-10-02"}]}</script>
 </head><body class="blog-page">
 <a class="skip" href="#main">Skip to content</a>
   <header class="shell header">
@@ -34,7 +36,13 @@
     <div class="blog-intro-links"><a href="#articles">Read the latest article ↓</a><a href="feed.xml">Subscribe via RSS ↗</a></div>
   </section></div>
   <section id="articles" class="shell blog-articles" aria-label="Articles"><article class="post-card">
-    <p class="eyebrow">Latest article / Agent improvement</p>
+    <p class="eyebrow">Latest article / Renewal Studio</p>
+    <h2><a href="renewal-studio-standard-renewal.html">Renewal Studio, Part 1: The Standard Renewal, End to End <span aria-hidden="true">↗</span></a></h2>
+    <p class="card-subtitle">From a trusted contract to verified billing and access</p><p>The buyer accepts. Billing succeeds. Access fails. Explore four interactive workflows showing how a standard renewal qualifies, records consent, activates and recovers.</p>
+    <p class="post-meta"><time datetime="2026-11-12">12 November 2026</time><span>6 min read</span><span>Synthetic application run; simulated providers</span></p><a class="text-link" href="renewal-studio-standard-renewal.html">Read the article →</a>
+  </article>
+<article class="post-card">
+    <p class="eyebrow">Engineering note / Agent improvement</p>
     <h2><a href="improving-agents-starts-with-verifying-the-work.html">Improving Agents Starts with Verifying the Work <span aria-hidden="true">↗</span></a></h2>
     <p class="card-subtitle">What a controlled AutoHelix experiment reveals about completion, recovery, and reward</p><p>I compared reported completion with verified outputs in a live AutoHelix experiment. Inspect the results, scripted cheating controls, and limits of editing the improvement strategy.</p>
     <p class="post-meta"><time datetime="2026-10-30">30 October 2026</time><span>7 min read</span><span>48 live model calls; synthetic workload</span></p><a class="text-link" href="improving-agents-starts-with-verifying-the-work.html">Read the article →</a>
@@ -63,7 +71,7 @@
     <p class="card-subtitle">Lessons from an executed tool-selection evaluation</p><p>I replaced a label-matching diagnostic with an executable support workflow. On 144 synthetic test episodes, the rules baseline outperformed the tested zero-shot model configurations.</p>
     <p class="post-meta"><time datetime="2026-10-02">2 October 2026</time><span>9 min read</span><span>Synthetic, executed workflow</span></p><a class="text-link" href="when-rules-beat-decision-models.html">Read the article →</a>
   </article>
-    <aside class="editorial-note"><p class="eyebrow">How I approach the work</p><h2>Question.<br>Implementation.<br>Evidence.</h2><p>I connect design choices to executable examples and measured outcomes. Each experiment states its scope and limitations.</p><p>Synthetic evaluations are labeled explicitly. Production claims require separate, shareable evidence.</p><a href="../#watch">Start with the portfolio workflow →</a></aside>
+    <aside class="editorial-note"><p class="eyebrow">New series</p><h2>Renewal Studio</h2><p>Software and API contract renewals, one workflow at a time. Start with a standard renewal and four interactive figures.</p><a href="renewal-studio.html">See the series reading order →</a><p>Synthetic examples are labeled explicitly. Each article connects decisions to implementation and evidence.</p></aside>
   </section>
   <section class="shell blog-projects" aria-labelledby="projects-heading"><p class="eyebrow">One body of work</p><h2 id="projects-heading">Four questions. Connected engineering.</h2><div class="project-strip"><a href="https://github.com/hk-775/axonllm"><span class="number">01</span><div><strong>AxonLLM</strong><small>Model selection &amp; provider routing</small></div><span aria-hidden="true">↗</span></a>
 <a href="https://github.com/hk-775/ostiari"><span class="number">02</span><div><strong>Ostiari</strong><small>Action governance &amp; policy enforcement</small></div><span aria-hidden="true">↗</span></a>

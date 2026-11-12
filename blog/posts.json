@@ -1,5 +1,40 @@
 [
   {
+    "slug": "renewal-studio-standard-renewal",
+    "source": "blog/2026-11-12-renewal-studio-standard-renewal.md",
+    "title": "Renewal Studio, Part 1: The Standard Renewal, End to End",
+    "subtitle": "From a trusted contract to verified billing and access",
+    "description": "The buyer accepts. Billing succeeds. Access fails. Explore four interactive workflows showing how a standard renewal qualifies, records consent, activates and recovers.",
+    "date": "2026-11-12",
+    "topics": ["Renewal Studio", "Workflow automation", "Agent engineering"],
+    "evidence": "Synthetic application run; simulated providers",
+    "series": "renewal-studio",
+    "cover": "blog/diagrams/renewal-standard-cover.png",
+    "coverAlt": "Renewal Studio, Part 1: The Standard Renewal, End to End. Check, offer, accept, activate, verify.",
+    "assets": [
+      "blog/diagrams/renewal-journey.svg",
+      "blog/diagrams/renewal-journey.png",
+      "blog/diagrams/renewal-journey.drawio",
+      "blog/diagrams/renewal-eligibility.svg",
+      "blog/diagrams/renewal-eligibility.png",
+      "blog/diagrams/renewal-eligibility.drawio",
+      "blog/diagrams/renewal-consent.svg",
+      "blog/diagrams/renewal-consent.png",
+      "blog/diagrams/renewal-consent.drawio",
+      "blog/diagrams/renewal-recovery.svg",
+      "blog/diagrams/renewal-recovery.png",
+      "blog/diagrams/renewal-recovery.drawio",
+      "blog/diagrams/renewal-standard-cover.svg",
+      "blog/diagrams/renewal-standard-cover.png"
+    ],
+    "interactiveDiagrams": {
+      "blog/diagrams/renewal-journey.svg": "journey",
+      "blog/diagrams/renewal-eligibility.svg": "eligibility",
+      "blog/diagrams/renewal-consent.svg": "consent",
+      "blog/diagrams/renewal-recovery.svg": "recovery"
+    }
+  },
+  {
     "slug": "improving-agents-starts-with-verifying-the-work",
     "source": "blog/2026-10-30-improving-agents-starts-with-verifying-the-work.md",
     "title": "Improving Agents Starts with Verifying the Work",

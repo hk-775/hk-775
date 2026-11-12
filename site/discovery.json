@@ -31,15 +31,16 @@
     }
   ],
   "blog": "https://hk-775.github.io/hk-775/blog/",
+  "series": "https://hk-775.github.io/hk-775/blog/renewal-studio.html",
   "feed": "https://hk-775.github.io/hk-775/blog/feed.xml",
   "documents": [
     {
       "source": "README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/README.md",
-      "source_sha256": "dfb71f9dcd60b3775dffe45f1a46e77446f8fa4d818ca3ed0de58a088967de61",
+      "source_sha256": "c772a2b2519682caf34d091a817b9b785eb5a3ae80d1d85812f392af31af72af",
       "markdown_url": "https://hk-775.github.io/hk-775/index.md",
-      "bytes": 4797,
-      "sha256": "64ef932cda817161a9f36f98685ae44ad037ab6d65ca1379282dc3e5868cc455"
+      "bytes": 4870,
+      "sha256": "8c0fd3d7bdc5aff4cf2593c16019c8e784c007617572a7a2835493f26001063d"
     },
     {
       "source": "CASE_STUDY.md",
@@ -76,10 +77,18 @@
     {
       "source": "blog/README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/README.md",
-      "source_sha256": "0e6db6b85c57812905c0f055374bfac0d0186f627d241e5c337ca2037313aa49",
+      "source_sha256": "91cc593572fc56004d32743887cf8309151d0ae5e237a6cfe63f53d05a364074",
       "markdown_url": "https://hk-775.github.io/hk-775/blog/index.md",
-      "bytes": 7920,
-      "sha256": "874e21ecb82af98752bc128d3e575af4669a13b762172e06bedbfd4b556304ea"
+      "bytes": 10853,
+      "sha256": "eea72a88942171289c67ce1dcd75bc5a1e38b4ab8853dc58ecc78e7c4990faca"
+    },
+    {
+      "source": "blog/2026-11-12-renewal-studio-standard-renewal.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-standard-renewal.md",
+      "source_sha256": "a9a64d7cc957a7462e0599de224e7aed892c1122d7fae71e9ee658047206fbe8",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.md",
+      "bytes": 9744,
+      "sha256": "88f59b0baa0dace7c0ed28949919d009e2153ffb2c850e6caad1dee83b0de4e5"
     },
     {
       "source": "blog/2026-10-30-improving-agents-starts-with-verifying-the-work.md",
