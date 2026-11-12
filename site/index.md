@@ -11,7 +11,8 @@ Together, they support a development loop: **route → govern → test containme
 **[Start here → one workflow, its evidence, and the code](https://hk-775.github.io/hk-775/)**
 
 **[Engineering blog](https://hk-775.github.io/hk-775/blog/)** ·
-[Latest: Improving Agents Starts with Verifying the Work](https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html) ·
+[Latest: Renewal Studio — The Standard Renewal, End to End](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.html) ·
+[Renewal Studio series](https://hk-775.github.io/hk-775/blog/renewal-studio.html) ·
 [RSS](https://hk-775.github.io/hk-775/blog/feed.xml)
 
 [Agent guide](https://hk-775.github.io/hk-775/llms.txt) ·
@@ -54,4 +55,4 @@ Practical Eval Lab's bundled candidates use local rules. Its teaching datasets c
 ---
 Source: [README.md](https://github.com/hk-775/hk-775/blob/main/README.md)
 
-Source SHA-256: `dfb71f9dcd60b3775dffe45f1a46e77446f8fa4d818ca3ed0de58a088967de61`
+Source SHA-256: `c772a2b2519682caf34d091a817b9b785eb5a3ae80d1d85812f392af31af72af`

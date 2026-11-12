@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { readFile, writeFile, access, mkdir } from "node:fs/promises";
 import { dirname, posix, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadPosts, buildBlog, blogBase } from "./build-blog.mjs";
+import { loadPosts, loadSeries, buildBlog, blogBase } from "./build-blog.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const base = "https://hk-775.github.io/hk-775/";
@@ -10,6 +10,7 @@ const repo = "https://github.com/hk-775/hk-775";
 const linkedin = "https://www.linkedin.com/in/harleenkaurprofile";
 const check = process.argv.includes("--check");
 const posts = await loadPosts(root);
+const series = await loadSeries(root, posts);
 const sources = new Map([
   ["README.md", "index.md"],
   ["CASE_STUDY.md", "case-study.md"],
@@ -20,7 +21,7 @@ const sources = new Map([
   ...posts.map(post => [post.source, `blog/${post.slug}.md`]),
 ]);
 const digestSources = [...sources.keys()].filter(name => name !== "AGENTS.md");
-const generated = buildBlog(posts);
+const generated = buildBlog(posts, series);
 const records = [];
 const hash = content => createHash("sha256").update(content).digest("hex");
 
@@ -92,6 +93,7 @@ The featured customer-summary workflow connects AxonLLM, Ostiari, and Escape Lab
 - [Engineering decisions](${base}decisions.md): Product boundaries, governance choices, and evidence practices.
 - [Run the integration](${base}run-example.md): Locked installation and reproduction commands.
 - [Engineering blog](${blogBase}): Articles on AI workloads, design decisions, and evaluation evidence.
+- [Renewal Studio series](${blogBase}${series.slug}.html): Reading order for software and API contract renewal workflows; Part 1 available, later installments planned.
 ${posts.map(post => `- [${post.title}](${post.url}): ${post.description}`).join("\n")}
 
 ## Evidence and context
@@ -114,9 +116,9 @@ const digest = digestSources.map(source => {
 generated.set("agent-context.txt", `Harleen Kaur — public engineering context\n\nGenerated from ${digestSources.length} allowlisted public documents. Source fingerprints describe the documentation; reported experiments retain their own dates and source revisions. Follow the cited evidence when evaluating a claim.\n\n${digest}`);
 generated.set("discovery.json", JSON.stringify({
   schema_version: 1, name: "Harleen Kaur", github: "https://github.com/hk-775",
-  website: base, linkedin, projects, blog: blogBase, feed: `${blogBase}feed.xml`, documents: records,
+  website: base, linkedin, projects, blog: blogBase, series: `${blogBase}${series.slug}.html`, feed: `${blogBase}feed.xml`, documents: records,
 }, null, 2) + "\n");
-generated.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[base, blogBase, ...posts.map(post => post.url)].map(url => `<url><loc>${url}</loc></url>`).join("")}</urlset>\n`);
+generated.set("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[base, blogBase, `${blogBase}${series.slug}.html`, ...posts.map(post => post.url)].map(url => `<url><loc>${url}</loc></url>`).join("")}</urlset>\n`);
 
 const structured = {
   "@context": "https://schema.org",

@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "observed_at": "2026-11-12T18:49:21.661Z",
+  "origin": "https://d11wfkflwovvog.cloudfront.net",
+  "scope": "One fresh synthetic session, simulated billing/access providers, zero model calls.",
+  "provenance": {
+    "capture_script": "scripts/capture-renewal-demo.mjs",
+    "capture_script_sha256": "18ab75c3b330e16ef13d9d15056866002b2592303de70a1207bd1a05c0588baa",
+    "public_assets": [
+      {
+        "path": "/assets/app.js",
+        "sha256": "dbeea6f484078cbf997183204bf7c1276bd0a9239ba8a5456d692f6343e37d22"
+      },
+      {
+        "path": "/assets/style.css",
+        "sha256": "cd73bf1431eec38a2861859c14ca15da8dd057acf14a4d6d4d1af2d8ae2946c1"
+      },
+      {
+        "path": "/diagrams/standard-renewal.svg",
+        "sha256": "0133b9e8ad951f7148406f47d1e8989e6c21b53680f2a1f59e28382ea5b6bdb5"
+      }
+    ],
+    "backend_revision": "Not exposed by the public API. Frontend asset hashes identify observed assets, not the backend build."
+  },
+  "checks": [
+    {
+      "check": "unverified contract",
+      "outcome": "data_hold"
+    },
+    {
+      "check": "commercial exception",
+      "outcome": "human_review"
+    },
+    {
+      "check": "view-only acceptance",
+      "outcome": "rejected",
+      "http_status": 403
+    },
+    {
+      "check": "noncurrent offer version",
+      "outcome": "rejected",
+      "http_status": 409
+    },
+    {
+      "check": "standard agreement before effective date",
+      "outcome": "scheduled",
+      "billing_updates": 0,
+      "access_updates": 0
+    },
+    {
+      "check": "standard renewal at term start",
+      "outcome": "complete",
+      "annual_amount_cents": 2400000,
+      "currency": "USD",
+      "billing_updates": 1,
+      "access_updates": 1
+    },
+    {
+      "check": "recovery agreement before effective date",
+      "outcome": "scheduled",
+      "billing_updates": 0,
+      "access_updates": 0
+    },
+    {
+      "check": "first access attempt fails after billing succeeds",
+      "outcome": "recovery_required",
+      "billing_updates": 1,
+      "access_updates": 0
+    },
+    {
+      "check": "reconcile and retry missing access",
+      "outcome": "complete",
+      "billing_updates": 1,
+      "access_attempts": 2,
+      "access_updates": 1
+    }
+  ],
+  "limitations": [
+    "One executed example per tested path; not a reliability benchmark.",
+    "Does not test real provider idempotency, ambiguous remote writes, concurrent transactions or production identity.",
+    "No evidence of production retention lift, staffing savings or live-model quality."
+  ]
+}

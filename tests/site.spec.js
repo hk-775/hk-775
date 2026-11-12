@@ -103,7 +103,9 @@ test("agent resources preserve source context and identify the canonical profile
   const digest = await (await page.request.get("/hk-775/agent-context.txt")).text();
   expect(digest).toContain("===== FILE: CASE_STUDY.md =====");
   expect(digest).toContain("one deterministic run per profile");
-  expect(digest.length).toBeLessThan(100_000);
+  // The sixth article adds the Renewal Studio series. Keep the combined,
+  // explicitly allowlisted text compact while accommodating its full prose.
+  expect(digest.length).toBeLessThan(128_000);
   const sitemap = await (await page.request.get("/hk-775/sitemap.xml")).text();
   expect(sitemap).toContain(`<loc>${publicBase}</loc>`);
   await expect(page.getByRole("link", { name: "Download context" })).toBeVisible();
