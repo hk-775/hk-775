@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Renewal Studio, Part 6: Follow the Money · Harleen Kaur</title>
+  <meta name="description" content="A payment succeeds but its acknowledgement disappears. Explore reservations, reconciliation, refunds and exact-cent service allocation.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/renewal-studio-finance.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="renewal-studio-finance.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=3">
+
+  <link rel="stylesheet" href="renewal-explorers.css?v=2">
+  <script type="module" src="renewal-explorers.js?v=2"></script>
+  <meta property="og:title" content="Renewal Studio, Part 6: Follow the Money">
+  <meta property="og:description" content="A payment succeeds but its acknowledgement disappears. Explore reservations, reconciliation, refunds and exact-cent service allocation.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/renewal-studio-finance.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/diagrams/renewal-finance-cover.png">
+  <meta property="og:image:alt" content="Renewal Studio, Part 6: Follow the Money. Keep consent, invoices, collections and credits connected.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-11-12">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Renewal Studio, Part 6: Follow the Money","alternativeHeadline":"Keep consent, invoices, collections and credits connected","description":"A payment succeeds but its acknowledgement disappears. Explore reservations, reconciliation, refunds and exact-cent service allocation.","datePublished":"2026-11-12","dateModified":"2026-11-12","url":"https://hk-775.github.io/hk-775/blog/renewal-studio-finance.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/renewal-studio-finance.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/diagrams/renewal-finance-cover.png","keywords":["Renewal Studio","Workflow engineering","Synthetic evidence"],"isPartOf":{"@type":"CollectionPage","name":"Renewal Studio: Building a System for Software and API Contract Renewals","url":"https://hk-775.github.io/hk-775/blog/renewal-studio.html"},"position":6}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Renewal Studio · Workflow engineering · Synthetic evidence</p>
+    <h1>Renewal Studio, Part 6: Follow the Money</h1>
+    <p class="article-subtitle">Keep consent, invoices, collections and credits connected</p>
+    <p class="post-meta"><time datetime="2026-11-12">12 November 2026</time><span>5 min read</span><span>Implementation review; synthetic replay</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#an-invoice-needs-an-identifiable-source">An invoice needs an identifiable source</a>
+<a href="#reserve-before-making-a-payment-attempt">Reserve before making a payment attempt</a>
+<a href="#disputes-change-the-collection-workflow">Disputes change the collection workflow</a>
+<a href="#a-goodwill-refund-has-a-different-authority">A goodwill refund has a different authority</a>
+<a href="#allocate-service-without-losing-cents">Allocate service without losing cents</a>
+<a href="#try-losing-the-acknowledgement">Try losing the acknowledgement</a></nav>
+      <div class="article-tools"><a href="renewal-studio-finance.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-finance.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="Renewal Studio, Part 6: Follow the Money"><div class="series-callout"><strong>Part 6 of 9 · Renewal Studio</strong><p>Renewal Studio: Building a System for Software and API Contract Renewals</p><a href="renewal-studio.html">Explore the series and reading order →</a> · <a href="renewal-studio-agents.html">Next: Part 7 →</a></div><p>The customer accepts a $12,000 agreement. The dashboard now has at least four questions to answer: what was agreed, what has been invoiced, what has been collected, and what service the amount covers.</p>
+<p>Using one “revenue” number for all four hides the operational work.</p>
+<p>This installment follows invoices, payment reservations, disputes, refunds and service allocations. Renewal Studio implements these as a synthetic operational ledger. It does not process real payments or provide statutory accounting.</p>
+<h2 id="an-invoice-needs-an-identifiable-source">An invoice needs an identifiable source</h2>
+<p>A subscription or commitment invoice comes from an accepted agreement. A PAYG invoice comes from observed usage. PAYG does not need a fabricated annual renewal to enter the collection workflow.</p>
+<p>Capturing invoices is repeatable. Repeated capture preserves the original document rather than generating a new invoice each time a worker runs. Archived accepted terms remain discoverable after another renewal cycle opens.</p>
+<figure class="renewal-explorer" data-renewal="invoices" data-motion="paused" aria-labelledby="flow-invoices">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 17</span><h3 id="flow-invoices">Keep the money states separate</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Keep the money states separate" class="renewal-svg landscape">
+<title>Keep the money states separate</title>
+<desc>Synthetic explanatory workflow. Accepted or observed leads to Capture immutable invoice. Capture immutable invoice leads to Reserve payment amount. Reserve payment amount leads to Provider records payment. Provider records payment leads to Reconcile collection. Reconcile collection leads to Dispute and resolution.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 17</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 324 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="source"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Accepted or observed</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Agreement or PAYG usage</text></g>
+<g data-node="invoice"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Capture immutable invoice</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Currency + schedule + source</text></g>
+<g data-node="reserve"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reserve payment amount</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Due date + remaining balance</text></g>
+<g data-node="provider"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Provider records payment</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Independent simulated receipt</text></g>
+<g data-node="reconcile"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reconcile collection</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Confirm the existing write</text></g>
+<g data-node="dispute"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Dispute and resolution</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Pause new collection; review</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Keep the money states separate" class="renewal-svg portrait">
+<title>Keep the money states separate</title>
+<desc>Synthetic explanatory workflow. Accepted or observed leads to Capture immutable invoice. Capture immutable invoice leads to Reserve payment amount. Reserve payment amount leads to Provider records payment. Provider records payment leads to Reconcile collection. Reconcile collection leads to Dispute and resolution.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 17</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 170 644 L 170 684" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 684) rotate(90)"/>
+<g data-node="source"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Accepted or observed</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Agreement or PAYG usage</text></g>
+<g data-node="invoice"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Capture immutable invoice</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Currency + schedule + source</text></g>
+<g data-node="reserve"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reserve payment amount</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Due date + remaining balance</text></g>
+<g data-node="provider"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Provider records payment</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Independent simulated receipt</text></g>
+<g data-node="reconcile"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reconcile collection</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Confirm the existing write</text></g>
+<g data-node="dispute"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Dispute and resolution</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Pause new collection; review</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose the financial stage</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Acknowledgement lost</button><button type="button" data-scenario="1" aria-pressed="false">Future installment</button><button type="button" data-scenario="2" aria-pressed="false">Payment disputed</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>Read the receipt before charging again</strong><p data-result-detail>The fixture records the payment and loses the acknowledgement. The amount stays reserved until reconciliation confirms that same receipt.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-invoices.svg" download>Download SVG</a><a href="diagrams/renewal-invoices.png" download>Download PNG</a><a href="diagrams/renewal-invoices.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>A future agreement can produce scheduled invoices, but payment is blocked until the issue date. The schedule, invoice and collection are separate states.</p>
+<p>For custom contracts, the signed amount is divided into the agreed installments. Remainder cents go to earlier installments. A fictional 10,001-cent amount across three installments becomes 3,334, 3,334 and 3,333 cents.</p>
+<p>Dates derive from the original day of month, clamped when necessary. This preserves a schedule such as January 31, February 29 and March 31 in a leap year, rather than letting February permanently shift later dates.</p>
+<p>These are explicit demo conventions. A production integration would need the billing provider&#39;s actual rules and the organization&#39;s approved commercial policy.</p>
+<h2 id="reserve-before-making-a-payment-attempt">Reserve before making a payment attempt</h2>
+<p>Assume an invoice has 10,000 cents outstanding. A payment attempt for 6,000 cents begins, but its final result is not yet known.</p>
+<p>If a second request can collect the full 10,000 cents, the system can overcollect. The first amount therefore remains reserved while the attempt is unresolved.</p>
+<p>The synthetic provider can record a payment and lose its acknowledgement. The application then has uncertainty about a result, not evidence that nothing happened.</p>
+<p>On retry, reconciliation reads the independently recorded receipt and confirms the existing payment. It does not issue another charge just because the original response was missing.</p>
+<p>The model also exercises declines and outages. After bounded outage attempts, a payment enters a dead letter. Explicit recovery resolves the outage and replays the stable action.</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>State</th>
+<th>What remains to establish</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Invoice captured</td>
+<td>Whether and when collection is due</td>
+</tr>
+<tr>
+<td>Payment reserved</td>
+<td>Whether the provider recorded the attempt</td>
+</tr>
+<tr>
+<td>Receipt reconciled</td>
+<td>The collected amount and remaining balance</td>
+</tr>
+<tr>
+<td>Payment declined</td>
+<td>A new collection decision, with the failure visible</td>
+</tr>
+<tr>
+<td>Dead letter</td>
+<td>An owned recovery decision after exhausted attempts</td>
+</tr>
+</tbody></table>
+</div><p>An idempotency key is useful only if its scope and effect are understood. The demonstration exercises its simulated receipts and reservations. It does not prove the semantics of a real payment provider.</p>
+<h2 id="disputes-change-the-collection-workflow">Disputes change the collection workflow</h2>
+<p>After a payment is reconciled, a dispute can cover part of it. While that dispute is open, new collections and reminders for the invoice pause.</p>
+<p>Upholding the dispute reverses the reviewed amount and reopens the balance. Dismissing it preserves the payment. Both decisions need an explicit review.</p>
+<p>Continuing the example, a 6,000-cent reconciled payment against a 10,000-cent invoice leaves 4,000 cents outstanding. Upholding a 1,000-cent dispute brings net collected value to 5,000 cents and outstanding value to 5,000 cents.</p>
+<p>The operational totals reconcile per currency. Negative adjustments remain separate credit documents; this version does not automatically net them across unrelated invoices.</p>
+<p>Reminders are also stateful. The fixture records overdue stages, including later 14-day and 30-day stages, without delivering the same stage repeatedly. Cancellation and unresolved disputes affect whether a new reminder is appropriate.</p>
+<h2 id="a-goodwill-refund-has-a-different-authority">A goodwill refund has a different authority</h2>
+<p>A goodwill refund is not the same operation as a dispute reversal or an unused-service credit.</p>
+<p>Renewal Studio gives refund requests an amount, reason and event ID. Pending and approved requests reserve a finite allowance. Finance reviews the current request with a rationale. Rejected or cancelled requests release their reservations.</p>
+<figure class="renewal-explorer" data-renewal="refund" data-motion="paused" aria-labelledby="flow-refund">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 18</span><h3 id="flow-refund">Reserve the allowance before issuing credit</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Reserve the allowance before issuing credit" class="renewal-svg landscape">
+<title>Reserve the allowance before issuing credit</title>
+<desc>Synthetic explanatory workflow. Refund request leads to Reserve allowance. Reserve allowance leads to Finance review. Finance review leads to Provider credit. Provider credit leads to Reconcile receipt. Finance review leads to Release reservation.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 18</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 544 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 390) rotate(90)"/>
+<g data-node="request"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Refund request</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Reason + amount + event ID</text></g>
+<g data-node="reserve"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reserve allowance</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Pending requests count</text></g>
+<g data-node="review"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Finance review</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Version + rationale</text></g>
+<g data-node="credit"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Provider credit</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Stable action identity</text></g>
+<g data-node="receipt"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reconcile receipt</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">One verified credit</text></g>
+<g data-node="release"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Release reservation</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Rejected or cancelled request</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Reserve the allowance before issuing credit" class="renewal-svg portrait">
+<title>Reserve the allowance before issuing credit</title>
+<desc>Synthetic explanatory workflow. Refund request leads to Reserve allowance. Reserve allowance leads to Finance review. Finance review leads to Provider credit. Provider credit leads to Reconcile receipt. Finance review leads to Release reservation.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 18</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 359 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="request"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Refund request</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Reason + amount + event ID</text></g>
+<g data-node="reserve"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reserve allowance</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Pending requests count</text></g>
+<g data-node="review"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Finance review</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Version + rationale</text></g>
+<g data-node="credit"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Provider credit</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Stable action identity</text></g>
+<g data-node="receipt"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reconcile receipt</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">One verified credit</text></g>
+<g data-node="release"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Release reservation</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Rejected or cancelled request</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose a credit outcome</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Credit acknowledged late</button><button type="button" data-scenario="1" aria-pressed="false">Finance rejects</button><button type="button" data-scenario="2" aria-pressed="false">Duplicate request</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>Confirm the original credit</strong><p data-result-detail>A lost acknowledgement leaves one provider record. Reconciliation recovers its result without another credit, even if a later policy change blocks new submissions.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-refund.svg" download>Download SVG</a><a href="diagrams/renewal-refund.png" download>Download PNG</a><a href="diagrams/renewal-refund.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>The credit fixture deliberately loses its acknowledgement after recording the credit. Reconciliation confirms the same receipt without issuing a second credit.</p>
+<p>A later policy change can block new submissions while still allowing reconciliation of an already written credit. That is an important distinction: the system must be able to learn what happened even when it is no longer allowed to initiate that action again.</p>
+<p>Identical request events are harmless replays. Reusing an event ID for conflicting content is rejected. Otherwise, deduplication itself could conceal a changed financial instruction.</p>
+<p>Refund caps and fictional tax rates are demonstration policy. They are not representations of legal entitlements or jurisdiction-specific tax treatment.</p>
+<h2 id="allocate-service-without-losing-cents">Allocate service without losing cents</h2>
+<p>The service allocator takes accepted subscription or custom service charges and spreads them across inclusive service days. It calculates cumulative monthly amounts, rounds those cumulative totals and uses the differences as monthly allocations.</p>
+<p>That keeps the monthly sum equal to the signed source amount.</p>
+<figure class="renewal-explorer" data-renewal="allocation" data-motion="paused" aria-labelledby="flow-allocation">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 19</span><h3 id="flow-allocation">Trace every allocated cent to signed service</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Trace every allocated cent to signed service" class="renewal-svg landscape">
+<title>Trace every allocated cent to signed service</title>
+<desc>Synthetic explanatory workflow. Accepted service terms leads to Allocate service days. Allocate service days leads to Round cumulative amounts. Round cumulative amounts leads to Preserve monthly schedule. Unused-service credit leads to Allocate service days. Accepted service terms leads to Exclude other amounts.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 19</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 28 431 H 12 V 56 H 544 V 74" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 74) rotate(90)"/>
+<path data-edge="4" d="M 176 156 V 207 H 360 V 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="terms"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Accepted service terms</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Inclusive dates + net service</text></g>
+<g data-node="days"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Allocate service days</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Monthly cumulative fractions</text></g>
+<g data-node="round"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Round cumulative amounts</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Exact integer cents</text></g>
+<g data-node="schedule"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Preserve monthly schedule</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Totals match signed source</text></g>
+<g data-node="credit"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Unused-service credit</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Separate negative schedule</text></g>
+<g data-node="exclude"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Exclude other amounts</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Tax, goodwill, PAYG, commitments</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Trace every allocated cent to signed service" class="renewal-svg portrait">
+<title>Trace every allocated cent to signed service</title>
+<desc>Synthetic explanatory workflow. Accepted service terms leads to Allocate service days. Allocate service days leads to Round cumulative amounts. Round cumulative amounts leads to Preserve monthly schedule. Unused-service credit leads to Allocate service days. Accepted service terms leads to Exclude other amounts.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 19</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 314 603 H 321 V 237 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 237) rotate(180)"/>
+<path data-edge="4" d="M 314 115 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="terms"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Accepted service terms</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Inclusive dates + net service</text></g>
+<g data-node="days"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Allocate service days</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Monthly cumulative fractions</text></g>
+<g data-node="round"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Round cumulative amounts</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Exact integer cents</text></g>
+<g data-node="schedule"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Preserve monthly schedule</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Totals match signed source</text></g>
+<g data-node="credit"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Unused-service credit</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Separate negative schedule</text></g>
+<g data-node="exclude"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Exclude other amounts</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Tax, goodwill, PAYG, commitments</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose an allocation source</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Subscription service</button><button type="button" data-scenario="1" aria-pressed="false">Unused service credited</button><button type="button" data-scenario="2" aria-pressed="false">Usage or goodwill</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>Monthly cents add back to the source</strong><p data-result-detail>Cumulative rounding assigns month-by-month differences from the rounded cumulative total. This avoids losing a cent in every independent monthly rounding.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-allocation.svg" download>Download SVG</a><a href="diagrams/renewal-allocation.png" download>Download PNG</a><a href="diagrams/renewal-allocation.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>Unused-service credits produce separate negative schedules. Taxes, goodwill refunds, PAYG usage and consumption commitments are excluded from this allocator.</p>
+<p>The limited scope is deliberate. A monthly allocation table can look like revenue recognition while omitting the policies and judgments that an accounting system requires. This feature is operational service allocation; it is not a GAAP or IFRS revenue-recognition engine or a general accounting subledger.</p>
+<p>Keeping accepted terms, invoice sources, payment receipts and allocation schedules connected still has practical value. An operator can explain which agreement produced an amount and where a discrepancy entered the workflow.</p>
+<h2 id="try-losing-the-acknowledgement">Try losing the acknowledgement</h2>
+<p>In <a href="https://d11wfkflwovvog.cloudfront.net/collections">Invoices &amp; collections</a>, capture observed PAYG invoices and submit a partial payment using the lost-acknowledgement scenario. Inspect the reserved amount, then reconcile the receipt. The balance should reflect one payment.</p>
+<p>In <a href="https://d11wfkflwovvog.cloudfront.net/finance">Finance controls</a>, follow a reviewed refund through the same uncertainty pattern and inspect the accepted service schedules.</p>
+<p>The figures are local explanations. Application payments, credits, taxes and receipts are synthetic; no money moves. Implementation was reviewed on 12 November 2026. The <a href="evidence/renewal-series.json">series replay record</a> identifies the executed public checks and their limits.</p>
+<p>These financial boundaries make the next design question concrete: <a href="renewal-studio-agents.html">which actions should an agent be allowed to run?</a></p>
+<nav class="series-reading-nav" aria-label="Continue the series">
+    <a rel="prev" href="renewal-studio-post-sale.html"><small>← Part 5</small>The Work After the Sale</a>
+    <a rel="next" href="renewal-studio-agents.html"><small>Part 7 →</small>Let Agents Work Within a Boundary</a>
+  </nav>
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>

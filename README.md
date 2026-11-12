@@ -11,7 +11,7 @@ Together, they support a development loop: **route → govern → test containme
 **[Start here → one workflow, its evidence, and the code](https://hk-775.github.io/hk-775/)**
 
 **[Engineering blog](https://hk-775.github.io/hk-775/blog/)** ·
-[Latest: Renewal Studio — The Standard Renewal, End to End](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.html) ·
+[Complete: Renewal Studio — nine parts, 28 interactive workflows](https://hk-775.github.io/hk-775/blog/renewal-studio.html) ·
 [Renewal Studio series](https://hk-775.github.io/hk-775/blog/renewal-studio.html) ·
 [RSS](https://hk-775.github.io/hk-775/blog/feed.xml)
 

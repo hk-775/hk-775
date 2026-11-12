@@ -6,7 +6,11 @@
     "subtitle": "From a trusted contract to verified billing and access",
     "description": "The buyer accepts. Billing succeeds. Access fails. Explore four interactive workflows showing how a standard renewal qualifies, records consent, activates and recovers.",
     "date": "2026-11-12",
-    "topics": ["Renewal Studio", "Workflow automation", "Agent engineering"],
+    "topics": [
+      "Renewal Studio",
+      "Workflow automation",
+      "Agent engineering"
+    ],
     "evidence": "Synthetic application run; simulated providers",
     "series": "renewal-studio",
     "cover": "blog/diagrams/renewal-standard-cover.png",
@@ -32,6 +36,295 @@
       "blog/diagrams/renewal-eligibility.svg": "eligibility",
       "blog/diagrams/renewal-consent.svg": "consent",
       "blog/diagrams/renewal-recovery.svg": "recovery"
+    },
+    "seriesPart": 1
+  },
+  {
+    "slug": "renewal-studio-exceptions",
+    "source": "blog/2026-11-12-renewal-studio-exceptions.md",
+    "title": "Renewal Studio, Part 2: When the Standard Path Ends",
+    "subtitle": "Terms, approvals and the people who own exceptions",
+    "description": "A shorter term and a new clause turn one renewal into several decisions. Explore commercial routing, versioned approvals and strategic procurement.",
+    "date": "2026-11-12",
+    "topics": [
+      "Renewal Studio",
+      "Workflow engineering",
+      "Synthetic evidence"
+    ],
+    "evidence": "Implementation review; synthetic replay",
+    "series": "renewal-studio",
+    "seriesPart": 2,
+    "cover": "blog/diagrams/renewal-exceptions-cover.png",
+    "coverAlt": "Renewal Studio, Part 2: When the Standard Path Ends. Terms, approvals and the people who own exceptions.",
+    "assets": [
+      "blog/diagrams/renewal-exception.svg",
+      "blog/diagrams/renewal-exception.png",
+      "blog/diagrams/renewal-exception.drawio",
+      "blog/diagrams/renewal-terms.svg",
+      "blog/diagrams/renewal-terms.png",
+      "blog/diagrams/renewal-terms.drawio",
+      "blog/diagrams/renewal-procurement.svg",
+      "blog/diagrams/renewal-procurement.png",
+      "blog/diagrams/renewal-procurement.drawio",
+      "blog/diagrams/renewal-exceptions-cover.svg",
+      "blog/diagrams/renewal-exceptions-cover.png"
+    ],
+    "interactiveDiagrams": {
+      "blog/diagrams/renewal-exception.svg": "exception",
+      "blog/diagrams/renewal-terms.svg": "terms",
+      "blog/diagrams/renewal-procurement.svg": "procurement"
+    }
+  },
+  {
+    "slug": "renewal-studio-consumption",
+    "source": "blog/2026-11-12-renewal-studio-consumption.md",
+    "title": "Renewal Studio, Part 3: Renewing a Commitment When Usage Changes",
+    "subtitle": "Turn a trusted usage picture into a deliberate offer",
+    "description": "A precise shortfall projection can still rest on bad data. Follow reconciled usage through intervention, evidence review and commitment rightsizing.",
+    "date": "2026-11-12",
+    "topics": [
+      "Renewal Studio",
+      "Workflow engineering",
+      "Synthetic evidence"
+    ],
+    "evidence": "Implementation review; synthetic replay",
+    "series": "renewal-studio",
+    "seriesPart": 3,
+    "cover": "blog/diagrams/renewal-consumption-cover.png",
+    "coverAlt": "Renewal Studio, Part 3: Renewing a Commitment When Usage Changes. Turn a trusted usage picture into a deliberate offer.",
+    "assets": [
+      "blog/diagrams/renewal-burndown.svg",
+      "blog/diagrams/renewal-burndown.png",
+      "blog/diagrams/renewal-burndown.drawio",
+      "blog/diagrams/renewal-intervention.svg",
+      "blog/diagrams/renewal-intervention.png",
+      "blog/diagrams/renewal-intervention.drawio",
+      "blog/diagrams/renewal-rightsize.svg",
+      "blog/diagrams/renewal-rightsize.png",
+      "blog/diagrams/renewal-rightsize.drawio",
+      "blog/diagrams/renewal-consumption-cover.svg",
+      "blog/diagrams/renewal-consumption-cover.png"
+    ],
+    "interactiveDiagrams": {
+      "blog/diagrams/renewal-burndown.svg": "burndown",
+      "blog/diagrams/renewal-intervention.svg": "intervention",
+      "blog/diagrams/renewal-rightsize.svg": "rightsize"
+    }
+  },
+  {
+    "slug": "renewal-studio-retention",
+    "source": "blog/2026-11-12-renewal-studio-retention.md",
+    "title": "Renewal Studio, Part 4: Retention Beyond the Renewal Date",
+    "subtitle": "PAYG value, cancellation, save plans and a return",
+    "description": "Lower spend can mean better efficiency. Follow customer value, explicit cancellation decisions and verified reactivation across three interactive workflows.",
+    "date": "2026-11-12",
+    "topics": [
+      "Renewal Studio",
+      "Workflow engineering",
+      "Synthetic evidence"
+    ],
+    "evidence": "Implementation review; synthetic replay",
+    "series": "renewal-studio",
+    "seriesPart": 4,
+    "cover": "blog/diagrams/renewal-retention-cover.png",
+    "coverAlt": "Renewal Studio, Part 4: Retention Beyond the Renewal Date. PAYG value, cancellation, save plans and a return.",
+    "assets": [
+      "blog/diagrams/renewal-payg.svg",
+      "blog/diagrams/renewal-payg.png",
+      "blog/diagrams/renewal-payg.drawio",
+      "blog/diagrams/renewal-cancellation.svg",
+      "blog/diagrams/renewal-cancellation.png",
+      "blog/diagrams/renewal-cancellation.drawio",
+      "blog/diagrams/renewal-winback.svg",
+      "blog/diagrams/renewal-winback.png",
+      "blog/diagrams/renewal-winback.drawio",
+      "blog/diagrams/renewal-retention-cover.svg",
+      "blog/diagrams/renewal-retention-cover.png"
+    ],
+    "interactiveDiagrams": {
+      "blog/diagrams/renewal-payg.svg": "payg",
+      "blog/diagrams/renewal-cancellation.svg": "cancellation",
+      "blog/diagrams/renewal-winback.svg": "winback"
+    }
+  },
+  {
+    "slug": "renewal-studio-post-sale",
+    "source": "blog/2026-11-12-renewal-studio-post-sale.md",
+    "title": "Renewal Studio, Part 5: The Work After the Sale",
+    "subtitle": "Handoffs, useful outcomes and accountable follow-up",
+    "description": "The agreement is active, but the integration is blocked. Connect post-sale milestones, partner evidence and customer replies to owned outcomes.",
+    "date": "2026-11-12",
+    "topics": [
+      "Renewal Studio",
+      "Workflow engineering",
+      "Synthetic evidence"
+    ],
+    "evidence": "Implementation review; synthetic replay",
+    "series": "renewal-studio",
+    "seriesPart": 5,
+    "cover": "blog/diagrams/renewal-post-sale-cover.png",
+    "coverAlt": "Renewal Studio, Part 5: The Work After the Sale. Handoffs, useful outcomes and accountable follow-up.",
+    "assets": [
+      "blog/diagrams/renewal-handoff.svg",
+      "blog/diagrams/renewal-handoff.png",
+      "blog/diagrams/renewal-handoff.drawio",
+      "blog/diagrams/renewal-partner.svg",
+      "blog/diagrams/renewal-partner.png",
+      "blog/diagrams/renewal-partner.drawio",
+      "blog/diagrams/renewal-conversation.svg",
+      "blog/diagrams/renewal-conversation.png",
+      "blog/diagrams/renewal-conversation.drawio",
+      "blog/diagrams/renewal-post-sale-cover.svg",
+      "blog/diagrams/renewal-post-sale-cover.png"
+    ],
+    "interactiveDiagrams": {
+      "blog/diagrams/renewal-handoff.svg": "handoff",
+      "blog/diagrams/renewal-partner.svg": "partner",
+      "blog/diagrams/renewal-conversation.svg": "conversation"
+    }
+  },
+  {
+    "slug": "renewal-studio-finance",
+    "source": "blog/2026-11-12-renewal-studio-finance.md",
+    "title": "Renewal Studio, Part 6: Follow the Money",
+    "subtitle": "Keep consent, invoices, collections and credits connected",
+    "description": "A payment succeeds but its acknowledgement disappears. Explore reservations, reconciliation, refunds and exact-cent service allocation.",
+    "date": "2026-11-12",
+    "topics": [
+      "Renewal Studio",
+      "Workflow engineering",
+      "Synthetic evidence"
+    ],
+    "evidence": "Implementation review; synthetic replay",
+    "series": "renewal-studio",
+    "seriesPart": 6,
+    "cover": "blog/diagrams/renewal-finance-cover.png",
+    "coverAlt": "Renewal Studio, Part 6: Follow the Money. Keep consent, invoices, collections and credits connected.",
+    "assets": [
+      "blog/diagrams/renewal-invoices.svg",
+      "blog/diagrams/renewal-invoices.png",
+      "blog/diagrams/renewal-invoices.drawio",
+      "blog/diagrams/renewal-refund.svg",
+      "blog/diagrams/renewal-refund.png",
+      "blog/diagrams/renewal-refund.drawio",
+      "blog/diagrams/renewal-allocation.svg",
+      "blog/diagrams/renewal-allocation.png",
+      "blog/diagrams/renewal-allocation.drawio",
+      "blog/diagrams/renewal-finance-cover.svg",
+      "blog/diagrams/renewal-finance-cover.png"
+    ],
+    "interactiveDiagrams": {
+      "blog/diagrams/renewal-invoices.svg": "invoices",
+      "blog/diagrams/renewal-refund.svg": "refund",
+      "blog/diagrams/renewal-allocation.svg": "allocation"
+    }
+  },
+  {
+    "slug": "renewal-studio-agents",
+    "source": "blog/2026-11-12-renewal-studio-agents.md",
+    "title": "Renewal Studio, Part 7: Let Agents Work Within a Boundary",
+    "subtitle": "Structured plans, durable jobs and tested authority",
+    "description": "An agent can propose a plan without gaining permission to accept for the buyer. Explore provider boundaries, durable scheduling and execution-based evaluations.",
+    "date": "2026-11-12",
+    "topics": [
+      "Renewal Studio",
+      "Workflow engineering",
+      "Synthetic evidence"
+    ],
+    "evidence": "Implementation review; synthetic replay",
+    "series": "renewal-studio",
+    "seriesPart": 7,
+    "cover": "blog/diagrams/renewal-agents-cover.png",
+    "coverAlt": "Renewal Studio, Part 7: Let Agents Work Within a Boundary. Structured plans, durable jobs and tested authority.",
+    "assets": [
+      "blog/diagrams/renewal-agent.svg",
+      "blog/diagrams/renewal-agent.png",
+      "blog/diagrams/renewal-agent.drawio",
+      "blog/diagrams/renewal-scheduler.svg",
+      "blog/diagrams/renewal-scheduler.png",
+      "blog/diagrams/renewal-scheduler.drawio",
+      "blog/diagrams/renewal-evals.svg",
+      "blog/diagrams/renewal-evals.png",
+      "blog/diagrams/renewal-evals.drawio",
+      "blog/diagrams/renewal-agents-cover.svg",
+      "blog/diagrams/renewal-agents-cover.png"
+    ],
+    "interactiveDiagrams": {
+      "blog/diagrams/renewal-agent.svg": "agent",
+      "blog/diagrams/renewal-scheduler.svg": "scheduler",
+      "blog/diagrams/renewal-evals.svg": "evals"
+    }
+  },
+  {
+    "slug": "renewal-studio-forecasting",
+    "source": "blog/2026-11-12-renewal-studio-forecasting.md",
+    "title": "Renewal Studio, Part 8: Forecast the Business from the Work",
+    "subtitle": "Snapshots, outcomes and experiments with honest limits",
+    "description": "Preserve what the business believed last week. Explore operational forecasts, synthetic model evaluation and multi-cycle portfolio experiments.",
+    "date": "2026-11-12",
+    "topics": [
+      "Renewal Studio",
+      "Workflow engineering",
+      "Synthetic evidence"
+    ],
+    "evidence": "Implementation review; synthetic replay",
+    "series": "renewal-studio",
+    "seriesPart": 8,
+    "cover": "blog/diagrams/renewal-forecasting-cover.png",
+    "coverAlt": "Renewal Studio, Part 8: Forecast the Business from the Work. Snapshots, outcomes and experiments with honest limits.",
+    "assets": [
+      "blog/diagrams/renewal-forecast.svg",
+      "blog/diagrams/renewal-forecast.png",
+      "blog/diagrams/renewal-forecast.drawio",
+      "blog/diagrams/renewal-model.svg",
+      "blog/diagrams/renewal-model.png",
+      "blog/diagrams/renewal-model.drawio",
+      "blog/diagrams/renewal-portfolio.svg",
+      "blog/diagrams/renewal-portfolio.png",
+      "blog/diagrams/renewal-portfolio.drawio",
+      "blog/diagrams/renewal-forecasting-cover.svg",
+      "blog/diagrams/renewal-forecasting-cover.png"
+    ],
+    "interactiveDiagrams": {
+      "blog/diagrams/renewal-forecast.svg": "forecast",
+      "blog/diagrams/renewal-model.svg": "model",
+      "blog/diagrams/renewal-portfolio.svg": "portfolio"
+    }
+  },
+  {
+    "slug": "renewal-studio-operations",
+    "source": "blog/2026-11-12-renewal-studio-operations.md",
+    "title": "Renewal Studio, Part 9: From Demonstration to an Operational System",
+    "subtitle": "Architecture, identity, connectors and the path to a pilot",
+    "description": "Connect the hosted AWS demo to its source, identity and recovery boundaries, then define the evidence a narrowly scoped real pilot would need.",
+    "date": "2026-11-12",
+    "topics": [
+      "Renewal Studio",
+      "Workflow engineering",
+      "Synthetic evidence"
+    ],
+    "evidence": "Implementation review; synthetic replay",
+    "series": "renewal-studio",
+    "seriesPart": 9,
+    "cover": "blog/diagrams/renewal-operations-cover.png",
+    "coverAlt": "Renewal Studio, Part 9: From Demonstration to an Operational System. Architecture, identity, connectors and the path to a pilot.",
+    "assets": [
+      "blog/diagrams/renewal-architecture.svg",
+      "blog/diagrams/renewal-architecture.png",
+      "blog/diagrams/renewal-architecture.drawio",
+      "blog/diagrams/renewal-sources.svg",
+      "blog/diagrams/renewal-sources.png",
+      "blog/diagrams/renewal-sources.drawio",
+      "blog/diagrams/renewal-restore.svg",
+      "blog/diagrams/renewal-restore.png",
+      "blog/diagrams/renewal-restore.drawio",
+      "blog/diagrams/renewal-operations-cover.svg",
+      "blog/diagrams/renewal-operations-cover.png"
+    ],
+    "interactiveDiagrams": {
+      "blog/diagrams/renewal-architecture.svg": "architecture",
+      "blog/diagrams/renewal-sources.svg": "sources",
+      "blog/diagrams/renewal-restore.svg": "restore"
     }
   },
   {
@@ -41,7 +334,11 @@
     "subtitle": "What a controlled AutoHelix experiment reveals about completion, recovery, and reward",
     "description": "I compared reported completion with verified outputs in a live AutoHelix experiment. Inspect the results, scripted cheating controls, and limits of editing the improvement strategy.",
     "date": "2026-10-30",
-    "topics": ["Agent improvement", "Reward design", "Evaluation"],
+    "topics": [
+      "Agent improvement",
+      "Reward design",
+      "Evaluation"
+    ],
     "evidence": "48 live model calls; synthetic workload",
     "diagramMotionStyle": "dots",
     "assets": [
@@ -51,9 +348,30 @@
     ],
     "animatedDiagrams": {
       "blog/diagrams/verified-agent-work.svg": {
-        "action": ["proposal-candidate", "candidate-worker", "worker-outputs", "candidate-counters", "score-proposal"],
-        "evidence": ["outputs-verifier", "requirements-verifier", "counters-score", "verifier-score", "selection-final"],
-        "stage": ["propose", "candidate", "worker", "outputs", "counters", "verifier", "selection", "final"]
+        "action": [
+          "proposal-candidate",
+          "candidate-worker",
+          "worker-outputs",
+          "candidate-counters",
+          "score-proposal"
+        ],
+        "evidence": [
+          "outputs-verifier",
+          "requirements-verifier",
+          "counters-score",
+          "verifier-score",
+          "selection-final"
+        ],
+        "stage": [
+          "propose",
+          "candidate",
+          "worker",
+          "outputs",
+          "counters",
+          "verifier",
+          "selection",
+          "final"
+        ]
       }
     }
   },
@@ -64,7 +382,11 @@
     "subtitle": "What happens when a remembered claim becomes permission to act",
     "description": "Follow a false approval across sessions, inspect 40 synthetic memory-authority episodes, and see why provenance and current permission need separate checks.",
     "date": "2026-10-19",
-    "topics": ["Agent memory", "AI security", "Evaluation"],
+    "topics": [
+      "Agent memory",
+      "AI security",
+      "Evaluation"
+    ],
     "evidence": "Synthetic cross-session example; no model calls",
     "diagramMotionStyle": "dots",
     "assets": [
@@ -74,9 +396,27 @@
     ],
     "animatedDiagrams": {
       "blog/diagrams/memory-authority-boundary.svg": {
-        "action": ["email-writer", "writer-memory", "request-recall", "recall-proposal", "proposal-guard", "guard-effects"],
-        "evidence": ["memory-recall", "registry-guard"],
-        "stage": ["email", "writer", "memory", "recall", "proposal", "guard", "effects"]
+        "action": [
+          "email-writer",
+          "writer-memory",
+          "request-recall",
+          "recall-proposal",
+          "proposal-guard",
+          "guard-effects"
+        ],
+        "evidence": [
+          "memory-recall",
+          "registry-guard"
+        ],
+        "stage": [
+          "email",
+          "writer",
+          "memory",
+          "recall",
+          "proposal",
+          "guard",
+          "effects"
+        ]
       }
     }
   },
@@ -87,7 +427,11 @@
     "subtitle": "Evaluate cancellations, refunds, and paid access through their actual effects",
     "description": "A synthetic subscription workflow compares permissions, business invariants, and deny-all controls, with recorded effects, explicit completion limits, and replayable evidence.",
     "date": "2026-10-08",
-    "topics": ["Agent engineering", "Subscription workflows", "Evaluation"],
+    "topics": [
+      "Agent engineering",
+      "Subscription workflows",
+      "Evaluation"
+    ],
     "evidence": "Synthetic billing and access simulation",
     "assets": [
       "blog/diagrams/subscription-action-boundary.drawio",
@@ -96,9 +440,25 @@
     ],
     "animatedDiagrams": {
       "blog/diagrams/subscription-action-boundary.svg": {
-        "action": ["candidate-guard", "guard-provider", "tool-feedback", "guard-feedback"],
-        "evidence": ["consent-guard", "provider-effects", "effects-grader", "reference-grader"],
-        "stage": ["candidate", "guard", "provider", "effects", "grader"]
+        "action": [
+          "candidate-guard",
+          "guard-provider",
+          "tool-feedback",
+          "guard-feedback"
+        ],
+        "evidence": [
+          "consent-guard",
+          "provider-effects",
+          "effects-grader",
+          "reference-grader"
+        ],
+        "stage": [
+          "candidate",
+          "guard",
+          "provider",
+          "effects",
+          "grader"
+        ]
       }
     }
   },
@@ -107,9 +467,13 @@
     "source": "blog/2026-10-05-designing-an-evidence-trail-for-agent-actions.md",
     "title": "Designing an Evidence Trail for Agent Actions",
     "subtitle": "Connecting requests, policy decisions, execution, and observed state",
-    "description": "I trace one synthetic agent action from its request to its observed effect, then examine what event hashes, snapshots, and replay can establish—and what needs additional verification.",
+    "description": "I trace one synthetic agent action from its request to its observed effect, then examine what event hashes, snapshots, and replay can establish\u2014and what needs additional verification.",
     "date": "2026-10-05",
-    "topics": ["Agent engineering", "Evidence", "Action governance"],
+    "topics": [
+      "Agent engineering",
+      "Evidence",
+      "Action governance"
+    ],
     "evidence": "Public code and synthetic recordings",
     "assets": [
       "blog/diagrams/agent-action-evidence-workflow.svg",
@@ -118,9 +482,28 @@
     ],
     "animatedDiagrams": {
       "blog/diagrams/agent-action-evidence-workflow.svg": {
-        "action": ["request-policy", "policy-change", "change-execution", "execution-state", "evidence-review"],
-        "evidence": ["request-evidence", "policy-evidence", "change-evidence", "execution-evidence", "observation-evidence", "evidence-ingress"],
-        "stage": ["request", "policy", "change", "execution", "observation"]
+        "action": [
+          "request-policy",
+          "policy-change",
+          "change-execution",
+          "execution-state",
+          "evidence-review"
+        ],
+        "evidence": [
+          "request-evidence",
+          "policy-evidence",
+          "change-evidence",
+          "execution-evidence",
+          "observation-evidence",
+          "evidence-ingress"
+        ],
+        "stage": [
+          "request",
+          "policy",
+          "change",
+          "execution",
+          "observation"
+        ]
       }
     }
   },
@@ -131,7 +514,11 @@
     "subtitle": "Lessons from an executed tool-selection evaluation",
     "description": "I replaced a label-matching diagnostic with an executable support workflow. On 144 synthetic test episodes, the rules baseline outperformed the tested zero-shot model configurations.",
     "date": "2026-10-02",
-    "topics": ["Evaluation", "Tool selection", "Agent engineering"],
+    "topics": [
+      "Evaluation",
+      "Tool selection",
+      "Agent engineering"
+    ],
     "evidence": "Synthetic, executed workflow"
   }
 ]

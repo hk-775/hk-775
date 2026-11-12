@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Renewal Studio, Part 4: Retention Beyond the Renewal Date · Harleen Kaur</title>
+  <meta name="description" content="Lower spend can mean better efficiency. Follow customer value, explicit cancellation decisions and verified reactivation across three interactive workflows.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/renewal-studio-retention.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="renewal-studio-retention.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=3">
+
+  <link rel="stylesheet" href="renewal-explorers.css?v=2">
+  <script type="module" src="renewal-explorers.js?v=2"></script>
+  <meta property="og:title" content="Renewal Studio, Part 4: Retention Beyond the Renewal Date">
+  <meta property="og:description" content="Lower spend can mean better efficiency. Follow customer value, explicit cancellation decisions and verified reactivation across three interactive workflows.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/renewal-studio-retention.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/diagrams/renewal-retention-cover.png">
+  <meta property="og:image:alt" content="Renewal Studio, Part 4: Retention Beyond the Renewal Date. PAYG value, cancellation, save plans and a return.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-11-12">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Renewal Studio, Part 4: Retention Beyond the Renewal Date","alternativeHeadline":"PAYG value, cancellation, save plans and a return","description":"Lower spend can mean better efficiency. Follow customer value, explicit cancellation decisions and verified reactivation across three interactive workflows.","datePublished":"2026-11-12","dateModified":"2026-11-12","url":"https://hk-775.github.io/hk-775/blog/renewal-studio-retention.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/renewal-studio-retention.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/diagrams/renewal-retention-cover.png","keywords":["Renewal Studio","Workflow engineering","Synthetic evidence"],"isPartOf":{"@type":"CollectionPage","name":"Renewal Studio: Building a System for Software and API Contract Renewals","url":"https://hk-775.github.io/hk-775/blog/renewal-studio.html"},"position":4}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Renewal Studio · Workflow engineering · Synthetic evidence</p>
+    <h1>Renewal Studio, Part 4: Retention Beyond the Renewal Date</h1>
+    <p class="article-subtitle">PAYG value, cancellation, save plans and a return</p>
+    <p class="post-meta"><time datetime="2026-11-12">12 November 2026</time><span>5 min read</span><span>Implementation review; synthetic replay</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#compare-outcomes-before-reacting-to-spend">Compare outcomes before reacting to spend</a>
+<a href="#unknown-health-is-different-from-poor-health">Unknown health is different from poor health</a>
+<a href="#cancellation-is-an-explicit-customer-workflow">Cancellation is an explicit customer workflow</a>
+<a href="#suppression-must-survive-a-queued-message">Suppression must survive a queued message</a>
+<a href="#a-return-has-its-own-consent-and-fulfillment">A return has its own consent and fulfillment</a>
+<a href="#try-a-different-definition-of-success">Try a different definition of success</a></nav>
+      <div class="article-tools"><a href="renewal-studio-retention.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-retention.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="Renewal Studio, Part 4: Retention Beyond the Renewal Date"><div class="series-callout"><strong>Part 4 of 9 · Renewal Studio</strong><p>Renewal Studio: Building a System for Software and API Contract Renewals</p><a href="renewal-studio.html">Explore the series and reading order →</a> · <a href="renewal-studio-post-sale.html">Next: Part 5 →</a></div><p>A customer&#39;s bill falls by 25%. Their successful jobs stay almost unchanged.</p>
+<p>Is that a retention problem? Perhaps the customer optimized its workload and now gets the same value for less money. A system that treats every spending decline as a failure can recommend exactly the wrong intervention.</p>
+<p>PAYG accounts make this especially visible. They may have ongoing consumption without an annual commitment or a renewal date. Their retention workflow must follow useful activity and customer decisions rather than an invented contract anniversary.</p>
+<h2 id="compare-outcomes-before-reacting-to-spend">Compare outcomes before reacting to spend</h2>
+<p>Renewal Studio&#39;s synthetic PAYG analysis keeps a fixed reference from the first four observed weeks. It compares that reference with the latest two complete, contiguous weeks.</p>
+<p>The fixture distinguishes several patterns. Successful jobs below 70% of reference trigger a decline investigation. At least 90% of reference jobs with spend below 80% is treated as efficiency. A separate decline in other units can prompt workload review.</p>
+<p>Those percentages are teaching policies, not validated predictors of churn.</p>
+<figure class="renewal-explorer" data-renewal="payg" data-motion="paused" aria-labelledby="flow-payg">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 11</span><h3 id="flow-payg">Lower spend can mean better efficiency</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Lower spend can mean better efficiency" class="renewal-svg landscape">
+<title>Lower spend can mean better efficiency</title>
+<desc>Synthetic explanatory workflow. Complete usage weeks leads to Compare outcomes. Compare outcomes leads to Adoption investigation. Compare outcomes leads to Efficiency recognized. Compare outcomes leads to Workload review. Complete usage weeks leads to Unknown: data hold.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 11</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 544 156 V 192 H 176 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 232) rotate(90)"/>
+<path data-edge="3" d="M 544 156 V 207 H 360 V 431 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 431) rotate(180)"/>
+<path data-edge="4" d="M 176 156 V 207 H 360 V 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="weeks"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Complete usage weeks</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Fixed reference + recent window</text></g>
+<g data-node="compare"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Compare outcomes</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Jobs, spend and units</text></g>
+<g data-node="decline"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Adoption investigation</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Jobs below reference threshold</text></g>
+<g data-node="efficient"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Efficiency recognized</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Outcomes hold; spend falls</text></g>
+<g data-node="review"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Workload review</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Other units decline</text></g>
+<g data-node="unknown"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Unknown: data hold</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Insufficient or stale coverage</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Lower spend can mean better efficiency" class="renewal-svg portrait">
+<title>Lower spend can mean better efficiency</title>
+<desc>Synthetic explanatory workflow. Complete usage weeks leads to Compare outcomes. Compare outcomes leads to Adoption investigation. Compare outcomes leads to Efficiency recognized. Compare outcomes leads to Workload review. Complete usage weeks leads to Unknown: data hold.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 11</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 314 237 H 324 V 481 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 481) rotate(180)"/>
+<path data-edge="3" d="M 314 237 H 321 V 603 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 603) rotate(180)"/>
+<path data-edge="4" d="M 314 115 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="weeks"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Complete usage weeks</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Fixed reference + recent window</text></g>
+<g data-node="compare"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Compare outcomes</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Jobs, spend and units</text></g>
+<g data-node="decline"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Adoption investigation</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Jobs below reference threshold</text></g>
+<g data-node="efficient"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Efficiency recognized</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Outcomes hold; spend falls</text></g>
+<g data-node="review"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Workload review</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Other units decline</text></g>
+<g data-node="unknown"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Unknown: data hold</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Insufficient or stale coverage</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose an observed pattern</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Jobs fall sharply</button><button type="button" data-scenario="1" aria-pressed="false">Jobs hold, spend falls</button><button type="button" data-scenario="2" aria-pressed="false">Other units fall</button><button type="button" data-scenario="3" aria-pressed="false">Incomplete weeks</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>Investigate loss of useful activity</strong><p data-result-detail>The fixture flags successful jobs below 70% of the fixed reference. An owner investigates the customer&#39;s workload before choosing an intervention.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-payg.svg" download>Download SVG</a><a href="diagrams/renewal-payg.png" download>Download PNG</a><a href="diagrams/renewal-payg.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>Consider a fictional reference of 1,000 successful jobs and $1,000 spend per week. A current window averaging 950 jobs and $750 is consistent with the fixture&#39;s efficiency condition. Averaging 600 jobs points toward a different investigation.</p>
+<p>The owner should ask what changed in the customer&#39;s work. A useful response might involve resolving errors, validating a migration or confirming that an optimization was intentional. Increasing spend is not automatically the desired outcome.</p>
+<p>Keeping the reference fixed also prevents a declining baseline from drifting downward until weak activity appears normal. The reference and recent window should be visible alongside the result.</p>
+<h2 id="unknown-health-is-different-from-poor-health">Unknown health is different from poor health</h2>
+<p>Incomplete periods, duplicated observations, future-dated weeks, stale coverage and a nonpositive reference prevent a trustworthy comparison. The application withholds a health judgment and exposes a data hold.</p>
+<p>That state needs an owner and a next action. It should not disappear from the portfolio simply because it lacks a score.</p>
+<p>The recovery workflow then separates intervention from observation. A PAYG recovery needs an owner, approved actions, two new observed weeks after activation, at least 14 days, a healthy or efficient result and a review note.</p>
+<p>The synthetic “outcomes recover, spend stays lower” scenario exercises an important result: a case can recover without returning to the old spend level. The system preserves evidence of customer value instead of using the invoice as its only measure.</p>
+<p>This remains a simulation. It does not establish that the intervention caused recovery or quantify real retained revenue.</p>
+<h2 id="cancellation-is-an-explicit-customer-workflow">Cancellation is an explicit customer workflow</h2>
+<p>A cancellation request is a stronger signal than a consumption pattern. It represents a customer decision that changes what the system is allowed to do next.</p>
+<p>The buyer records the request and reason. Renewal outreach and new cycles are suppressed. The account owner can propose a noncommercial save plan on existing terms or confirm termination at the current term&#39;s end.</p>
+<figure class="renewal-explorer" data-renewal="cancellation" data-motion="paused" aria-labelledby="flow-cancellation">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 12</span><h3 id="flow-cancellation">Cancellation needs its own state machine</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Cancellation needs its own state machine" class="renewal-svg landscape">
+<title>Cancellation needs its own state machine</title>
+<desc>Synthetic explanatory workflow. Buyer requests exit leads to Account owner responds. Account owner responds leads to Existing-terms save plan. Existing-terms save plan leads to Buyer accepts save. Account owner responds leads to Confirm end of term. Confirm end of term leads to Effective termination.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 12</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 544 156 V 207 H 360 V 431 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 431) rotate(180)"/>
+<path data-edge="4" d="M 324 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="request"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Buyer requests exit</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Record reason + current term</text></g>
+<g data-node="owner"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Account owner responds</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Suppress renewal outreach</text></g>
+<g data-node="save"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Existing-terms save plan</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">No automatic price concession</text></g>
+<g data-node="stay"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Buyer accepts save</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Explicit decision recorded</text></g>
+<g data-node="end"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Confirm end of term</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Resolve future agreement first</text></g>
+<g data-node="terminate"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Effective termination</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Billing + access reconciled</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Cancellation needs its own state machine" class="renewal-svg portrait">
+<title>Cancellation needs its own state machine</title>
+<desc>Synthetic explanatory workflow. Buyer requests exit leads to Account owner responds. Account owner responds leads to Existing-terms save plan. Existing-terms save plan leads to Buyer accepts save. Account owner responds leads to Confirm end of term. Confirm end of term leads to Effective termination.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 12</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 314 237 H 321 V 603 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 603) rotate(180)"/>
+<path data-edge="4" d="M 170 644 L 170 684" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 684) rotate(90)"/>
+<g data-node="request"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Buyer requests exit</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Record reason + current term</text></g>
+<g data-node="owner"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Account owner responds</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Suppress renewal outreach</text></g>
+<g data-node="save"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Existing-terms save plan</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">No automatic price concession</text></g>
+<g data-node="stay"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Buyer accepts save</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Explicit decision recorded</text></g>
+<g data-node="end"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Confirm end of term</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Resolve future agreement first</text></g>
+<g data-node="terminate"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Effective termination</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Billing + access reconciled</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose the customer&#39;s decision</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Customer chooses to stay</button><button type="button" data-scenario="1" aria-pressed="false">Customer leaves</button><button type="button" data-scenario="2" aria-pressed="false">Future agreement exists</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>A save requires a customer decision</strong><p data-result-detail>An owner can propose an adoption or service plan on existing terms. The buyer explicitly accepts it or withdraws the cancellation.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-cancellation.svg" download>Download SVG</a><a href="diagrams/renewal-cancellation.png" download>Download PNG</a><a href="diagrams/renewal-cancellation.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>The buyer must explicitly accept the save plan or withdraw the cancellation. A specialist marking a task complete cannot manufacture that decision.</p>
+<p>There is also a difficult ordering case: the customer may already have accepted a future renewal. The cancellation workflow cannot silently undo that agreement. Its obligations must be resolved separately before the exit proceeds.</p>
+<p>The application therefore distinguishes several events that a dashboard might otherwise compress into one “lost” state:</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Event</th>
+<th>What it establishes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Customer requests cancellation</td>
+<td>Intent to leave and a reason to respond</td>
+</tr>
+<tr>
+<td>Owner proposes a save plan</td>
+<td>A recommendation, awaiting customer choice</td>
+</tr>
+<tr>
+<td>Buyer accepts the save</td>
+<td>An explicit decision on the existing terms</td>
+</tr>
+<tr>
+<td>Termination is confirmed</td>
+<td>A scheduled exit</td>
+</tr>
+<tr>
+<td>Effective termination is reconciled</td>
+<td>Billing and access are inactive; a churn outcome exists</td>
+</tr>
+<tr>
+<td>Quote expires or customer stays silent</td>
+<td>No new agreement; not proof of effective churn</td>
+</tr>
+</tbody></table>
+</div><p>That final distinction matters for forecasting and performance. A missing response cannot safely become a confirmed churn label just because a report needs a complete row.</p>
+<h2 id="suppression-must-survive-a-queued-message">Suppression must survive a queued message</h2>
+<p>Suppose a renewal reminder was approved yesterday and the buyer requests cancellation today. The queued reminder should not be delivered simply because an approval exists.</p>
+<p>The communication boundary checks current approval and suppression state at delivery. This connects retention to the operation that actually contacts the customer.</p>
+<p>The same principle applies to new renewal work. Once cancellation is active, a scheduled worker should not create a contradictory offer merely because it reached the usual date.</p>
+<p>An automated system needs to carry customer decisions across its workflows. A cancellation that only changes one screen leaves other parts of the operation acting on obsolete assumptions.</p>
+<h2 id="a-return-has-its-own-consent-and-fulfillment">A return has its own consent and fulfillment</h2>
+<p>After effective termination, the account owner can propose a return on the existing products and annual price. Deal Desk reviews the terms; the buyer accepts the displayed products and dates.</p>
+<p>Only then does the system reconcile billing and access, record the return and open a fresh post-sale plan.</p>
+<figure class="renewal-explorer" data-renewal="winback" data-motion="paused" aria-labelledby="flow-winback">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 13</span><h3 id="flow-winback">A return is a new agreement</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="A return is a new agreement" class="renewal-svg landscape">
+<title>A return is a new agreement</title>
+<desc>Synthetic explanatory workflow. Terminated account leads to Return proposal. Return proposal leads to Deal Desk review. Deal Desk review leads to Buyer accepts return. Buyer accepts return leads to Reconcile both targets. Reconcile both targets leads to New post-sale plan.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 13</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 324 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="churn"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Terminated account</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Verified effective exit</text></g>
+<g data-node="proposal"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Return proposal</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Existing products and price</text></g>
+<g data-node="review"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Deal Desk review</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Current return terms</text></g>
+<g data-node="buyer"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Buyer accepts return</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Products + dates + consent</text></g>
+<g data-node="activate"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reconcile both targets</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Verify billing and access</text></g>
+<g data-node="handoff"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">New post-sale plan</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Record the return outcome</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="A return is a new agreement" class="renewal-svg portrait">
+<title>A return is a new agreement</title>
+<desc>Synthetic explanatory workflow. Terminated account leads to Return proposal. Return proposal leads to Deal Desk review. Deal Desk review leads to Buyer accepts return. Buyer accepts return leads to Reconcile both targets. Reconcile both targets leads to New post-sale plan.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 13</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 170 644 L 170 684" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 684) rotate(90)"/>
+<g data-node="churn"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Terminated account</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Verified effective exit</text></g>
+<g data-node="proposal"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Return proposal</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Existing products and price</text></g>
+<g data-node="review"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Deal Desk review</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Current return terms</text></g>
+<g data-node="buyer"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Buyer accepts return</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Products + dates + consent</text></g>
+<g data-node="activate"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reconcile both targets</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Verify billing and access</text></g>
+<g data-node="handoff"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">New post-sale plan</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Record the return outcome</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose the return stage</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Contract customer returns</button><button type="button" data-scenario="1" aria-pressed="false">PAYG customer returns</button><button type="button" data-scenario="2" aria-pressed="false">One target is missing</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>A return has review, consent and fulfillment</strong><p data-result-detail>The synthetic return offer uses existing products and annual price. Approval and a buyer decision precede reactivation and a fresh post-sale plan.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-winback.svg" download>Download SVG</a><a href="diagrams/renewal-winback.png" download>Download PNG</a><a href="diagrams/renewal-winback.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>A PAYG return resumes ongoing consumption. It does not acquire a fictional annual commitment or contract expiry just to fit the subscription model.</p>
+<p>For either arrangement, a positive customer conversation is not verified reactivation. If one target is still inactive, the return remains operationally incomplete. The accepted decision should remain intact while the missing effect is reconciled.</p>
+<p>The new post-sale plan is also purposeful. A returning customer may need help resolving the same friction that contributed to departure. The system should carry that context into owned work while keeping proposed goals distinct from contractual promises.</p>
+<h2 id="try-a-different-definition-of-success">Try a different definition of success</h2>
+<p>In <a href="https://d11wfkflwovvog.cloudfront.net/retention">PAYG retention</a>, compare the decline and efficiency scenarios. Inspect which observations support the case and what evidence closure needs. In <a href="https://d11wfkflwovvog.cloudfront.net/cancellations">Cancellation &amp; winback</a>, follow the buyer&#39;s request through a save decision or effective exit and return.</p>
+<p>All examples use fictional observations and simulated providers. The blog diagrams are local explanations; the linked application changes an isolated synthetic workspace. Implementation was reviewed on 12 November 2026. The <a href="evidence/renewal-series.json">series replay record</a> lists the narrower public checks executed for publication.</p>
+<p>The next installment follows the work created by an agreement or return: <a href="renewal-studio-post-sale.html">handoffs, partner evidence and customer follow-up</a>.</p>
+<nav class="series-reading-nav" aria-label="Continue the series">
+    <a rel="prev" href="renewal-studio-consumption.html"><small>← Part 3</small>Renewing a Commitment When Usage Changes</a>
+    <a rel="next" href="renewal-studio-post-sale.html"><small>Part 5 →</small>The Work After the Sale</a>
+  </nav>
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>

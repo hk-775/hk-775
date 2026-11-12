@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Renewal Studio, Part 9: From Demonstration to an Operational System · Harleen Kaur</title>
+  <meta name="description" content="Connect the hosted AWS demo to its source, identity and recovery boundaries, then define the evidence a narrowly scoped real pilot would need.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/renewal-studio-operations.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="renewal-studio-operations.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=3">
+
+  <link rel="stylesheet" href="renewal-explorers.css?v=2">
+  <script type="module" src="renewal-explorers.js?v=2"></script>
+  <meta property="og:title" content="Renewal Studio, Part 9: From Demonstration to an Operational System">
+  <meta property="og:description" content="Connect the hosted AWS demo to its source, identity and recovery boundaries, then define the evidence a narrowly scoped real pilot would need.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/renewal-studio-operations.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/diagrams/renewal-operations-cover.png">
+  <meta property="og:image:alt" content="Renewal Studio, Part 9: From Demonstration to an Operational System. Architecture, identity, connectors and the path to a pilot.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-11-12">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Renewal Studio, Part 9: From Demonstration to an Operational System","alternativeHeadline":"Architecture, identity, connectors and the path to a pilot","description":"Connect the hosted AWS demo to its source, identity and recovery boundaries, then define the evidence a narrowly scoped real pilot would need.","datePublished":"2026-11-12","dateModified":"2026-11-12","url":"https://hk-775.github.io/hk-775/blog/renewal-studio-operations.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/renewal-studio-operations.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/diagrams/renewal-operations-cover.png","keywords":["Renewal Studio","Workflow engineering","Synthetic evidence"],"isPartOf":{"@type":"CollectionPage","name":"Renewal Studio: Building a System for Software and API Contract Renewals","url":"https://hk-775.github.io/hk-775/blog/renewal-studio.html"},"position":9}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Renewal Studio · Workflow engineering · Synthetic evidence</p>
+    <h1>Renewal Studio, Part 9: From Demonstration to an Operational System</h1>
+    <p class="article-subtitle">Architecture, identity, connectors and the path to a pilot</p>
+    <p class="post-meta"><time datetime="2026-11-12">12 November 2026</time><span>7 min read</span><span>Implementation review; synthetic replay</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#the-hosted-application-has-two-execution-paths">The hosted application has two execution paths</a>
+<a href="#protecting-the-origin-is-only-one-boundary">Protecting the origin is only one boundary</a>
+<a href="#expiry-and-restoration-need-application-semantics">Expiry and restoration need application semantics</a>
+<a href="#importing-a-record-is-a-controlled-transition">Importing a record is a controlled transition</a>
+<a href="#a-checkpoint-cannot-undo-an-external-payment">A checkpoint cannot undo an external payment</a>
+<a href="#a-realistic-pilot-should-prove-one-complete-path">A realistic pilot should prove one complete path</a>
+<a href="#follow-one-decision-all-the-way-through">Follow one decision all the way through</a></nav>
+      <div class="article-tools"><a href="renewal-studio-operations.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-operations.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="Renewal Studio, Part 9: From Demonstration to an Operational System"><div class="series-callout"><strong>Part 9 of 9 · Renewal Studio</strong><p>Renewal Studio: Building a System for Software and API Contract Renewals</p><a href="renewal-studio.html">Explore the series and reading order →</a></div><p>The standard renewal can complete. Exceptions have owners. Consumption cases, cancellations, post-sale work, financial controls, agents and forecasts all have a place to run.</p>
+<p>The final question is operational: what happens when these workflows meet real identities, real source systems and providers whose effects live outside the application&#39;s database?</p>
+<p>Renewal Studio is a working synthetic demonstration hosted on AWS. Its workflows make that question inspectable. They do not make the remaining integration work disappear.</p>
+<h2 id="the-hosted-application-has-two-execution-paths">The hosted application has two execution paths</h2>
+<p>The browser reaches CloudFront with AWS WAF attached. Static assets come from a private S3 origin. Uncached API requests reach a Lambda function URL protected with AWS IAM authentication and CloudFront origin access control.</p>
+<p>The API persists an isolated workspace in DynamoDB. A separate worker Lambda receives a one-minute EventBridge Scheduler trigger and queries an index of due workspaces.</p>
+<figure class="renewal-explorer" data-renewal="architecture" data-motion="paused" aria-labelledby="flow-architecture">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 26</span><h3 id="flow-architecture">The hosted demo: two paths through AWS</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 780" width="1040" height="780" role="img" aria-label="The hosted demo: two paths through AWS" class="renewal-svg landscape">
+<title>The hosted demo: two paths through AWS</title>
+<desc>Synthetic explanatory workflow. Browser leads to CloudFront + AWS WAF. CloudFront + AWS WAF leads to Private Amazon S3. CloudFront + AWS WAF leads to API Lambda. API Lambda leads to Amazon DynamoDB. EventBridge Scheduler leads to Worker Lambda. Worker Lambda leads to Amazon DynamoDB. EventBridge Scheduler leads to Amazon SQS. API Lambda leads to CloudWatch.</desc>
+<rect width="1040" height="780" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 26</text>
+<path data-edge="0" d="M 308 115 H 380" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(380 115) rotate(0)"/>
+<path data-edge="1" d="M 660 115 H 732" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(732 115) rotate(0)"/>
+<path data-edge="2" d="M 520 156 V 250" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(520 250) rotate(90)"/>
+<path data-edge="3" d="M 660 291 H 732" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(732 291) rotate(0)"/>
+<path data-edge="4" d="M 308 493 H 380" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(380 493) rotate(0)"/>
+<path data-edge="5" d="M 660 493 H 698 V 291 H 732" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(732 291) rotate(0)"/>
+<path data-edge="6" d="M 168 534 V 628" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(168 628) rotate(90)"/>
+<path data-edge="7" d="M 520 332 V 400 H 872 V 452" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(872 452) rotate(90)"/>
+<g data-node="browser"><rect x="28" y="74" width="280" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Browser</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Isolated synthetic workspace</text></g>
+<g data-node="edge"><rect x="380" y="74" width="280" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="398" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">CloudFront + AWS WAF</text><text x="398" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">HTTPS + origin access control</text></g>
+<g data-node="assets"><rect x="732" y="74" width="280" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="750" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Private Amazon S3</text><text x="750" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Static application assets</text></g>
+<g data-node="api"><rect x="380" y="250" width="280" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="398" y="283" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">API Lambda</text><text x="398" y="309" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">IAM-authenticated function URL</text></g>
+<g data-node="data"><rect x="732" y="250" width="280" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="750" y="283" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Amazon DynamoDB</text><text x="750" y="309" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Versioned workspace + due index</text></g>
+<g data-node="schedule"><rect x="28" y="452" width="280" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="485" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">EventBridge Scheduler</text><text x="46" y="511" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">One-minute worker trigger</text></g>
+<g data-node="worker"><rect x="380" y="452" width="280" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="398" y="485" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Worker Lambda</text><text x="398" y="511" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Bounded due-work processing</text></g>
+<g data-node="dlq"><rect x="28" y="628" width="280" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="661" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Amazon SQS</text><text x="46" y="687" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Failed schedule delivery</text></g>
+<g data-node="logs"><rect x="732" y="452" width="280" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="750" y="485" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">CloudWatch</text><text x="750" y="511" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Function logs and alarms</text></g>
+<text x="28" y="763" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 1180" width="340" height="1180" role="img" aria-label="The hosted demo: two paths through AWS" class="renewal-svg portrait">
+<title>The hosted demo: two paths through AWS</title>
+<desc>Synthetic explanatory workflow. Browser leads to CloudFront + AWS WAF. CloudFront + AWS WAF leads to Private Amazon S3. CloudFront + AWS WAF leads to API Lambda. API Lambda leads to Amazon DynamoDB. EventBridge Scheduler leads to Worker Lambda. Worker Lambda leads to Amazon DynamoDB. EventBridge Scheduler leads to Amazon SQS. API Lambda leads to CloudWatch.</desc>
+<rect width="340" height="1180" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 26</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 314 237 H 324 V 481 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 481) rotate(180)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 170 766 L 170 806" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 806) rotate(90)"/>
+<path data-edge="5" d="M 314 847 H 327 V 603 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 603) rotate(180)"/>
+<path data-edge="6" d="M 314 725 H 324 V 969 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 969) rotate(180)"/>
+<path data-edge="7" d="M 314 481 H 321 V 1091 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 1091) rotate(180)"/>
+<g data-node="browser"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Browser</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Isolated synthetic workspace</text></g>
+<g data-node="edge"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">CloudFront + AWS WAF</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">HTTPS + origin access control</text></g>
+<g data-node="assets"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Private Amazon S3</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Static application assets</text></g>
+<g data-node="api"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">API Lambda</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">IAM-authenticated function URL</text></g>
+<g data-node="data"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Amazon DynamoDB</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Versioned workspace + due index</text></g>
+<g data-node="schedule"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">EventBridge Scheduler</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">One-minute worker trigger</text></g>
+<g data-node="worker"><rect x="26" y="806" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="839" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Worker Lambda</text><text x="44" y="865" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Bounded due-work processing</text></g>
+<g data-node="dlq"><rect x="26" y="928" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="961" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Amazon SQS</text><text x="44" y="987" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Failed schedule delivery</text></g>
+<g data-node="logs"><rect x="26" y="1050" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="1083" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">CloudWatch</text><text x="44" y="1109" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Function logs and alarms</text></g>
+<text x="28" y="1163" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose an infrastructure path</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Load the application</button><button type="button" data-scenario="1" aria-pressed="false">Change workspace state</button><button type="button" data-scenario="2" aria-pressed="false">Run scheduled work</button><button type="button" data-scenario="3" aria-pressed="false">Schedule delivery fails</button><button type="button" data-scenario="4" aria-pressed="false">Inspect function signals</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>CloudFront serves private static assets</strong><p data-result-detail>Origin access control restricts the S3 origin. The public page creates an isolated synthetic workspace through the API path.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-architecture.svg" download>Download SVG</a><a href="diagrams/renewal-architecture.png" download>Download PNG</a><a href="diagrams/renewal-architecture.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>The diagram is an original reconstruction of the application&#39;s infrastructure definition reviewed on 12 November 2026. It shows the main configured runtime paths. It is not a fresh audit of every deployed resource. Static SVG, PNG and editable draw.io downloads are available beneath it.</p>
+<p>The two execution paths serve different needs. An interactive request should finish bounded work and return. A background worker must find due work, recheck its persisted schedule and retain the result without requiring an open browser.</p>
+<p>The worker processes a bounded number of workspaces per invocation. Conditional writes preserve workspace versions and prevent a competing worker from repeating a committed tick.</p>
+<p>A separate SQS dead-letter queue receives failed scheduler delivery after configured retries. Application job failures remain in workspace records. Those are different failure layers and need different recovery decisions.</p>
+<h2 id="protecting-the-origin-is-only-one-boundary">Protecting the origin is only one boundary</h2>
+<p>CloudFront origin access control signs requests to the Lambda origin. AWS documents the <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-lambda.html">Lambda function URL origin pattern</a> and the corresponding <a href="https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html">function URL authentication requirements</a>.</p>
+<p>That prevents an unsigned public request from using the protected origin directly. It does not establish that a browser user is the authorized buyer for an account.</p>
+<p>The application separately uses workspace cookies, origin and CSRF checks, role checks and account-scoped domain authority. The hosted configuration uses secure cookies. API responses are not cached as shared static assets.</p>
+<p>The infrastructure also defines function logs and alarms in CloudWatch, selected CloudFront access logs and protected WAF logs in S3, plus CloudTrail management-write records. These signals help investigate requests and infrastructure changes. They are not substitutes for the business record of who approved which terms.</p>
+<p>The API and worker have scoped DynamoDB permissions. They do not receive real billing credentials or paid model access in the public fixture deployment.</p>
+<h2 id="expiry-and-restoration-need-application-semantics">Expiry and restoration need application semantics</h2>
+<p>Hosted synthetic workspaces expire after seven days. The application checks expiry itself. DynamoDB TTL is storage cleanup, not an exact authorization deadline; AWS documents <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ttl-expired-items.html">handling expired items that are pending deletion</a>.</p>
+<p>Workspace payloads are bounded and versioned, with compressed archives and an encoded size limit. This makes the demo manageable. It is not an unlimited event store for a global renewal business.</p>
+<p>Invited-session mode adds synthetic administrators, internal specialists, customers and partners. Internal staff can be scoped to a workspace or one account; customer and partner roles require an account. Object-level checks prevent a scoped user from reaching another account by supplying its ID.</p>
+<p>Invitations are single-use and short-lived. Session recovery is also a one-time capability, and revocation disables the identity&#39;s sessions and recovery. These controls demonstrate authority transitions. Possession of a synthetic invitation does not verify a real person&#39;s employment or buying authority.</p>
+<p>A production identity integration would need to map verified identities to those same domain permissions and test offboarding, role changes, account reassignment and recovery.</p>
+<h2 id="importing-a-record-is-a-controlled-transition">Importing a record is a controlled transition</h2>
+<p>The connector sandbox stages an envelope with an event ID, mapping, source version and payload digest. Applying it checks the account, billing identity, current source evidence and accepted terms.</p>
+<figure class="renewal-explorer" data-renewal="sources" data-motion="paused" aria-labelledby="flow-sources">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 27</span><h3 id="flow-sources">Treat an imported record as a proposal</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Treat an imported record as a proposal" class="renewal-svg landscape">
+<title>Treat an imported record as a proposal</title>
+<desc>Synthetic explanatory workflow. Staged source envelope leads to Validate source boundary. Validate source boundary leads to Apply current evidence. Apply current evidence leads to Preserve import result. Validate source boundary leads to Quarantine the batch. Quarantine the batch leads to Resolve and restage.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 27</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 544 156 V 207 H 360 V 431 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 431) rotate(180)"/>
+<path data-edge="4" d="M 324 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="envelope"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Staged source envelope</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Event ID + mapping + digest</text></g>
+<g data-node="validate"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Validate source boundary</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Account, version, identity, terms</text></g>
+<g data-node="apply"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Apply current evidence</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Conditional source update</text></g>
+<g data-node="receipt"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Preserve import result</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Replay deduplicated</text></g>
+<g data-node="quarantine"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Quarantine the batch</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Named reason; no source change</text></g>
+<g data-node="reconcile"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Resolve and restage</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Fresh mapping and source</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Treat an imported record as a proposal" class="renewal-svg portrait">
+<title>Treat an imported record as a proposal</title>
+<desc>Synthetic explanatory workflow. Staged source envelope leads to Validate source boundary. Validate source boundary leads to Apply current evidence. Apply current evidence leads to Preserve import result. Validate source boundary leads to Quarantine the batch. Quarantine the batch leads to Resolve and restage.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 27</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 314 237 H 321 V 603 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 603) rotate(180)"/>
+<path data-edge="4" d="M 170 644 L 170 684" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 684) rotate(90)"/>
+<g data-node="envelope"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Staged source envelope</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Event ID + mapping + digest</text></g>
+<g data-node="validate"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Validate source boundary</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Account, version, identity, terms</text></g>
+<g data-node="apply"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Apply current evidence</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Conditional source update</text></g>
+<g data-node="receipt"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Preserve import result</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Replay deduplicated</text></g>
+<g data-node="quarantine"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Quarantine the batch</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Named reason; no source change</text></g>
+<g data-node="reconcile"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Resolve and restage</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Fresh mapping and source</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose an incoming envelope</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Valid current envelope</button><button type="button" data-scenario="1" aria-pressed="false">Conflicting identity</button><button type="button" data-scenario="2" aria-pressed="false">Already accepted terms</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>An import has a recorded source transition</strong><p data-result-detail>The batch binds its mapping and source fingerprint. Identical event replay preserves the existing result instead of advancing the source version.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-sources.svg" download>Download SVG</a><a href="diagrams/renewal-sources.png" download>Download PNG</a><a href="diagrams/renewal-sources.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>Changed mappings, stale evidence, identity conflicts and accepted agreements can quarantine a batch without changing the source record. Replaying an identical event preserves its earlier result.</p>
+<p>This is a useful contract for a real connector: incoming data proposes a transition that the application validates. It is not automatically entitled to overwrite every field.</p>
+<p>The same sandbox models target delivery with stable action IDs, independent simulated provider records, signed receipts, retries and dead letters. Its targets support subscription, commitment, custom and PAYG workflows.</p>
+<p>Those provider records still live inside the synthetic workspace. They do not reproduce network partitions, a provider&#39;s retention window for idempotency keys or an external administrator changing the target independently.</p>
+<p>A real integration needs tests for those conditions, with authoritative reads and a clear decision when the provider&#39;s state conflicts with the requested state.</p>
+<h2 id="a-checkpoint-cannot-undo-an-external-payment">A checkpoint cannot undo an external payment</h2>
+<p>The resilience workspace provides incidents, acknowledgements, a local action chain, checksummed checkpoints and controlled restoration.</p>
+<p>Restoration checks the selected checkpoint, requires confirmation against the current revision and stops the background worker. It restores synthetic business records while preserving identities, revocations, the action chain and restore history.</p>
+<figure class="renewal-explorer" data-renewal="restore" data-motion="paused" aria-labelledby="flow-restore">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 28</span><h3 id="flow-restore">Recover business state without reviving access</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Recover business state without reviving access" class="renewal-svg landscape">
+<title>Recover business state without reviving access</title>
+<desc>Synthetic explanatory workflow. Incident acknowledged leads to Select checkpoint. Select checkpoint leads to Validate restoration. Validate restoration leads to Restore synthetic records. Restore synthetic records leads to Preserve access revocations. Restore synthetic records leads to Reconcile external effects.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 28</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 176 314 V 360 H 544 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 390) rotate(90)"/>
+<g data-node="incident"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Incident acknowledged</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Owner + affected action</text></g>
+<g data-node="checkpoint"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Select checkpoint</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Checksum + current revision</text></g>
+<g data-node="verify"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Validate restoration</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Explicit confirmation</text></g>
+<g data-node="restore"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Restore synthetic records</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Stop background worker</text></g>
+<g data-node="preserve"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Preserve access revocations</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Identity + action + restore history</text></g>
+<g data-node="external"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reconcile external effects</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Production integration requirement</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Recover business state without reviving access" class="renewal-svg portrait">
+<title>Recover business state without reviving access</title>
+<desc>Synthetic explanatory workflow. Incident acknowledged leads to Select checkpoint. Select checkpoint leads to Validate restoration. Validate restoration leads to Restore synthetic records. Restore synthetic records leads to Preserve access revocations. Restore synthetic records leads to Reconcile external effects.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 28</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 481 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="incident"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Incident acknowledged</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Owner + affected action</text></g>
+<g data-node="checkpoint"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Select checkpoint</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Checksum + current revision</text></g>
+<g data-node="verify"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Validate restoration</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Explicit confirmation</text></g>
+<g data-node="restore"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Restore synthetic records</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Stop background worker</text></g>
+<g data-node="preserve"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Preserve access revocations</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Identity + action + restore history</text></g>
+<g data-node="external"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Reconcile external effects</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Production integration requirement</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose a recovery condition</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Synthetic restoration</button><button type="button" data-scenario="1" aria-pressed="false">Checkpoint changed</button><button type="button" data-scenario="2" aria-pressed="false">Real provider was called</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>Restoring data does not restore revoked authority</strong><p data-result-detail>The demo restores bounded synthetic business records while preserving identities, revocations and the action chain. It stops the worker so it cannot immediately repeat the action.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-restore.svg" download>Download SVG</a><a href="diagrams/renewal-restore.png" download>Download PNG</a><a href="diagrams/renewal-restore.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>Preserving revocations prevents a database recovery from quietly reviving someone whose access was removed.</p>
+<p>The action chain covers a bounded recent mutation history with a predecessor anchor. It can reveal accidental changes. An unrestricted database writer could replace the chain, so it is not independently tamper-proof evidence. External anchoring and durable retention remain production work.</p>
+<p>Likewise, restoring the application cannot reverse a payment, an email or an entitlement change at a real provider. Recovery must inspect those external effects and explicitly reconcile or compensate them. A successful database restore is only one part of that process.</p>
+<h2 id="a-realistic-pilot-should-prove-one-complete-path">A realistic pilot should prove one complete path</h2>
+<p>I would begin a real pilot with one clearly defined standard contract type, one authoritative source path, one billing target and one access target. Use a bounded account cohort, named operational owners and an explicit stop condition.</p>
+<p>This is a proposed next step, not an already completed deployment.</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Pilot area</th>
+<th>Evidence required before widening scope</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Identity and consent</td>
+<td>Verified buyer authority, account isolation, revocation and exact-version consent</td>
+</tr>
+<tr>
+<td>Source reconciliation</td>
+<td>Freshness, conflicting updates, replay and amendment handling against authoritative records</td>
+</tr>
+<tr>
+<td>Commercial policy</td>
+<td>Approved thresholds, supported terms and owned exception paths</td>
+</tr>
+<tr>
+<td>Provider effects</td>
+<td>Lost acknowledgements, duplicates, outages and independently changed target state</td>
+</tr>
+<tr>
+<td>Operations</td>
+<td>Alert routing, intervention records, recovery runbooks and a tested stop control</td>
+</tr>
+<tr>
+<td>Records and finance</td>
+<td>Agreed retention, audit integrity, privacy handling and accounting integration</td>
+</tr>
+<tr>
+<td>Agent behavior</td>
+<td>Representative live-model evaluation, costs and prohibited-action checks</td>
+</tr>
+<tr>
+<td>Business outcomes</td>
+<td>A defined cohort, observed manual effort and outcome measurement over real cycles</td>
+</tr>
+</tbody></table>
+</div><p>A shadow phase could compare recommendations with the existing process. A reviewed execution phase could then perform narrowly authorized actions. Expansion should depend on observed error modes and successful recovery, not the number of workflows demonstrated.</p>
+<p>The existing system already provides useful places to attach that evidence: source versions, proposal approvals, consent snapshots, action receipts, owned tasks and saved forecasts.</p>
+<h2 id="follow-one-decision-all-the-way-through">Follow one decision all the way through</h2>
+<p>The series began with a customer accepting a renewal and one provider failing. Across nine parts, the same requirement kept returning: preserve the decision, its authority, the evidence it depended on and the effects that still need verification.</p>
+<p>Explore <a href="https://d11wfkflwovvog.cloudfront.net/demos">the full demo catalog</a>, then use <a href="https://d11wfkflwovvog.cloudfront.net/connectors">Connectors</a>, <a href="https://d11wfkflwovvog.cloudfront.net/access">Access &amp; roles</a> and <a href="https://d11wfkflwovvog.cloudfront.net/resilience">Resilience</a> to inspect the operational boundaries.</p>
+<p>The <a href="evidence/renewal-series.json">public replay record</a> lists the synthetic checks executed for this publication. Backend revision is not exposed by that API; recorded frontend hashes identify observed assets, not the backend build. The <a href="renewal-studio.html">series index</a> links all nine installments and their downloadable diagrams.</p>
+<p>The next milestone is evidence from a narrowly scoped real integration. Until then, the demonstration offers something concrete to review: an executable model of the decisions a renewal operation must make.</p>
+<nav class="series-reading-nav" aria-label="Continue the series">
+    <a rel="prev" href="renewal-studio-forecasting.html"><small>← Part 8</small>Forecast the Business from the Work</a>
+    <a href="renewal-studio-standard-renewal.html"><small>Return to Part 1 →</small>The Standard Renewal, End to End</a>
+  </nav>
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>

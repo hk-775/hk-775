@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "observed_at": "2026-11-12T19:29:48.629Z",
+  "completed_at": "2026-11-12T19:30:12.822Z",
+  "origin": "https://d11wfkflwovvog.cloudfront.net",
+  "scope": "8 fresh isolated synthetic sessions. Simulated providers, fixture plans and no paid model calls.",
+  "provenance": {
+    "capture_script": "scripts/capture-renewal-series.mjs",
+    "capture_script_sha256": "98794db82ddc3bb250da109e63f499990f4ea129cd61544e54eb516c68d79c5e",
+    "public_assets": [
+      {
+        "path": "/assets/app.js",
+        "sha256": "dbeea6f484078cbf997183204bf7c1276bd0a9239ba8a5456d692f6343e37d22"
+      },
+      {
+        "path": "/assets/style.css",
+        "sha256": "cd73bf1431eec38a2861859c14ca15da8dd057acf14a4d6d4d1af2d8ae2946c1"
+      }
+    ],
+    "backend_revision": "Not exposed by the public API. Frontend asset hashes identify observed assets, not the backend build."
+  },
+  "checks": [
+    {
+      "part": 2,
+      "check": "18-month custom quote has a distinct annual value and service charge",
+      "passed": true,
+      "term_months": 18,
+      "billing_frequency": "quarterly"
+    },
+    {
+      "part": 2,
+      "check": "operator cannot supply Deal Desk approval",
+      "passed": true,
+      "http_status": 403
+    },
+    {
+      "part": 2,
+      "check": "clause edit invalidates earlier commercial approval and blocks publication",
+      "passed": true,
+      "http_status": 409
+    },
+    {
+      "part": 3,
+      "check": "reconciled shortfall opens a case with a baseline",
+      "passed": true,
+      "currency": "USD",
+      "commitment_cents": 12000000,
+      "projected_cents": 9000000,
+      "shortfall_cents": 3000000
+    },
+    {
+      "part": 3,
+      "check": "incomplete or untrusted consumption withholds projection",
+      "passed": true,
+      "projected_cents": null,
+      "signal": "data_hold"
+    },
+    {
+      "part": 4,
+      "check": "PAYG distinguishes declining outcomes, efficiency and unknown health",
+      "passed": true,
+      "signals": [
+        "declining",
+        "efficient",
+        "data_hold"
+      ]
+    },
+    {
+      "part": 4,
+      "check": "save requires an explicit buyer decision",
+      "passed": true,
+      "outcome": "saved"
+    },
+    {
+      "part": 5,
+      "check": "first outcome cannot bypass handoff and milestone prerequisites",
+      "passed": true,
+      "http_status": 409
+    },
+    {
+      "part": 5,
+      "check": "ordered milestones with evidence complete the post-sale plan",
+      "passed": true,
+      "outcome": "complete",
+      "completed_milestones": 3
+    },
+    {
+      "part": 5,
+      "check": "delivered message reply creates owned work without contract acceptance",
+      "passed": true,
+      "task_status": "open",
+      "contract_accepted": false
+    },
+    {
+      "part": 6,
+      "check": "repeated PAYG invoice capture preserves original documents",
+      "passed": true,
+      "invoices": 6
+    },
+    {
+      "part": 6,
+      "check": "lost payment acknowledgement reconciles one provider write",
+      "passed": true,
+      "payment_cents": 100,
+      "provider_writes": 1
+    },
+    {
+      "part": 6,
+      "check": "upheld partial dispute reverses the reviewed amount",
+      "passed": true,
+      "net_paid_cents": 50
+    },
+    {
+      "part": 6,
+      "check": "credit acknowledgement recovery preserves one receipt",
+      "passed": true,
+      "credit_receipts": 1,
+      "outcome": "complete"
+    },
+    {
+      "part": 7,
+      "check": "bounded fixture plan executes permitted work without buyer acceptance",
+      "passed": true,
+      "model_calls": 0,
+      "contract_accepted": false
+    },
+    {
+      "part": 7,
+      "check": "repeated due-work run preserves completed jobs for the business date",
+      "passed": true,
+      "completed_jobs": 17,
+      "background_enabled": false
+    },
+    {
+      "part": 7,
+      "check": "offline baseline passes and deliberate provider regression fails",
+      "passed": true,
+      "baseline_passed": 52,
+      "baseline_cases": 52,
+      "regression_passed": 36,
+      "regression_cases": 52,
+      "regression_gate": false,
+      "model_calls": 0
+    },
+    {
+      "part": 8,
+      "check": "same-week forecast capture preserves the saved snapshot",
+      "passed": true,
+      "snapshots": 1
+    },
+    {
+      "part": 8,
+      "check": "synthetic model separates fitting, calibration and held-out scoring",
+      "passed": true,
+      "partition_counts": [
+        240,
+        60,
+        60
+      ],
+      "held_out_brier": 0.18724560556061265,
+      "baseline_brier": 0.2377951388888889,
+      "sensitivity_snapshots": 1
+    },
+    {
+      "part": 8,
+      "check": "25-account two-cycle experiment preserves the interactive workspace",
+      "passed": true,
+      "accounts": 25,
+      "cycles": 2,
+      "all_reported_invariants_passed": true,
+      "interactive_clock_preserved": true,
+      "limitation": "Sequential synthetic domain execution, not a capacity benchmark."
+    },
+    {
+      "part": 9,
+      "check": "conflicting source envelope is quarantined without changing the contract",
+      "passed": true,
+      "outcome": "quarantined"
+    },
+    {
+      "part": 9,
+      "check": "reconciled source replay does not advance its version twice",
+      "passed": true,
+      "replay_preserves_version": true
+    },
+    {
+      "part": 9,
+      "check": "checkpoint restores synthetic business state and stops the worker",
+      "passed": true,
+      "offer_restored_to_absent": true,
+      "background_enabled": false,
+      "local_action_chain_valid": true
+    }
+  ],
+  "limitations": [
+    "The 24 new blog diagrams are explanatory scenarios; this replay tests only the checks listed here.",
+    "No real identity authority, payments, messages, billing, access or model services are connected.",
+    "Infrastructure topology was reviewed from the implementation, not re-audited through this HTTP replay.",
+    "Does not establish concurrent capacity, real-provider idempotency, live-model quality, retention lift or staffing savings."
+  ]
+}

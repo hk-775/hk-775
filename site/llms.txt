@@ -10,8 +10,16 @@ The featured customer-summary workflow connects AxonLLM, Ostiari, and Escape Lab
 - [Engineering decisions](https://hk-775.github.io/hk-775/decisions.md): Product boundaries, governance choices, and evidence practices.
 - [Run the integration](https://hk-775.github.io/hk-775/run-example.md): Locked installation and reproduction commands.
 - [Engineering blog](https://hk-775.github.io/hk-775/blog/): Articles on AI workloads, design decisions, and evaluation evidence.
-- [Renewal Studio series](https://hk-775.github.io/hk-775/blog/renewal-studio.html): Reading order for software and API contract renewal workflows; Part 1 available, later installments planned.
+- [Renewal Studio series](https://hk-775.github.io/hk-775/blog/renewal-studio.html): All nine parts, with 28 interactive workflows covering software and API contract renewals, retention, agents, finance and the operational pilot path.
 - [Renewal Studio, Part 1: The Standard Renewal, End to End](https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.html): The buyer accepts. Billing succeeds. Access fails. Explore four interactive workflows showing how a standard renewal qualifies, records consent, activates and recovers.
+- [Renewal Studio, Part 2: When the Standard Path Ends](https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.html): A shorter term and a new clause turn one renewal into several decisions. Explore commercial routing, versioned approvals and strategic procurement.
+- [Renewal Studio, Part 3: Renewing a Commitment When Usage Changes](https://hk-775.github.io/hk-775/blog/renewal-studio-consumption.html): A precise shortfall projection can still rest on bad data. Follow reconciled usage through intervention, evidence review and commitment rightsizing.
+- [Renewal Studio, Part 4: Retention Beyond the Renewal Date](https://hk-775.github.io/hk-775/blog/renewal-studio-retention.html): Lower spend can mean better efficiency. Follow customer value, explicit cancellation decisions and verified reactivation across three interactive workflows.
+- [Renewal Studio, Part 5: The Work After the Sale](https://hk-775.github.io/hk-775/blog/renewal-studio-post-sale.html): The agreement is active, but the integration is blocked. Connect post-sale milestones, partner evidence and customer replies to owned outcomes.
+- [Renewal Studio, Part 6: Follow the Money](https://hk-775.github.io/hk-775/blog/renewal-studio-finance.html): A payment succeeds but its acknowledgement disappears. Explore reservations, reconciliation, refunds and exact-cent service allocation.
+- [Renewal Studio, Part 7: Let Agents Work Within a Boundary](https://hk-775.github.io/hk-775/blog/renewal-studio-agents.html): An agent can propose a plan without gaining permission to accept for the buyer. Explore provider boundaries, durable scheduling and execution-based evaluations.
+- [Renewal Studio, Part 8: Forecast the Business from the Work](https://hk-775.github.io/hk-775/blog/renewal-studio-forecasting.html): Preserve what the business believed last week. Explore operational forecasts, synthetic model evaluation and multi-cycle portfolio experiments.
+- [Renewal Studio, Part 9: From Demonstration to an Operational System](https://hk-775.github.io/hk-775/blog/renewal-studio-operations.html): Connect the hosted AWS demo to its source, identity and recovery boundaries, then define the evidence a narrowly scoped real pilot would need.
 - [Improving Agents Starts with Verifying the Work](https://hk-775.github.io/hk-775/blog/improving-agents-starts-with-verifying-the-work.html): I compared reported completion with verified outputs in a live AutoHelix experiment. Inspect the results, scripted cheating controls, and limits of editing the improvement strategy.
 - [Your AI remembers you. Can it remember a lie?](https://hk-775.github.io/hk-775/blog/your-ai-remembers-you-can-it-remember-a-lie.html): Follow a false approval across sessions, inspect 40 synthetic memory-authority episodes, and see why provenance and current permission need separate checks.
 - [Testing subscription abuse at the action boundary](https://hk-775.github.io/hk-775/blog/testing-subscription-abuse-at-the-action-boundary.html): A synthetic subscription workflow compares permissions, business invariants, and deny-all controls, with recorded effects, explicit completion limits, and replayable evidence.
@@ -20,7 +28,7 @@ The featured customer-summary workflow connects AxonLLM, Ostiari, and Escape Lab
 
 ## Evidence and context
 - [Paired result data](https://hk-775.github.io/hk-775/evidence/summary.json): One recorded synthetic run per control profile.
-- [Combined context download](https://hk-775.github.io/hk-775/agent-context.txt): 11 allowlisted public documents, including blog articles, with source URLs and SHA-256 fingerprints.
+- [Combined context download](https://hk-775.github.io/hk-775/agent-context.txt): 19 allowlisted public documents, including blog articles, with source URLs and SHA-256 fingerprints.
 - [Blog RSS feed](https://hk-775.github.io/hk-775/blog/feed.xml): Published engineering articles.
 - [Source manifest](https://hk-775.github.io/hk-775/discovery.json): Document provenance and project destinations in JSON.
 - [Eval Lab agent guide](https://hk-775.github.io/practical-eval-lab/llms.txt): Six evaluation walkthroughs, contracts, and recorded results.

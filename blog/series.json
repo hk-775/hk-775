@@ -3,14 +3,59 @@
   "title": "Renewal Studio: Building a System for Software and API Contract Renewals",
   "description": "A workflow-by-workflow engineering series: from a standard renewal to exceptions, consumption risk, retention, finance, agents and operations.",
   "parts": [
-    { "number": 1, "title": "The Standard Renewal, End to End", "slug": "renewal-studio-standard-renewal", "description": "Follow a contract through eligibility, a versioned offer, buyer acceptance, activation and recovery. Explore four interactive workflows." },
-    { "number": 2, "title": "When the Standard Path Ends", "description": "Commercial exceptions, custom contracts, legal review and strategic negotiations: who owns the next decision, and what evidence travels with it?" },
-    { "number": 3, "title": "Renewing a Commitment When Usage Changes", "description": "Consumption signals, commitment burndown, shortfall risk and rightsizing an offer around a credible usage picture." },
-    { "number": 4, "title": "Retention Beyond the Renewal Date", "description": "Pay-as-you-go retention, cancellation, save offers and winback: connect interventions to the customer's actual situation." },
-    { "number": 5, "title": "The Work After the Sale", "description": "Post-sale tasks, customer communications, specialist queues and partner handoffs, with an owner for every unresolved outcome." },
-    { "number": 6, "title": "Follow the Money", "description": "Invoices, collections, credits, refunds and revenue schedules: reconcile financial outcomes with the accepted agreement." },
-    { "number": 7, "title": "Let Agents Work Within a Boundary", "description": "Schedules, durable delivery, policy, provider adapters and evaluations: decide which actions can run and how to verify them." },
-    { "number": 8, "title": "Forecast the Business from the Work", "description": "Weekly renewal forecasts, risk models, performance measures and portfolio simulations grounded in usage and contract state." },
-    { "number": 9, "title": "From Demonstration to an Operational System", "description": "Architecture, identity, source connectors, audit, recovery and the evidence a production pilot would need." }
+    {
+      "number": 1,
+      "title": "The Standard Renewal, End to End",
+      "slug": "renewal-studio-standard-renewal",
+      "description": "Follow a contract through eligibility, a versioned offer, buyer acceptance, activation and recovery. Explore four interactive workflows."
+    },
+    {
+      "number": 2,
+      "title": "When the Standard Path Ends",
+      "description": "Commercial exceptions, custom contracts, legal review and strategic negotiations: who owns the next decision, and what evidence travels with it?",
+      "slug": "renewal-studio-exceptions"
+    },
+    {
+      "number": 3,
+      "title": "Renewing a Commitment When Usage Changes",
+      "description": "Consumption signals, commitment burndown, shortfall risk and rightsizing an offer around a credible usage picture.",
+      "slug": "renewal-studio-consumption"
+    },
+    {
+      "number": 4,
+      "title": "Retention Beyond the Renewal Date",
+      "description": "Pay-as-you-go retention, cancellation, save offers and winback: connect interventions to the customer's actual situation.",
+      "slug": "renewal-studio-retention"
+    },
+    {
+      "number": 5,
+      "title": "The Work After the Sale",
+      "description": "Post-sale tasks, customer communications, specialist queues and partner handoffs, with an owner for every unresolved outcome.",
+      "slug": "renewal-studio-post-sale"
+    },
+    {
+      "number": 6,
+      "title": "Follow the Money",
+      "description": "Invoices, collections, credits, refunds and revenue schedules: reconcile financial outcomes with the accepted agreement.",
+      "slug": "renewal-studio-finance"
+    },
+    {
+      "number": 7,
+      "title": "Let Agents Work Within a Boundary",
+      "description": "Schedules, durable delivery, policy, provider adapters and evaluations: decide which actions can run and how to verify them.",
+      "slug": "renewal-studio-agents"
+    },
+    {
+      "number": 8,
+      "title": "Forecast the Business from the Work",
+      "description": "Weekly renewal forecasts, risk models, performance measures and portfolio simulations grounded in usage and contract state.",
+      "slug": "renewal-studio-forecasting"
+    },
+    {
+      "number": 9,
+      "title": "From Demonstration to an Operational System",
+      "description": "Architecture, identity, source connectors, audit, recovery and the evidence a production pilot would need.",
+      "slug": "renewal-studio-operations"
+    }
   ]
 }

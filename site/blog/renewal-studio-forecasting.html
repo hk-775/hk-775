@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Renewal Studio, Part 8: Forecast the Business from the Work · Harleen Kaur</title>
+  <meta name="description" content="Preserve what the business believed last week. Explore operational forecasts, synthetic model evaluation and multi-cycle portfolio experiments.">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="https://hk-775.github.io/hk-775/blog/renewal-studio-forecasting.html">
+  <link rel="alternate" type="application/rss+xml" title="Harleen Kaur — Engineering notes" href="feed.xml">
+  <link rel="alternate" type="text/markdown" href="renewal-studio-forecasting.md">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=3">
+
+  <link rel="stylesheet" href="renewal-explorers.css?v=2">
+  <script type="module" src="renewal-explorers.js?v=2"></script>
+  <meta property="og:title" content="Renewal Studio, Part 8: Forecast the Business from the Work">
+  <meta property="og:description" content="Preserve what the business believed last week. Explore operational forecasts, synthetic model evaluation and multi-cycle portfolio experiments.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hk-775.github.io/hk-775/blog/renewal-studio-forecasting.html">
+  <meta property="og:image" content="https://hk-775.github.io/hk-775/blog/diagrams/renewal-forecasting-cover.png">
+  <meta property="og:image:alt" content="Renewal Studio, Part 8: Forecast the Business from the Work. Snapshots, outcomes and experiments with honest limits.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-11-12">
+  <meta property="article:author" content="https://hk-775.github.io/hk-775/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Renewal Studio, Part 8: Forecast the Business from the Work","alternativeHeadline":"Snapshots, outcomes and experiments with honest limits","description":"Preserve what the business believed last week. Explore operational forecasts, synthetic model evaluation and multi-cycle portfolio experiments.","datePublished":"2026-11-12","dateModified":"2026-11-12","url":"https://hk-775.github.io/hk-775/blog/renewal-studio-forecasting.html","mainEntityOfPage":"https://hk-775.github.io/hk-775/blog/renewal-studio-forecasting.html","author":{"@type":"Person","name":"Harleen Kaur","url":"https://hk-775.github.io/hk-775/"},"image":"https://hk-775.github.io/hk-775/blog/diagrams/renewal-forecasting-cover.png","keywords":["Renewal Studio","Workflow engineering","Synthetic evidence"],"isPartOf":{"@type":"CollectionPage","name":"Renewal Studio: Building a System for Software and API Contract Renewals","url":"https://hk-775.github.io/hk-775/blog/renewal-studio.html"},"position":8}</script>
+</head><body class="blog-page">
+<a class="skip" href="#main">Skip to content</a>
+  <header class="shell header">
+    <a class="identity" href="../" aria-label="Harleen Kaur home"><span class="monogram">HK</span> Harleen Kaur</a>
+    <nav aria-label="Main navigation"><a href="../">Portfolio</a><a href="./" aria-current="page">Blog</a><a href="../#inspect">Code &amp; evidence</a><a href="https://www.linkedin.com/in/harleenkaurprofile">Contact</a></nav>
+  </header>
+<main id="main">
+  <div class="blog-banner"><div class="shell article-heading">
+    <a class="back-link" href="./">← All engineering notes</a>
+    <p class="eyebrow">Renewal Studio · Workflow engineering · Synthetic evidence</p>
+    <h1>Renewal Studio, Part 8: Forecast the Business from the Work</h1>
+    <p class="article-subtitle">Snapshots, outcomes and experiments with honest limits</p>
+    <p class="post-meta"><time datetime="2026-11-12">12 November 2026</time><span>5 min read</span><span>Implementation review; synthetic replay</span></p>
+    <p class="byline">By Harleen Kaur</p>
+  </div></div>
+  <div class="shell article-layout">
+    <aside class="article-aside"><nav aria-label="On this page"><span class="eyebrow">On this page</span><a href="#keep-the-operational-forecast-inspectable">Keep the operational forecast inspectable</a>
+<a href="#a-model-forecast-needs-a-different-evidence-trail">A model forecast needs a different evidence trail</a>
+<a href="#missing-evidence-should-reach-the-model-boundary">Missing evidence should reach the model boundary</a>
+<a href="#measure-retention-from-a-fixed-opening-cohort">Measure retention from a fixed opening cohort</a>
+<a href="#use-portfolio-experiments-to-expose-unfinished-work">Use portfolio experiments to expose unfinished work</a>
+<a href="#ask-what-changed-then-ask-what-the-evidence-supports">Ask what changed, then ask what the evidence supports</a></nav>
+      <div class="article-tools"><a href="renewal-studio-forecasting.md">Read as Markdown</a><a href="https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-forecasting.md">View article source ↗</a><a href="feed.xml">Subscribe via RSS</a></div>
+    </aside>
+    <article class="prose" aria-label="Renewal Studio, Part 8: Forecast the Business from the Work"><div class="series-callout"><strong>Part 8 of 9 · Renewal Studio</strong><p>Renewal Studio: Building a System for Software and API Contract Renewals</p><a href="renewal-studio.html">Explore the series and reading order →</a> · <a href="renewal-studio-operations.html">Next: Part 9 →</a></div><p>Last week&#39;s forecast looked strong. This week&#39;s dashboard looks weaker. Did customer behavior change, did a contract move out of the horizon, or did someone finally correct the source record?</p>
+<p>A current dashboard alone cannot answer. It shows what the system knows now, not what the business believed then.</p>
+<p>Renewal Studio preserves weekly forecasts and connects them to later effective outcomes. It also provides a synthetic prediction model and multi-cycle portfolio experiments. Those are three different tools, with different evidence.</p>
+<h2 id="keep-the-operational-forecast-inspectable">Keep the operational forecast inspectable</h2>
+<p>The basic forecast starts with contract dates, agreement amounts, current offers, risk states and trusted usage evidence. It distinguishes agreed and offered work, risk and uncertainty.</p>
+<p>Its scenario totals are not probability-weighted model predictions. Consumption utilization and PAYG weekly spend remain different measures from annual agreement value.</p>
+<figure class="renewal-explorer" data-renewal="forecast" data-motion="paused" aria-labelledby="flow-forecast">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 23</span><h3 id="flow-forecast">Forecast from the state of the work</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Forecast from the state of the work" class="renewal-svg landscape">
+<title>Forecast from the state of the work</title>
+<desc>Synthetic explanatory workflow. Contract + usage states leads to Separate forecast buckets. Separate forecast buckets leads to Save weekly snapshot. Save weekly snapshot leads to Match effective outcomes. Match effective outcomes leads to Review calibration. Save weekly snapshot leads to Keep unresolved rows.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 23</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 544 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 390) rotate(90)"/>
+<g data-node="records"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Contract + usage states</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Amounts, dates, source versions</text></g>
+<g data-node="buckets"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Separate forecast buckets</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Agreed, offered, risk, unknown</text></g>
+<g data-node="snapshot"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Save weekly snapshot</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">As-of date + horizon + evidence</text></g>
+<g data-node="outcome"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Match effective outcomes</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Stable outcome identity</text></g>
+<g data-node="compare"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Review calibration</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Resolve what actually happened</text></g>
+<g data-node="unresolved"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Keep unresolved rows</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Overdue is not confirmed churn</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Forecast from the state of the work" class="renewal-svg portrait">
+<title>Forecast from the state of the work</title>
+<desc>Synthetic explanatory workflow. Contract + usage states leads to Separate forecast buckets. Separate forecast buckets leads to Save weekly snapshot. Save weekly snapshot leads to Match effective outcomes. Match effective outcomes leads to Review calibration. Save weekly snapshot leads to Keep unresolved rows.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 23</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 359 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="records"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Contract + usage states</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Amounts, dates, source versions</text></g>
+<g data-node="buckets"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Separate forecast buckets</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Agreed, offered, risk, unknown</text></g>
+<g data-node="snapshot"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Save weekly snapshot</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">As-of date + horizon + evidence</text></g>
+<g data-node="outcome"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Match effective outcomes</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Stable outcome identity</text></g>
+<g data-node="compare"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Review calibration</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Resolve what actually happened</text></g>
+<g data-node="unresolved"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Keep unresolved rows</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Overdue is not confirmed churn</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose a forecast question</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Outcome arrives later</button><button type="button" data-scenario="1" aria-pressed="false">Record is unverified</button><button type="button" data-scenario="2" aria-pressed="false">Due date passes</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>Preserve the forecast that existed at the time</strong><p data-result-detail>A later outcome is compared with the saved rows. Refreshing today&#39;s dashboard must not rewrite last week&#39;s expectation.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-forecast.svg" download>Download SVG</a><a href="diagrams/renewal-forecast.png" download>Download PNG</a><a href="diagrams/renewal-forecast.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>The weekly snapshot records its business date, horizon and source rows. Repeating a capture for the same week and horizon preserves the snapshot rather than rewriting the past.</p>
+<p>That makes a review concrete. The team can ask which rows moved, which source facts changed and which outcomes have become effective since the earlier forecast.</p>
+<p>An overdue row without a confirmed outcome stays unresolved. It does not become churn just to complete a chart. Similarly, an unverified contract should remain visible as uncertainty or an exclusion instead of quietly disappearing from the denominator.</p>
+<p>For a fictional review, suppose a $24,000 renewal was offered in the saved snapshot. The buyer later accepts, but the next term has not begun. The offer, agreement and effective outcome are distinct events. A report must state which one it counts.</p>
+<h2 id="a-model-forecast-needs-a-different-evidence-trail">A model forecast needs a different evidence trail</h2>
+<p>The prediction workspace generates 360 distinct synthetic cases with a fixed seed. The oldest 240 fit a regularized logistic model. The next 60 fit a calibration intercept. The final 60 remain held out for scoring.</p>
+<p>The dates precede the workspace date. Features describe usage, engagement and friction. The generator is deliberately learnable.</p>
+<figure class="renewal-explorer" data-renewal="model" data-motion="paused" aria-labelledby="flow-model">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 24</span><h3 id="flow-model">Separate fitting, calibration and scoring</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Separate fitting, calibration and scoring" class="renewal-svg landscape">
+<title>Separate fitting, calibration and scoring</title>
+<desc>Synthetic explanatory workflow. Synthetic dated history leads to Fit on oldest 240. Fit on oldest 240 leads to Calibrate on next 60. Calibrate on next 60 leads to Score final 60. Score final 60 leads to Freeze forecast evidence. Synthetic dated history leads to Withhold prediction.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 24</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 176 156 V 207 H 360 V 431 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 431) rotate(0)"/>
+<g data-node="history"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Synthetic dated history</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">360 distinct cases; fixed seed</text></g>
+<g data-node="fit"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Fit on oldest 240</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Usage, engagement, friction</text></g>
+<g data-node="calibrate"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Calibrate on next 60</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Intercept adjustment</text></g>
+<g data-node="test"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Score final 60</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Held-out Brier + reliability bins</text></g>
+<g data-node="freeze"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Freeze forecast evidence</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Model ID + features + currency</text></g>
+<g data-node="unknown"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Withhold prediction</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Incomplete or unverified source</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Separate fitting, calibration and scoring" class="renewal-svg portrait">
+<title>Separate fitting, calibration and scoring</title>
+<desc>Synthetic explanatory workflow. Synthetic dated history leads to Fit on oldest 240. Fit on oldest 240 leads to Calibrate on next 60. Calibrate on next 60 leads to Score final 60. Score final 60 leads to Freeze forecast evidence. Synthetic dated history leads to Withhold prediction.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 24</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 115 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="history"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Synthetic dated history</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">360 distinct cases; fixed seed</text></g>
+<g data-node="fit"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Fit on oldest 240</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Usage, engagement, friction</text></g>
+<g data-node="calibrate"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Calibrate on next 60</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Intercept adjustment</text></g>
+<g data-node="test"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Score final 60</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Held-out Brier + reliability bins</text></g>
+<g data-node="freeze"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Freeze forecast evidence</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Model ID + features + currency</text></g>
+<g data-node="unknown"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Withhold prediction</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Incomplete or unverified source</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose the modeling stage</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Train and score</button><button type="button" data-scenario="1" aria-pressed="false">Usage sensitivity</button><button type="button" data-scenario="2" aria-pressed="false">Missing trusted usage</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>The test cases remain outside fitting</strong><p data-result-detail>The synthetic generator is deliberately learnable. Held-out scoring checks this experiment&#39;s machinery, not accuracy on real renewal decisions.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-model.svg" download>Download SVG</a><a href="diagrams/renewal-model.png" download>Download PNG</a><a href="diagrams/renewal-model.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>The Brier score measures the mean squared difference between a probability and the observed binary outcome:</p>
+<pre><code class="language-text">Brier score = mean((predicted probability − observed outcome)²)
+</code></pre>
+<p>For three fictional predictions of 0.9, 0.6 and 0.2 with outcomes 1, 0 and 0, the score is <code>(0.01 + 0.36 + 0.04) / 3</code>, or about 0.137. That calculation describes those three observations, not general model quality.</p>
+<p>The application also displays reliability bins with counts. A bin supported by very few examples should not look as convincing as one supported by many.</p>
+<p>Held-out synthetic performance checks that the training and scoring machinery behaves coherently on its generated problem. It does not establish accuracy for real customers, where selection, product changes, missing data and behavior can differ.</p>
+<h2 id="missing-evidence-should-reach-the-model-boundary">Missing evidence should reach the model boundary</h2>
+<p>Commitment predictions use reconciled utilization and explicit synthetic assumptions. Standard accounts use illustrative activity history; custom accounts use illustrative constants. These are disclosed feature constructions.</p>
+<p>Unverified contracts and incomplete required usage withhold predictions. Accepted or declined decisions use their observed states. Currency totals remain separate.</p>
+<p>A saved sensitivity forecast preserves the model ID, feature values and amounts. Adjusting usage in that scenario asks how the fixed model responds to the changed input.</p>
+<p>It does not establish that causing the same usage change would cause a renewal. Prediction sensitivity and intervention effectiveness require different evidence.</p>
+<p>That distinction matters when an agent recommends work. “The score rises when this feature rises” is not sufficient justification for a customer intervention.</p>
+<h2 id="measure-retention-from-a-fixed-opening-cohort">Measure retention from a fixed opening cohort</h2>
+<p>The performance workspace uses a fixed opening account cohort and effective annual agreement values, separately by currency. PAYG spend and service-allocation schedules are excluded from these retention measures.</p>
+<p>Consider two fictional opening agreements: $100 and $100. One later expands to $120; the other contracts to $80.</p>
+<p>Net revenue retention is <code>(120 + 80) / 200 = 100%</code>. Gross revenue retention caps each retained account at its opening value, so it is <code>(100 + 80) / 200 = 90%</code>.</p>
+<p class="table-hint">Scroll the table horizontally to see every column.</p><div class="article-table" role="region" aria-label="Data table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>What it helps explain</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NRR</td>
+<td>Expansion, contraction and churn within the opening cohort</td>
+</tr>
+<tr>
+<td>GRR</td>
+<td>Retained opening value without expansion covering a loss</td>
+</tr>
+<tr>
+<td>Forecast calibration</td>
+<td>Saved expectations compared with matched effective outcomes</td>
+</tr>
+<tr>
+<td>Recorded human minutes</td>
+<td>Observed work entries, not estimated savings</td>
+</tr>
+<tr>
+<td>Instrumented automation share</td>
+<td>Covered commands and worker/agent steps, not every historic action</td>
+</tr>
+</tbody></table>
+</div><p>Before live workspace outcomes exist, the screen can show a clearly labeled independent historical sample. Mixing that sample into the live cohort would manufacture apparent performance.</p>
+<h2 id="use-portfolio-experiments-to-expose-unfinished-work">Use portfolio experiments to expose unfinished work</h2>
+<p>The portfolio simulator creates disposable fictional standard USD customers and runs the application&#39;s actual preparation, acceptance, fulfillment, cycle promotion, connector, invoice and payment functions.</p>
+<p>Inputs include a seed, account count, cycle count, usage drift, outage percentage, outage duration and whether recovery succeeds. The interface supports up to 5,000 accounts and five annual cycles.</p>
+<figure class="renewal-explorer" data-renewal="portfolio" data-motion="paused" aria-labelledby="flow-portfolio">
+  <div class="renewal-explorer-heading"><span class="eyebrow">Interactive workflow 25</span><h3 id="flow-portfolio">Stress the workflow across renewal cycles</h3><p>Local teaching example · synthetic data</p></div>
+  <div class="renewal-toolbar" hidden><button type="button" data-motion-toggle>Play animation</button><button type="button" data-expand>Expand diagram</button><span data-motion-note></span></div>
+  <div class="renewal-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" width="720" height="520" role="img" aria-label="Stress the workflow across renewal cycles" class="renewal-svg landscape">
+<title>Stress the workflow across renewal cycles</title>
+<desc>Synthetic explanatory workflow. Disposable cohort leads to Actual domain functions. Actual domain functions leads to Synthetic provider events. Synthetic provider events leads to Check invariants. Check invariants leads to Bounded evidence report. Synthetic provider events leads to Unresolved outage backlog.</desc>
+<rect width="720" height="520" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 25</text>
+<path data-edge="0" d="M 324 115 H 396" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(396 115) rotate(0)"/>
+<path data-edge="1" d="M 544 156 V 232" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 232) rotate(90)"/>
+<path data-edge="2" d="M 396 273 H 324" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(324 273) rotate(180)"/>
+<path data-edge="3" d="M 176 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(176 390) rotate(90)"/>
+<path data-edge="4" d="M 544 314 V 390" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(544 390) rotate(90)"/>
+<g data-node="seed"><rect x="28" y="74" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Disposable cohort</text><text x="46" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Seed + accounts + cycle count</text></g>
+<g data-node="cycle"><rect x="396" y="74" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Actual domain functions</text><text x="414" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Prepare, accept, fulfill, promote</text></g>
+<g data-node="provider"><rect x="396" y="232" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="414" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Synthetic provider events</text><text x="414" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Outages + receipts + payments</text></g>
+<g data-node="check"><rect x="28" y="232" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="46" y="265" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Check invariants</text><text x="46" y="291" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Balances, duplicates, recovery</text></g>
+<g data-node="report"><rect x="28" y="390" width="296" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="46" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Bounded evidence report</text><text x="46" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Digest + sampled histories</text></g>
+<g data-node="backlog"><rect x="396" y="390" width="296" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="414" y="423" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Unresolved outage backlog</text><text x="414" y="449" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Do not label as completed</text></g>
+<text x="28" y="503" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 814" width="340" height="814" role="img" aria-label="Stress the workflow across renewal cycles" class="renewal-svg portrait">
+<title>Stress the workflow across renewal cycles</title>
+<desc>Synthetic explanatory workflow. Disposable cohort leads to Actual domain functions. Actual domain functions leads to Synthetic provider events. Synthetic provider events leads to Check invariants. Check invariants leads to Bounded evidence report. Synthetic provider events leads to Unresolved outage backlog.</desc>
+<rect width="340" height="814" rx="12" fill="#FAF8F3"/>
+<text x="28" y="36" fill="#435D6B" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW 25</text>
+<path data-edge="0" d="M 170 156 L 170 196" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 196) rotate(90)"/>
+<path data-edge="1" d="M 170 278 L 170 318" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 318) rotate(90)"/>
+<path data-edge="2" d="M 170 400 L 170 440" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 440) rotate(90)"/>
+<path data-edge="3" d="M 170 522 L 170 562" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(170 562) rotate(90)"/>
+<path data-edge="4" d="M 314 359 H 330 V 725 H 314" fill="none" stroke="#9AB2BF" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="#9AB2BF" stroke-width="2" transform="translate(314 725) rotate(180)"/>
+<g data-node="seed"><rect x="26" y="74" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="107" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Disposable cohort</text><text x="44" y="133" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Seed + accounts + cycle count</text></g>
+<g data-node="cycle"><rect x="26" y="196" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="229" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Actual domain functions</text><text x="44" y="255" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Prepare, accept, fulfill, promote</text></g>
+<g data-node="provider"><rect x="26" y="318" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="351" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Synthetic provider events</text><text x="44" y="377" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Outages + receipts + payments</text></g>
+<g data-node="check"><rect x="26" y="440" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="473" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Check invariants</text><text x="44" y="499" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Balances, duplicates, recovery</text></g>
+<g data-node="report"><rect x="26" y="562" width="288" height="82" rx="10" fill="#FFFFFF" stroke="#9AB2BF"/><text x="44" y="595" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Bounded evidence report</text><text x="44" y="621" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Digest + sampled histories</text></g>
+<g data-node="backlog"><rect x="26" y="684" width="288" height="82" rx="10" fill="#EDF5F7" stroke="#9AB2BF"/><text x="44" y="717" fill="#0D1B2A" font-family="Arial, sans-serif" font-size="18" font-weight="600">Unresolved outage backlog</text><text x="44" y="743" fill="#435D6B" font-family="Arial, sans-serif" font-size="13">Do not label as completed</text></g>
+<text x="28" y="797" fill="#435D6B" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
+</svg></div>
+  <div class="renewal-interaction" hidden>
+    <fieldset><legend>Choose a simulated operating condition</legend><div class="renewal-choices"><button type="button" data-scenario="0" aria-pressed="true">Recover outages</button><button type="button" data-scenario="1" aria-pressed="false">Leave outages unresolved</button><button type="button" data-scenario="2" aria-pressed="false">Repeat identical inputs</button></div></fieldset>
+  </div>
+  <div class="renewal-result" role="status" aria-live="polite" aria-atomic="true"><strong data-result-title>Exercise workflow invariants across cycles</strong><p data-result-detail>Decisions and providers are simulated while the actual domain functions run. Report observations separately from any claim about customer behavior.</p></div>
+  <noscript><p class="renewal-fallback">This is the complete static workflow. Enable JavaScript to explore the scenarios; the article explains each decision below.</p></noscript>
+  <figcaption>Arrows show possible transitions. Highlighted paths illustrate the selected example; motion does not represent execution timing.<span class="renewal-downloads"><a href="diagrams/renewal-portfolio.svg" download>Download SVG</a><a href="diagrams/renewal-portfolio.png" download>Download PNG</a><a href="diagrams/renewal-portfolio.drawio" download>Edit in draw.io</a></span></figcaption>
+</figure>
+<p>Customer decisions and providers are simulated. Declined customers leave later cohorts. Unresolved outages remain backlog. Duplicate calls exercise idempotency. The prediction model comes from separate fictional history and remains frozen while behavior changes across cycles.</p>
+<p>The report checks balances, duplicate writes and recovery alongside predicted and observed decisions. Identical inputs and business dates produce the same evidence digest; elapsed time is excluded. The application retains bounded reports and sampled account histories while preserving the interactive accounts and clock.</p>
+<p>This is sequential local domain execution. It is not a concurrent HTTP load test, an AWS capacity benchmark or evidence that 5,000 real customers could renew safely at once.</p>
+<p>Leaving outages unresolved is particularly instructive. The successful portion of a portfolio should not hide actions that remain in dead letters. A useful report preserves both.</p>
+<h2 id="ask-what-changed-then-ask-what-the-evidence-supports">Ask what changed, then ask what the evidence supports</h2>
+<p>Open <a href="https://d11wfkflwovvog.cloudfront.net/forecasts">Weekly forecasts</a> and compare a saved snapshot with current work. Explore <a href="https://d11wfkflwovvog.cloudfront.net/predictions">Predictive models</a> for the separate fit, calibration and scoring stages. Use <a href="https://d11wfkflwovvog.cloudfront.net/performance">Performance</a> and <a href="https://d11wfkflwovvog.cloudfront.net/simulations">Portfolio simulations</a> to distinguish effective outcomes from simulated experiments.</p>
+<p>Implementation was reviewed on 12 November 2026. Figures are local teaching examples; application histories and outcomes are synthetic. The <a href="evidence/renewal-series.json">series replay record</a> states which public checks were executed. None establishes real prediction accuracy, staffing savings or retention lift.</p>
+<p>The final installment connects the workflows to <a href="renewal-studio-operations.html">the AWS architecture and the evidence a real operational pilot would need</a>.</p>
+<nav class="series-reading-nav" aria-label="Continue the series">
+    <a rel="prev" href="renewal-studio-agents.html"><small>← Part 7</small>Let Agents Work Within a Boundary</a>
+    <a rel="next" href="renewal-studio-operations.html"><small>Part 9 →</small>From Demonstration to an Operational System</a>
+  </nav>
+      <div class="article-end"><strong>Follow the next experiment.</strong><p>New notes on model routing, action governance, containment, and evaluation.</p><a href="feed.xml">Subscribe via RSS →</a><a href="./">More engineering notes →</a></div>
+    </article>
+  </div></main>
+<footer class="shell"><span>Harleen Kaur · Engineering notes</span>
+  <a href="feed.xml">RSS feed</a><a href="https://github.com/hk-775">GitHub ↗</a>
+  <a href="../">Portfolio</a><span>Original writing &amp; site code · MIT-0</span></footer>
+</body></html>

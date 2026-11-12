@@ -37,10 +37,10 @@
     {
       "source": "README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/README.md",
-      "source_sha256": "c772a2b2519682caf34d091a817b9b785eb5a3ae80d1d85812f392af31af72af",
+      "source_sha256": "2af6eac733f046ca187392be9dbcaec04158822d3e85e6aaf05327dbda5f0d59",
       "markdown_url": "https://hk-775.github.io/hk-775/index.md",
-      "bytes": 4870,
-      "sha256": "8c0fd3d7bdc5aff4cf2593c16019c8e784c007617572a7a2835493f26001063d"
+      "bytes": 4859,
+      "sha256": "3e4a1634c6c9faf7a7cd0b960f852429e99cde58b4467d8002c5ab8005e5adfa"
     },
     {
       "source": "CASE_STUDY.md",
@@ -77,18 +77,82 @@
     {
       "source": "blog/README.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/README.md",
-      "source_sha256": "91cc593572fc56004d32743887cf8309151d0ae5e237a6cfe63f53d05a364074",
+      "source_sha256": "dea29df4b93f7d79bec721ef2ce8cf741257190d7f20940306d5c89b058a8d21",
       "markdown_url": "https://hk-775.github.io/hk-775/blog/index.md",
-      "bytes": 10853,
-      "sha256": "eea72a88942171289c67ce1dcd75bc5a1e38b4ab8853dc58ecc78e7c4990faca"
+      "bytes": 13903,
+      "sha256": "b49a351362d444593784dfd63cec519e1760b9433a6a4388513e0ce690ff3555"
     },
     {
       "source": "blog/2026-11-12-renewal-studio-standard-renewal.md",
       "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-standard-renewal.md",
-      "source_sha256": "a9a64d7cc957a7462e0599de224e7aed892c1122d7fae71e9ee658047206fbe8",
+      "source_sha256": "c5ef238bbc9b7b940586bc36457cd485b18bce38a12e5123c9485d634ec598ff",
       "markdown_url": "https://hk-775.github.io/hk-775/blog/renewal-studio-standard-renewal.md",
-      "bytes": 9744,
-      "sha256": "88f59b0baa0dace7c0ed28949919d009e2153ffb2c850e6caad1dee83b0de4e5"
+      "bytes": 9811,
+      "sha256": "baf190a970b2e488f863377cdcd2b0dd7a31b486f4bfaf7babf84b31c8fe392f"
+    },
+    {
+      "source": "blog/2026-11-12-renewal-studio-exceptions.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-exceptions.md",
+      "source_sha256": "08c98dde53285021db91c67d1d9cb90ca10a9017978f1163d92c3753ed43ec98",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.md",
+      "bytes": 8669,
+      "sha256": "6f87ec4018c1661471e109a4ff8e494b4eb0ef9dbc9ef7a4c802d914ad77d6c2"
+    },
+    {
+      "source": "blog/2026-11-12-renewal-studio-consumption.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-consumption.md",
+      "source_sha256": "4c2a0bf531e13a8de01601b11aa1e56af195243c0eac7c89ff9ae173526e05f2",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/renewal-studio-consumption.md",
+      "bytes": 8432,
+      "sha256": "075bc738ecfe7812ac79d5f7fa136e6c6058778aae0a252aecbd896c801b4ad7"
+    },
+    {
+      "source": "blog/2026-11-12-renewal-studio-retention.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-retention.md",
+      "source_sha256": "073ce9fcdab194251b6b47ad825866ccf783c7ff206ee699c21fe2cd0cb81442",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/renewal-studio-retention.md",
+      "bytes": 7844,
+      "sha256": "9cfc5031ba91262b00698aa9fdebeba84c7c37f88f8d06a9006d2197689c6970"
+    },
+    {
+      "source": "blog/2026-11-12-renewal-studio-post-sale.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-post-sale.md",
+      "source_sha256": "8f39a17a0fcccfe6bbf2f4db3b6e4bcc0ba57d1f3e278b7078915583c4e43353",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/renewal-studio-post-sale.md",
+      "bytes": 8349,
+      "sha256": "16e20638f267ef4565918f4424fa1a29bf39db8f6ef4538dc03f76cd6f0bb709"
+    },
+    {
+      "source": "blog/2026-11-12-renewal-studio-finance.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-finance.md",
+      "source_sha256": "c9b26e5a83d392f72119da349bc987438c0311e4d8a3e420d226442ffa7f1337",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/renewal-studio-finance.md",
+      "bytes": 8074,
+      "sha256": "39f4ad6de2aeae117c13f03ea9ec691d9d3d6f55af35557adfe50188d8617746"
+    },
+    {
+      "source": "blog/2026-11-12-renewal-studio-agents.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-agents.md",
+      "source_sha256": "d1a715ae4809ee66a6261d2713eb64d373a6d3a637aa01ee9613bebbf3a98610",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/renewal-studio-agents.md",
+      "bytes": 8169,
+      "sha256": "95dc6aa5bf79e438a7ee86892d7129b458e5ab7794f5d296d7ad3c049024f468"
+    },
+    {
+      "source": "blog/2026-11-12-renewal-studio-forecasting.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-forecasting.md",
+      "source_sha256": "64320de459f665ce3df788a6c9af05a8f0c457397caf69eb082ef7e501c3f209",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/renewal-studio-forecasting.md",
+      "bytes": 8374,
+      "sha256": "4b842951afe67e649c63ad3f37b8c3ed01158b22272dbf7f20e22e9242f599bd"
+    },
+    {
+      "source": "blog/2026-11-12-renewal-studio-operations.md",
+      "source_url": "https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-operations.md",
+      "source_sha256": "dd4f78c759612fdc218ae2e1d13daa47e8a86c76842994b480027ac64e11b3da",
+      "markdown_url": "https://hk-775.github.io/hk-775/blog/renewal-studio-operations.md",
+      "bytes": 10636,
+      "sha256": "9a310581f59dba490508c1c2c16c76dd22c9b19cd93e2011ea1037ce3452ff64"
     },
     {
       "source": "blog/2026-10-30-improving-agents-starts-with-verifying-the-work.md",

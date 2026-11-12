@@ -90,11 +90,11 @@ The evidence supports the two tested examples: a standard renewal completes, and
 
 A useful standard path also makes its stopping points visible. What should happen when the customer wants different terms, an amendment needs verification, or a strategic account requires negotiation?
 
-Part 2 will follow those exceptions: the recommendation a specialist receives, the decision they own, and the conditions for returning work to automation.
+[Part 2 follows those exceptions](https://hk-775.github.io/hk-775/blog/renewal-studio-exceptions.html): the recommendation a specialist receives, the decision they own, and the conditions for returning work to automation.
 
 The [series reading order](https://hk-775.github.io/hk-775/blog/renewal-studio.html) maps the later installments across commitment renewals, retention, post-sale operations, finance, agents, forecasting and production architecture.
 
 ---
 Source: [blog/2026-11-12-renewal-studio-standard-renewal.md](https://github.com/hk-775/hk-775/blob/main/blog/2026-11-12-renewal-studio-standard-renewal.md)
 
-Source SHA-256: `a9a64d7cc957a7462e0599de224e7aed892c1122d7fae71e9ee658047206fbe8`
+Source SHA-256: `c5ef238bbc9b7b940586bc36457cd485b18bce38a12e5123c9485d634ec598ff`

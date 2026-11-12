@@ -6,6 +6,15 @@ const palette = { ink: "#0D1B2A", cream: "#FAF8F3", line: "#9AB2BF", muted: "#43
 
 export function layout(key, narrow = false) {
   const spec = explorers[key];
+  if (spec.topology && !narrow) {
+    return {
+      width: spec.topology.width, height: spec.topology.height,
+      nodes: spec.nodes.map(([id, title, subtitle], i) => ({
+        id, title, subtitle, x: spec.topology.positions[i][0], y: spec.topology.positions[i][1], w: 280, h: 82,
+      })),
+      edges: spec.edges.map(([from, to], index) => ({ from, to, index, d: spec.topology.paths[index] })),
+    };
+  }
   const width = narrow ? 340 : 720;
   const boxWidth = narrow ? 288 : 296;
   const nodes = spec.nodes.map(([id, title, subtitle], i) => {
@@ -21,7 +30,11 @@ export function layout(key, narrow = false) {
     if (narrow) {
       const start = `${a.x + a.w / 2} ${a.y + a.h}`, end = `${b.x + b.w / 2} ${b.y}`;
       d = b.y - a.y === 122 ? `M ${start} L ${end}`
-        : `M ${a.x + a.w} ${a.y + a.h / 2} H ${330 - index * 3} V ${b.y + b.h / 2} H ${b.x + b.w}`;
+        : `M ${a.x + a.w} ${a.y + a.h / 2} H ${330 - (index % 4) * 3} V ${b.y + b.h / 2} H ${b.x + b.w}`;
+    } else if (b.y < a.y) {
+      // Return to an earlier checkpoint through the outside rail.
+      const rail = a.x < 360 ? 12 : 708;
+      d = `M ${a.x < 360 ? a.x : a.x + a.w} ${a.y + 41} H ${rail} V ${b.y - 18} H ${b.x + b.w / 2} V ${b.y}`;
     } else if (b.y - a.y > 158) {
       // Skip intervening boxes using the gutter, rather than drawing a
       // misleading connection through the commercial-review node.
