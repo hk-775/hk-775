@@ -2,7 +2,7 @@ import { explorers } from "../site/blog/renewal-explorer-data.js";
 
 export const escape = value => String(value).replace(/[&<>"']/g, c =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const palette = { ink: "#0D1B2A", cyan: "#00B4D8", cream: "#FAF8F3", line: "#9AB2BF", muted: "#435D6B" };
+const palette = { ink: "#0D1B2A", cream: "#FAF8F3", line: "#9AB2BF", muted: "#435D6B" };
 
 export function layout(key, narrow = false) {
   const spec = explorers[key];
@@ -48,7 +48,7 @@ export function diagramSVG(key, narrow = false, embedded = false) {
 <rect width="${l.width}" height="${l.height}" rx="12" fill="${p.cream}"/>
 <text x="28" y="36" fill="${p.muted}" font-family="Arial, sans-serif" font-size="13" letter-spacing="1.3">RENEWAL STUDIO / FLOW ${spec.number}</text>
 ${l.edges.map(e => `<path data-edge="${e.index}" d="${e.d}" fill="none" stroke="${p.line}" stroke-width="2.5" stroke-dasharray="7 6"/><path d="M -5 -4 L 1 0 L -5 4" fill="none" stroke="${p.line}" stroke-width="2" transform="translate(${endPoint(e.d)}) rotate(${endAngle(e.d)})"/>`).join("\n")}
-${l.nodes.map((n, i) => `<g data-node="${n.id}"><rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="10" fill="${i % 2 ? "#EDF5F7" : "#FFFFFF"}" stroke="${p.line}"/><rect x="${n.x}" y="${n.y + 17}" width="4" height="47" rx="2" fill="${p.cyan}"/><text x="${n.x + 18}" y="${n.y + 33}" fill="${p.ink}" font-family="Arial, sans-serif" font-size="18" font-weight="600">${escape(n.title)}</text><text x="${n.x + 18}" y="${n.y + 59}" fill="${p.muted}" font-family="Arial, sans-serif" font-size="13">${escape(n.subtitle)}</text></g>`).join("\n")}
+${l.nodes.map((n, i) => `<g data-node="${n.id}"><rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="10" fill="${i % 2 ? "#EDF5F7" : "#FFFFFF"}" stroke="${p.line}"/><text x="${n.x + 18}" y="${n.y + 33}" fill="${p.ink}" font-family="Arial, sans-serif" font-size="18" font-weight="600">${escape(n.title)}</text><text x="${n.x + 18}" y="${n.y + 59}" fill="${p.muted}" font-family="Arial, sans-serif" font-size="13">${escape(n.subtitle)}</text></g>`).join("\n")}
 <text x="28" y="${l.height - 17}" fill="${p.muted}" font-family="Arial, sans-serif" font-size="11">Illustrative flow · synthetic data · no timing scale</text>
 </svg>`;
 }
